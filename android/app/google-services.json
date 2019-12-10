@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "405788812001",
+    "firebase_url": "https://sprayrecord-9baf2.firebaseio.com",
+    "project_id": "sprayrecord-9baf2",
+    "storage_bucket": "sprayrecord-9baf2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:405788812001:android:1ab5e4ebeb7a01933f0da0",
+        "android_client_info": {
+          "package_name": "com.sprayrecord"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "405788812001-b3pi8j8e88tji6npj1m5o7iv9pkdea86.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLCoR_H7mWVwQF6CdR0lIejETSUeHmNA8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "405788812001-b3pi8j8e88tji6npj1m5o7iv9pkdea86.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
