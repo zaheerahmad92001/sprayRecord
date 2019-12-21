@@ -15,6 +15,7 @@ import AddNewProduct from '../views/AddNewProduct';
 import NewOrder from '../views/NewOrder';
 import DailySale from '../views/DailySale';
 import OrderHistory from '../views/orderHistory';
+import SaleHistory from '../views/saleHistory';
 
 const LoadingNavigator = createStackNavigator({
     Splas: Splash,
@@ -41,7 +42,8 @@ const AppNavigator = createStackNavigator({
     AddNewProduct:AddNewProduct,
     NewOrder:NewOrder,
     DailySale:DailySale,
-    OrderHistory:OrderHistory
+    OrderHistory:OrderHistory,
+    SaleHistory:SaleHistory
 },
     {
         initialRouteName: 'Landing',

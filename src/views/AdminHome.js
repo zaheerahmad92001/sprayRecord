@@ -108,34 +108,16 @@ export default class FoHome extends Component {
                    ImageLeftIcon={'menu'}
                    LeftPress={() => this.openDrawer()}
                     HeadingText={'Available Products'} />
-                {/* <View style={{flex:1}}> */}
-                    {/* <View style={{ paddingVertical:10, flexDirection: 'row',
-                    alignItems:'center', marginBottom:5,backgroundColor:'red'}}>
-                    
-                        <Autocomplete
-                            style={styles.AutocompleteStyle}
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            inputContainerStyle={{ borderWidth: 0, }}
-                            data={matchedproduct.length >= 1 && comp(SearchValue, matchedproduct[0].name) ? [] : matchedproduct}
-                            defaultValue={SearchValue}
-                            onChangeText={(text) => this.setState({ SearchValue: text })}
-                            placeholder="Search "
-                            placeholderTextColor={TextColor}
-                            renderItem={({ item }) => (
-                                <TouchableOpacity onPress={() => this.setState({ SearchValue: item.name })}>
-                                    <Text style={styles.itemText}>{item.name}</Text>
-                                </TouchableOpacity>
-                            )}>
-                        </Autocomplete>
-                    </View> */}
+               
                      <View style={styles.SearchView}>
                         <Autocomplete
                             style={styles.AutocompleteStyle}
                             autoCapitalize="none"
+                            hideResults={true}
                             autoCorrect={false}
+                            autoFocus={false}
                             inputContainerStyle={{ borderWidth: 0, }}
-                            listStyle={{borderWidth:0}}
+                            listStyle={{borderWidth:0,}}
                             data={matchedproduct.length >= 1 && comp(SearchValue, matchedproduct[0].name) ? [] : matchedproduct}
                             defaultValue={SearchValue}
                             onChangeText={(text) => this.setState({ SearchValue: text })}
@@ -170,11 +152,13 @@ export default class FoHome extends Component {
                                 keyExtractor={(item) => item.Id}
                                 renderItem={this.renderAdminSearchList}
                                 key={1}
-                                numColumns={1}>
+                                numColumns={1}
+                                showsVerticalScrollIndicator={false}
+                                >
                             </FlatList> :
 
                             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text style={styles.NotFound}> Data not found</Text>
+                                <Text style={styles.NotFound}>No Search Result</Text>
                             </View>
                     }
                 </View>
@@ -228,7 +212,7 @@ const styles = StyleSheet.create({
     },
     SearchView:{
         width: ScreenWidth * 0.97,
-        paddingVertical: 2,
+       // paddingVertical: 2,
         flexDirection: 'row',
         justifyContent: 'space-between',
         borderRadius: 10,

@@ -92,11 +92,11 @@ const styles = StyleSheet.create({
      fontWeight:'500',
     },
     imageStyle: {
-        // width: 90, 
-        // height: 90,
-        backgroundColor:'pink',
-        width: ScreenHeight*0.23,
-        height: ScreenHeight*0.23
+        //backgroundColor:'pink',
+        //width: ScreenHeight*0.23,
+       // height: ScreenHeight*0.22
+       width:RFValue(140),
+       height:RFValue(140)
 
     },
     imageView: {

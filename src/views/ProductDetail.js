@@ -35,6 +35,7 @@ const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 export default class ProductDetail extends Component {
     constructor(props) {
         super(props);
+        console.log("props asad",this.props)
         this.param = this.props.navigation.getParam('item'),
             this.state = {
                 name: this.param.name,

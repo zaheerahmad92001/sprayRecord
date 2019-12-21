@@ -12,61 +12,50 @@ import { borderColor, TextColor, LIGHT_WHITE, buttonBGcolor } from '../../Consta
 import { Icon, Item } from 'native-base';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
-const _OrderDetail = (props) => {
+const _SaleHistory = (props) => {
     return (
         <View style={styles.container} >
-            <View style={styles.imageView}>
+            <View style={{ width: screenWidth * 0.35, height: screenHeight * 0.2, padding: 5, backgroundColor: 'white' }}>
                 <Image
                     style={{ width: '100%', height: '100%' }}
-                    source={require('../../assets/image/p.png')}
-                //source={require('../../assets/image/p.png')}
+                    source={require('../../assets/image/5.jpg')}
+                    //source={require('../../assets/image/p.png')}
                 />
             </View>
-            <View style={{ width: screenWidth * 0.61, backgroundColor: 'white', marginTop: 5 }}>
+            <View style={{ width: screenWidth * 0.61, backgroundColor: 'white',marginTop:5 }}>
                 <View style={[styles.detailView]}>
-                    <Text style={[styles.name]}>{props.item.name}</Text>
+                <Text style={[styles.name]}>{props.item.name}</Text>
                 </View>
                 <View style={styles.borderBottom}></View>
                 <View style={[styles.detailView, { marginTop: 5 }]}>
-                    <Text style={styles.heading}>Available</Text>
-                    <Text style={styles.value} >{props.item.AQty}</Text>
+                    <Text style={styles.heading}>Opening</Text>
+                    <Text style={styles.value} >{props.item.open}</Text>
                 </View>
                 <View style={styles.detailView}>
-                    <Text style={styles.heading}>Received</Text>
-                    <Text style={styles.value} >{props.item.RQty}</Text>
+                    <Text style={styles.heading}>Sale</Text>
+                    <Text style={styles.value} >{props.item.sale}</Text>
                 </View>
                 <View style={styles.borderBottom}></View>
 
-                <View style={[styles.detailView, { marginBottom: 8 }]}>
-                    <Text style={styles.heading}>Total Quantity</Text>
-                    <Text style={[styles.value, { fontWeight: 'bold' }]} >{props.item.TQty}</Text>
+                <View style={[styles.detailView,{marginBottom:8}]}>
+                    <Text style={styles.heading}>Closing</Text>
+                    <Text style={[styles.value,{fontWeight:'bold'}]} >{props.item.close}</Text>
                 </View>
                 <View style={styles.detailView}>
                     <Text style={[styles.heading]}>Date</Text>
                     <Text style={[styles.value, { color: TextColor, fontWeight: '500' }]} >{props.item.date}</Text>
                 </View>
-                <View style={styles.detailView}>
-                    <Text style={[styles.heading]}>Batch</Text>
-                    <Text style={[styles.value, { color: TextColor, fontWeight: '500' }]} >{props.item.batchNO}</Text>
-                </View>
 
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <TouchableOpacity style={styles.textInvoice}
-                        onPress={props.invoice}>
-                        <View style={[styles.detailView, { paddingRight: 5 }]}>
-                            <Text style={{ color: 'green' }}>Invoice</Text>
-                            <Icon name={'file'}
-                                type={'MaterialCommunityIcons'}
-                                style={{ fontSize: 20, color: 'green' }}></Icon>
-                        </View>
-                    </TouchableOpacity>
-                    <Icon
-                        name={'dots-vertical'}
+                {/* <TouchableOpacity style={{borderWidth:1,borderColor:'green',marginTop:5,width:'40%'}}
+                   onPress={props.invoice}
+                >
+                    <View style={[styles.detailView,{paddingRight:5}]}>
+                        <Text style={{color:'green'}}>Invoice</Text>
+                        <Icon name={'file'}
                         type={'MaterialCommunityIcons'}
-                        onPress={props.EditDelete}
-                    />
-                </View>
-
+                        style={{fontSize:20,color:'green'}}></Icon>
+                    </View>
+                </TouchableOpacity> */}
             </View>
 
 
@@ -74,7 +63,7 @@ const _OrderDetail = (props) => {
     )
 };
 
-export default _OrderDetail;
+export default _SaleHistory;
 
 const styles = StyleSheet.create({
     container: {
@@ -83,7 +72,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
         marginTop: 10,
         flexDirection: 'row',
-        paddingBottom: 10
+        paddingBottom:10
     },
     imgView: {
         margin: 7,
@@ -100,8 +89,8 @@ const styles = StyleSheet.create({
     detailView: {
         // justifyContent:'space-between',
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingLeft: 5, paddingRight: 10
+        justifyContent:'space-between',
+        paddingLeft:5,paddingRight:10
         //alignItems:'center',
         // paddingHorizontal:15,
         // marginTop: 5,
@@ -121,7 +110,7 @@ const styles = StyleSheet.create({
         fontSize: RFValue(14),
         color: TextColor,
         //paddingRight:50
-        // width: '70%',
+       // width: '70%',
 
 
     },
@@ -130,8 +119,10 @@ const styles = StyleSheet.create({
         fontFamily: 'Poppins',
         fontStyle: 'italic',
         fontSize: RFValue(14),
-        // color: '#FF0000',
-        color: TextColor
+       // color: '#FF0000',
+       color:TextColor
+
+
         //  marginLeft:RFValue(60)
     },
     borderBottom: {
@@ -141,22 +132,5 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignSelf: 'center',
         marginTop: 5
-    },
-    imageView: {
-        //width: screenWidth * 0.35,
-        //height: screenHeight * 0.2,
-        width: RFValue(120),
-        height: RFValue(140),
-        padding: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
-        //backgroundColor: 'green'
-    },
-    textInvoice: {
-        borderWidth: 1,
-        borderColor: 'green',
-        marginTop: 5,
-        marginLeft: 5,
-        width: '40%'
     }
 })
