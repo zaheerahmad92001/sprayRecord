@@ -25,6 +25,7 @@ export default class AdminSearchList extends Component {
                         Id: Id,
                         qty: qty,
                         name: name,
+                        from:'admin'
                     }
                 })}>
                 <View style={styles.cardStyle}>

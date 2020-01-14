@@ -9,22 +9,30 @@ import {
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { borderColor, TextColor, LIGHT_WHITE, buttonBGcolor } from '../../Constants/colors';
-import { Icon, Item } from 'native-base';
+import { Icon, Item, Thumbnail } from 'native-base';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 const _OrderDetail = (props) => {
     return (
-        <View style={styles.container} >
+        <TouchableOpacity style={styles.container}
+        onLongPress={props.EditDelete}
+        >
             <View style={styles.imageView}>
-                <Image
-                    style={{ width: '100%', height: '100%' }}
+                {/* <Image
+                    style={styles.avatar}
                     source={require('../../assets/image/p.png')}
-                //source={require('../../assets/image/p.png')}
+                /> */}
+                <Thumbnail square large 
+                source={require('../../assets/image/p.png')}
                 />
             </View>
-            <View style={{ width: screenWidth * 0.61, backgroundColor: 'white', marginTop: 5 }}>
+            <View style={{ width: screenWidth * 0.65, backgroundColor: 'white', marginTop: 5 }}>
                 <View style={[styles.detailView]}>
                     <Text style={[styles.name]}>{props.item.name}</Text>
+                    <View style={{flexDirection:'row'}}>
+                     <Text style={styles.value}>{props.item.weight}</Text>
+                     <Text style={styles.value}>{props.item.unit}</Text>
+                     </View>
                 </View>
                 <View style={styles.borderBottom}></View>
                 <View style={[styles.detailView, { marginTop: 5 }]}>
@@ -50,27 +58,19 @@ const _OrderDetail = (props) => {
                     <Text style={[styles.value, { color: TextColor, fontWeight: '500' }]} >{props.item.batchNO}</Text>
                 </View>
 
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <TouchableOpacity style={styles.textInvoice}
-                        onPress={props.invoice}>
-                        <View style={[styles.detailView, { paddingRight: 5 }]}>
-                            <Text style={{ color: 'green' }}>Invoice</Text>
-                            <Icon name={'file'}
-                                type={'MaterialCommunityIcons'}
-                                style={{ fontSize: 20, color: 'green' }}></Icon>
-                        </View>
-                    </TouchableOpacity>
+                {/* <View style={{ flexDirection: 'row',justifyContent:'flex-end' }}>
+                   
                     <Icon
                         name={'dots-vertical'}
                         type={'MaterialCommunityIcons'}
                         onPress={props.EditDelete}
                     />
-                </View>
+                </View> */}
 
             </View>
 
 
-        </View>
+        </TouchableOpacity>
     )
 };
 
@@ -145,18 +145,18 @@ const styles = StyleSheet.create({
     imageView: {
         //width: screenWidth * 0.35,
         //height: screenHeight * 0.2,
-        width: RFValue(120),
-        height: RFValue(140),
-        padding: 5,
+        width: RFValue(110),
+        height: RFValue(110),
+        marginTop:10,
+        //padding: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        //backgroundColor: 'green'
+       // backgroundColor: 'green'
     },
-    textInvoice: {
-        borderWidth: 1,
-        borderColor: 'green',
-        marginTop: 5,
-        marginLeft: 5,
-        width: '40%'
-    }
+    avatar:{
+   width:'100%',
+   height:'100%'
+    },
+   
+
 })

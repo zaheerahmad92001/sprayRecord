@@ -2,13 +2,19 @@ import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet,Dimensions } from 'react-native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import {buttonBGcolor}from '../../Constants/colors';
+import { Icon } from 'native-base';
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
 const _Button = props => (
   <View style={{ alignItems: 'center' }}>
     <TouchableOpacity style={[styles.container, props.styles]} onPress={props.onPress} disabled={props.disabled}>
-      <View>
+      <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
         <Text style={[styles.text, props.textStyle]}>{props.textButton}</Text>
+        <Icon
+        name={props.IconNmae}
+        type={'MaterialCommunityIcons'}
+        style={[styles.IconStyle]}
+        />
       </View>
     </TouchableOpacity>
   </View>
@@ -18,10 +24,11 @@ export default _Button;
 
 const styles = StyleSheet.create({
   container: {
-    width: screenWidth * 0.9,
+    width: screenWidth * 0.95,
     height: screenHeight * 0.07,
     borderRadius: 10,
     backgroundColor:buttonBGcolor,
+  //backgroundColor: 'rgba(34, 35, 38, 0.2)',
     alignItems: 'center',
     justifyContent: 'center',
     //marginTop: 20
@@ -29,8 +36,15 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     fontStyle: 'normal',
-    fontWeight: '700',
+    fontWeight: 'bold',
     fontSize: RFValue(20),
     alignSelf: 'center',
+  },
+  IconStyle:{
+    color:'white',
+    alignItems:'center',
+    fontSize:RFValue(26),
+    marginLeft:5
+
   }
 });

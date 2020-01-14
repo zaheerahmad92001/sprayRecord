@@ -13,7 +13,7 @@ const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 const Text_Input = (props) => { 
     return (
               <TextInput
-                    style={styles.inputStyle}
+                    style={[styles.inputStyle,props.styles]}
                     selection={props.selection}
                     placeholder={props.placeholder}
                     placeholderTextColor={'#979797'}
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         borderBottomRightRadius:15,
         paddingHorizontal:15,
         fontFamily: 'normal',
-        borderWidth:2,
+        borderWidth:1,
         borderColor:borderColor
     },
 

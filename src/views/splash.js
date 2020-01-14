@@ -8,6 +8,8 @@ import {
     Image,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { TextColor } from '../Constants/colors';
+import { RFValue } from 'react-native-responsive-fontsize';
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 export default class Splash extends Component {
 
@@ -18,15 +20,18 @@ export default class Splash extends Component {
     componentDidMount() {
         setTimeout(() => {
             this.props.navigation.navigate('AppNavigator')
-        }, 1000)
+        }, 2000)
     }
 
     render() {
         return (
             <SafeAreaView style={styles.Container}>
-                <Image
+                <View style={{alignItems:'center',justifyContent:'center'}}>
+                <Text style={{fontSize:RFValue(25),color:TextColor,fontStyle:'normal',fontWeight:'bold'}}>AL Yousaf Spray Center</Text> 
+                </View>
+                {/* <Image
                    // source={require('../assets/image/squadly_logo.png')} 
-                    />
+                    /> */}
             </SafeAreaView>
         )
     }

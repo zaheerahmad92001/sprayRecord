@@ -2,24 +2,30 @@ import React, { Component } from 'react';
 
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-
 import Splash from '../views/splash';
 import IndexFile from '../views/indexFile';
-import Landing from '../views/landing';
-import FoHome from '../views/FoHome';
-import ForgetPassword from '../views/ForgetPassword';
-import Login from '../views/login';
-import AdminHome from '../views/AdminHome';
-import ProductDetail from '../views/ProductDetail';
-import AddNewProduct from '../views/AddNewProduct';
-import NewOrder from '../views/NewOrder';
-import DailySale from '../views/DailySale';
-import OrderHistory from '../views/orderHistory';
-import SaleHistory from '../views/saleHistory';
+import Landing from '../views/landingpage/landing';
+import FoHome from '../views/FoHome/FoHome';
+import ForgetPassword from '../views/forgetpassword/ForgetPassword';
+import Login from '../views/login/login';
+import AdminHome from '../views/Admin/AdminHome';
+import ProductDetail from '../views/productDetail/ProductDetail';
+import AddNewProduct from '../views/Addproduct/AddNewProduct';
+import NewOrder from '../views/order/NewOrder';
+import DailySale from '../views/sale/DailySale';
+import OrderProducts from '../views/orderHistory/orderProduct';
+import SaleHistory from '../views/saleHistory/saleHistory';
+import Orders from '../views/orderHistory/orderList';
+import EditOrder from '../views/EditOrder/EditOrder';
+import EditOrderProduct from '../views/EditOrder/editOrderProduct';
+import Signup from '../views/signUp/Signup';
+import ProductList from '../views/products/productList';
+import EditProduct from '../views/EditProduct/EditProduct';
+import PaidAmount from '../views/payment/paidAmount';
+import paymentHistory from '../views/payment/paymentHistory'; 
 
 const LoadingNavigator = createStackNavigator({
     Splas: Splash,
-
 },
     {
         initialRouteName: 'Splas',
@@ -27,6 +33,7 @@ const LoadingNavigator = createStackNavigator({
     });
 const AuthNavigator = createStackNavigator({
     Login: Login,
+    Signup:Signup,
     ForgetPassword:ForgetPassword,
 }, {
     initialRouteName: 'Login',
@@ -39,21 +46,39 @@ const AppNavigator = createStackNavigator({
     FoHome: FoHome,
     AdminHome:AdminHome,
     ProductDetail:ProductDetail,
-    AddNewProduct:AddNewProduct,
+    // AddNewProduct:AddNewProduct,
     NewOrder:NewOrder,
     DailySale:DailySale,
-    OrderHistory:OrderHistory,
-    SaleHistory:SaleHistory
+    Orders:Orders,
+    OrderProducts:OrderProducts,
+    SaleHistory:SaleHistory,
+    EditOrder:EditOrder,
+    EditOrderProduct:EditOrderProduct,
+    ProductList:ProductList,
+    AddNewProduct:AddNewProduct,
+    EditProduct:EditProduct,
+    PaidAmount:PaidAmount,
+    paymentHistory:paymentHistory,
 },
     {
         initialRouteName: 'Landing',
+       // initialRouteName:'AdminHome',
         headerMode: 'none',
     },
 );
+// const AddNewProductNavigator = createStackNavigator({
+//     AddNewProduct:AddNewProduct,
+// },
+// {
+//     initialRouteName: 'AddNewProduct',
+//     headerMode: 'none',
+// }
+// )
 const RootNavigator = createSwitchNavigator({
     LoadingNavigator,
     AuthNavigator,
     AppNavigator,
+    //AddNewProductNavigator
 },
     {
         initialRouteName: 'LoadingNavigator',

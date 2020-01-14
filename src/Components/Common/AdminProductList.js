@@ -25,6 +25,7 @@ export default class AdminProductList extends Component {
                         Id: Id,
                         qty: qty,
                         name: name,
+                        from:'admin'
                     }
                 })}
             >

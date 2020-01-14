@@ -9,4 +9,5 @@ export const forgetpass='#B5D64D';
 export const buttonBGcolor= '#EFAD55';
 export const BBCOLOR = '#DADADA';
 export const LIGHT_WHITE='#F2F2F2';
+export const RED='#EB5757'
 

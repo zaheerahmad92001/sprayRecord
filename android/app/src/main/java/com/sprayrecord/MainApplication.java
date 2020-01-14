@@ -13,6 +13,7 @@ import java.util.List;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage; // <-- Add this line
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage; // <-- Add this line
 import com.imagepicker.ImagePickerPackage; // <-- add this import
+
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =
