@@ -94,7 +94,7 @@ export default class Sidebar extends Component {
                     </Button>
                     <Button transparent
                         style={styles.Button}
-                        onPress={() => this._onPress('PaidAmount')}>
+                        onPress={() => this._onPress('payment')}>
                         <Image
                             style={styles.Icon}
                         //source={require('../assets/images/notification.png')}

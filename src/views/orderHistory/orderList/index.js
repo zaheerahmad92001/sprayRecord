@@ -1,39 +1,20 @@
 import React, { Component } from 'react';
 import {
-    View,
-    Text,
-    Image,
-    Dimensions,
-    TouchableOpacity,
-    StyleSheet,
-    FlatList,
-    Alert,
-    PermissionsAndroid,
-    Keyboard
+    View,Text,Image,Dimensions,
+    TouchableOpacity,FlatList,Alert,
+    PermissionsAndroid,Keyboard
 } from 'react-native';
-import {
-    Container,
-    Content,
-    Icon,
-    Drawer,
-} from 'native-base';
+import {Container,Content,Icon,Drawer} from 'native-base';
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 import _Header from '../../../Components/Common/AppHeader';
 import Autocomplete from 'react-native-autocomplete-input';
-import { TextFont_Search, HeadingFont } from '../../../Constants/fontsize';
-import { TextColor, borderColor, buttonBGcolor } from '../../../Constants/colors';
+import styles from '../orderList/styles';
+import { TextColor, buttonBGcolor } from '../../../Constants/colors';
 import { RFValue } from 'react-native-responsive-fontsize';
 import _OrderList from '../../../Components/Common/orderList';
 import Modalize from 'react-native-modalize';
 import Sidebar from '../../../Components/sidebar/menu';
-import Dialog,
-{
-    DialogTitle,
-    DialogContent,
-    SlideAnimation,
-    DialogFooter,
-    DialogButton,
-} from 'react-native-popup-dialog';
+import Dialog,{DialogTitle,DialogContent,SlideAnimation,DialogFooter,DialogButton,}from 'react-native-popup-dialog';
 import RNFetchBlob from 'rn-fetch-blob';
 const myProduct =
     [
@@ -43,7 +24,6 @@ const myProduct =
         { Id: 4, qty: 24, name: 'Danydar' },
         { Id: 5, qty: 25, name: 'PhasPhoras' },
         { Id: 6, qty: 22, name: 'Jugni' },
-
     ]
 const order_history =
     [
@@ -53,7 +33,6 @@ const order_history =
         { Id: 4, name: 'Danydar', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '4', batchNO: 'XxB12345678BAS',weight:'500',unit:'kg' },
         { Id: 5, name: 'PhasPhoras', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '5', batchNO: 'XxB12345678BAS',weight:'300',unit:'ml' },
         { Id: 6, name: 'Jugni', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '6', batchNO: 'XxB12345678BAS',weight:'200',unit:'kg' },
-
     ]
 
 export async function request_storage_runtime_permission() {
@@ -203,7 +182,6 @@ export default class Orders extends Component {
         return (
             <View style={{ backgroundColor: 'white', borderTopRightRadius: 5, borderTopLeftRadius: 5 }}>
                 <View style={{ marginTop: 15, }}>
-
                     <TouchableOpacity style={styles.buttonStyle}
                         onPress={()=>this._navigateTo('EditOrder')}>
                         <Text style={styles.buttonText}>Edit</Text>
@@ -219,10 +197,7 @@ export default class Orders extends Component {
 
                 </View>
             </View>
-
-        )
-    }
-
+        )}
     renderSheet = () => {
         // console.log('invoice image', this.state.imageUrl)
         // console.log('product data for Edit',this.state.pData.name)
@@ -232,8 +207,7 @@ export default class Orders extends Component {
             <View style={{ backgroundColor: 'white', borderTopRightRadius: 5, borderTopLeftRadius: 5 }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
                     <TouchableOpacity style={{ paddingVertical: 5, paddingLeft: 10, }}
-                        onPress={() => this.downloadImage()}
-                    >
+                        onPress={() => this.downloadImage()}>
                         <View style={{ flexDirection: 'row', paddingVertical: 5, paddingHorizontal: 5 }}>
                             <Text style={styles.invoiceStyle}>Download Image </Text>
                             <Icon
@@ -374,8 +348,7 @@ export default class Orders extends Component {
                                 }}
                                 title="Delete " 
                                 style={{ backgroundColor:buttonBGcolor,color:'white' }} />
-                            }
-                        >
+                            }>
                             <DialogContent
                                 style={{ width: 300 }}>
                                 <Text style={styles.DialogText}>Do you want to Delete ? Action can`t Undo</Text>
@@ -402,91 +375,3 @@ export default class Orders extends Component {
         )
     }
 }
-
-const styles = StyleSheet.create({
-    AutocompleteStyle: {
-        backgroundColor: 'transparent',
-        // borderWidth: 1,
-        // borderColor:'black',
-        //borderRadius: 20,
-        //paddingLeft: 15,
-        //marginHorizontal:5,
-        marginRight: 5,
-        fontSize: TextFont_Search,
-
-    },
-    IconStyle: {
-        width: RFValue(35),
-        height: RFValue(40),
-        fontSize: RFValue(30),
-        marginTop: RFValue(10),
-
-    },
-    SearchView: {
-        width: ScreenWidth * 0.97,
-        //paddingVertical: 2,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        borderRadius: 10,
-        borderWidth: 1,
-        alignSelf: 'center',
-        borderColor: borderColor,
-        paddingHorizontal: 10,
-    },
-    invoiceStyle: {
-        fontStyle: 'italic',
-        fontWeight: 'bold',
-        fontFamily: 'Poppins',
-        fontSize: RFValue(14),
-        color: 'green'
-    },
-    borderBottom: {
-        borderBottomColor: borderColor,
-        borderBottomWidth: 1,
-        width: '95%',
-        justifyContent: "center",
-        alignSelf: 'center',
-    },
-    imgView: {
-        marginTop: 10,
-        marginBottom: 10,
-        paddingHorizontal: 5,
-        paddingVertical: 5,
-        backgroundColor: 'red',
-        alignItems: 'center',
-        alignSelf: 'center',
-        justifyContent: 'center',
-        width: ScreenWidth * 0.98,
-        height: ScreenHeight * 0.8
-
-    },
-    buttonStyle: {
-        backgroundColor: TextColor,
-        marginHorizontal: 20,
-        marginVertical: 7,
-        paddingVertical: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 10
-
-    },
-    buttonText: {
-        color: 'white',
-        fontFamily: 'Poppins',
-        fontStyle: 'normal',
-        fontWeight: 'bold',
-        fontSize: RFValue(18)
-    },
-    DialogText: {
-        fontSize: RFValue(12),
-        fontStyle:'italic',
-        fontWeight:'bold'
-    },
-    DialogOK_CancelButton:{ 
-        color:TextColor,
-        fontSize:RFValue(12),
-        fontStyle:'normal',
-        fontWeight:'bold',
-        fontFamily:'Poppins'
-     }
-})

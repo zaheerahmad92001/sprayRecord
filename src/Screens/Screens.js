@@ -13,7 +13,7 @@ import ProductDetail from '../views/productDetail/ProductDetail';
 import AddNewProduct from '../views/Addproduct/AddNewProduct';
 import NewOrder from '../views/order/NewOrder';
 import DailySale from '../views/sale/DailySale';
-import OrderProducts from '../views/orderHistory/orderProduct';
+import OrderProducts from '../views/orderHistory/Product/orderProduct';
 import SaleHistory from '../views/saleHistory/saleHistory';
 import Orders from '../views/orderHistory/orderList';
 import EditOrder from '../views/EditOrder/EditOrder';
@@ -21,8 +21,11 @@ import EditOrderProduct from '../views/EditOrder/editOrderProduct';
 import Signup from '../views/signUp/Signup';
 import ProductList from '../views/products/productList';
 import EditProduct from '../views/EditProduct/EditProduct';
-import PaidAmount from '../views/payment/paidAmount';
+import payment from '../views/payment/payment';
 import paymentHistory from '../views/payment/paymentHistory'; 
+import EditPayment from '../views/payment/EditPayment';
+import SearchView from '../views/SearchView';
+
 
 const LoadingNavigator = createStackNavigator({
     Splas: Splash,
@@ -36,8 +39,8 @@ const AuthNavigator = createStackNavigator({
     Signup:Signup,
     ForgetPassword:ForgetPassword,
 }, {
-    initialRouteName: 'Login',
-    headerMode: 'none'
+     initialRouteName: 'Login',
+     headerMode: 'none'
 }
 );
 const AppNavigator = createStackNavigator({
@@ -57,12 +60,14 @@ const AppNavigator = createStackNavigator({
     ProductList:ProductList,
     AddNewProduct:AddNewProduct,
     EditProduct:EditProduct,
-    PaidAmount:PaidAmount,
+    payment:payment,
     paymentHistory:paymentHistory,
+    EditPayment:EditPayment,
+    SearchView:SearchView,
 },
     {
-        initialRouteName: 'Landing',
-       // initialRouteName:'AdminHome',
+       // initialRouteName: 'Landing',
+        initialRouteName:'AdminHome',
         headerMode: 'none',
     },
 );

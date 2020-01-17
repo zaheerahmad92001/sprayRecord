@@ -13,6 +13,8 @@ import java.util.List;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage; // <-- Add this line
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage; // <-- Add this line
 import com.imagepicker.ImagePickerPackage; // <-- add this import
+import com.rnnestedscrollview.RNNestedScrollViewPackage;
+import com.rncollapsingtoolbar.RNCollapsingToolbarPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -33,6 +35,8 @@ public class MainApplication extends Application implements ReactApplication {
             packages.add(new RNFirebaseAuthPackage()); // <-- Add this line
             packages.add(new RNFirebaseFirestorePackage()); // <-- Add this line
             new ImagePickerPackage(); // <-- add this line
+            new RNCollapsingToolbarPackage();
+            new RNNestedScrollViewPackage();
             return packages;
         }
 

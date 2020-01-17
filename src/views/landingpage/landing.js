@@ -9,13 +9,12 @@ import {
     SafeAreaView
 } from 'react-native';
 import { Icon } from 'native-base';
-import { AdmingIcon, HeadingFont, TextFont } from '../../Constants/fontsize';
-import { BGColor } from '../../Constants/colors';
-const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
+import { AdmingIcon } from '../../Constants/fontsize';
+import styles from '../landingpage/styles';
 export default class Landing extends Component {
-    
-    _OnPress=(rootName)=>{
-       this.props.navigation.navigate(rootName)
+
+    _OnPress = (rootName) => {
+        this.props.navigation.navigate(rootName)
     }
 
     render() {
@@ -23,15 +22,15 @@ export default class Landing extends Component {
             <SafeAreaView style={styles.container}>
                 <View style={styles.logoStyle}>
                     <Image
-                        // source={require('../assets/image/squadly_logo.png')}
-                         />
+                    // source={require('../assets/image/squadly_logo.png')}
+                    />
                 </View>
 
                 <View style={styles.buttonView}>
                     <TouchableOpacity
                         style={{ marginBottom: 10 }}
-                        onPress = {()=>this._OnPress('AuthNavigator')}
-                        >
+                        onPress={() => this._OnPress('AuthNavigator')}
+                    >
                         <View style={{ flexDirection: 'row', }}>
                             <View style={styles.buttonstyle} >
                                 <Icon
@@ -47,9 +46,9 @@ export default class Landing extends Component {
 
                     <TouchableOpacity
                         style={{ marginTop: 10 }}
-                        onPress={()=> this._OnPress('FoHome')}
+                        onPress={() => this._OnPress('FoHome')}
                     >
-                        <View style={{flexDirection: 'row', }}>
+                        <View style={{ flexDirection: 'row', }}>
                             <View style={styles.buttonstyle} >
                                 <Icon
                                     style={{ fontSize: AdmingIcon, }}
@@ -69,34 +68,3 @@ export default class Landing extends Component {
         )
     }
 }
-const styles = StyleSheet.create({
-    container: {
-        height: ScreenHeight * 1,
-        backgroundColor:BGColor,
-    },
-    logoStyle: {
-        flex: 0.45,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    buttonView: {
-        flex: 0.55,
-    },
-    buttonstyle: {
-        flex: 0.4,
-        paddingVertical: 10,
-        justifyContent: 'center',
-        alignItems: 'flex-end'
-
-    },
-    AdminTextView: {
-        justifyContent: "center",
-        paddingLeft: 10,
-        flex: 0.6
-    },
-    AdminText:{ 
-        fontWeight: 'bold',
-         fontSize: TextFont, 
-
-}
-})

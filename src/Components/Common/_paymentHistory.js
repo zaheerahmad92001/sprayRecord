@@ -11,45 +11,54 @@ const PaymentList = (props) => {
     return (
 
         <Card noShadow >
-            {props.item.payment ?
-                <TouchableOpacity style={{ backgroundColor: 'green' }} >
+            {props.item.type === 'payment' ?
+                <TouchableOpacity style={{ backgroundColor: 'green' }}
+                    onLongPress={props.callBottomSheet}
+                >
                     <View style={styles.contaner} >
                         <Text style={[styles.textStyle]}>Current balance</Text>
-            <Text style={[styles.textStyle]}>{props.item.currentbalance}</Text>
+                        <Text style={[styles.textStyle]}>{props.item.currentbalance}</Text>
                     </View>
                     <View style={styles.contaner} >
                         <Text style={[styles.textStyle]}>Paid amount</Text>
-            <Text style={[styles.textStyle]}>{props.item.payment}</Text>
+                        <Text style={[styles.textStyle]}>{props.item.price}</Text>
                     </View>
                     <View style={[styles.borderBottom]}></View>
                     <View style={[styles.contaner]} >
                         <Text style={[styles.textStyle, { fontWeight: 'bold' }]}>Total balance</Text>
-            <Text style={[styles.textStyle, { fontWeight: 'bold' }]}>{props.item.total}</Text>
+                        <Text style={[styles.textStyle, { fontWeight: 'bold' }]}>{props.item.total}</Text>
                     </View>
                     <View style={styles.contaner} >
                         <Text style={styles.textStyle}>Date</Text>
-            <Text style={styles.textStyle}>{props.item.date}</Text>
+                        <Text style={styles.textStyle}>{props.item.date}</Text>
                     </View>
                 </TouchableOpacity> :
 
-                <TouchableOpacity style={{backgroundColor:'#BBBBBB'}}>
+                <TouchableOpacity style={{ backgroundColor: '#BBBBBB' }}
+                    onLongPress={props.callBottomSheet}
+                >
                     <View style={styles.contaner} >
                         <Text style={styles.textStyle}>Current balance</Text>
-            <Text style={styles.textStyle}>{props.item.currentbalance}</Text>
+                        <Text style={styles.textStyle}>{props.item.currentbalance}</Text>
                     </View>
                     <View style={styles.contaner} >
                         <Text style={styles.textStyle}>Order price</Text>
-            <Text style={styles.textStyle}>{props.item.orderPrice}</Text>
+                        <Text style={styles.textStyle}>{props.item.price}</Text>
                     </View>
-                    <View style={[styles.borderBottom,{borderBottomColor:'white'}]}></View>
+                    <View style={[styles.borderBottom, { borderBottomColor: 'white' }]}></View>
                     <View style={styles.contaner} >
                         <Text style={[styles.textStyle, { fontWeight: 'bold' }]}>Total balance</Text>
-            <Text style={[styles.textStyle, { fontWeight: 'bold' }]}>{props.item.total}</Text>
+                        <Text style={[styles.textStyle, { fontWeight: 'bold' }]}>{props.item.total}</Text>
+                    </View>
+                    <View style={styles.contaner} >
+                        <Text style={styles.textStyle}>Batch no</Text>
+                        <Text style={styles.textStyle}>{props.item.batch_no}</Text>
                     </View>
                     <View style={styles.contaner} >
                         <Text style={styles.textStyle}>Date</Text>
-            <Text style={styles.textStyle}>{props.item.date}</Text>
+                        <Text style={styles.textStyle}>{props.item.date}</Text>
                     </View>
+
                 </TouchableOpacity>
 
             }

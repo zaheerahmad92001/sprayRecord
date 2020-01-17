@@ -2,12 +2,9 @@ import React, { Component } from 'react';
 import {
   View,
   Text,
-  Dimensions,
-  StyleSheet,
   Image,
   FlatList,
   TouchableOpacity,
-  SafeAreaView,
   Keyboard
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
@@ -16,12 +13,10 @@ import { Drawer, Container, Content ,Icon } from 'native-base';
 import Sidebar from '../../Components/sidebar/menu';
 import Text_Input from '../../Components/Common/inputField';
 import _Button from '../../Components/Common/_Button';
-import { CountColor, RED, TextColor, borderColor, buttonBGcolor } from '../../Constants/colors';
-import { TextFont_Search, HeadingFont } from '../../Constants/fontsize';
 import { RFValue } from 'react-native-responsive-fontsize';
 import _DisabledButton from '../../Components/Common/DisabledButton';
 import DocumentPicker from 'react-native-document-picker';
-const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
+import styles from '../EditProduct/styles';
 
 export default class EditProduct extends Component {
   constructor(props) {
@@ -204,53 +199,3 @@ export default class EditProduct extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    height: ScreenHeight,
-    backgroundColor: 'white'
-  },
-  avatarContainer: {
-    borderColor: '#9B9B9B',
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: RFValue(180),
-    height: RFValue(180),
-    borderRadius: RFValue(90)
-  },
-  avatar: {
-    borderRadius: RFValue(90),
-    width: RFValue(180),
-    height: RFValue(180),
-  },
-  Heading: {
-    paddingHorizontal: 5,
-    color: TextColor,
-    fontSize: RFValue(14),
-    fontFamily: 'Poppins',
-    fontWeight: '500',
-  },
-  errorText: {
-    marginTop: 10,
-    color: RED,
-    fontFamily: 'Poppins',
-    fontSize: RFValue(14),
-    fontWeight: '500',
-    fontStyle: 'normal',
-  },
-  buttonStyle: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    backgroundColor: '#DDDDDD',
-    paddingLeft: 10,
-    padding: 5,
-    marginHorizontal: 10,
-  },
-  
-  Imagepickerbutton: {
-    marginTop: 10,
-    marginHorizontal: 20,
-    backgroundColor: buttonBGcolor
-  }
-});

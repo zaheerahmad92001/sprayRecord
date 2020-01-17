@@ -9,13 +9,13 @@ import {
     ScrollView,
     Dimensions,
 } from 'react-native';
-import { BGColor, RED, TextColor, forgetpass, buttonBGcolor } from '../../Constants/colors'
 import _Header from '../../Components/Common/AppHeader';
 import Text_Input from '../../Components/Common/inputField';
 import _Button from '../../Components/Common/_Button';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { Validate, ValidateEmail } from '../../RandFunction';
+import {ValidateEmail } from '../../RandFunction';
 import { Container, Content } from 'native-base';
+import styles from '../forgetpassword/styles';
 const { width: ScreenWidth ,height:ScreenHeight } = Dimensions.get('window');
 export default class ForgetPassword extends Component {
     constructor(props) {
@@ -50,11 +50,11 @@ export default class ForgetPassword extends Component {
                 <Content  contentContainerStyle={styles.container} showsVerticalScrollIndicator={false} >
                     {/* <StatusBar backgroundColor={COLOR_STATUSBAR}></StatusBar> */}
                     {/* <View style={{ flex: 1 }}> */}
-                        <View style={{ height:ScreenHeight*0.3, alignItems: 'flex-start', justifyContent: 'flex-end',paddingLeft:15 }}>
+                        <View style={styles.midContainer}>
                             <Text style={styles.companyName}>Forget your Password</Text>
                         </View>
 
-                        <View style={{height:ScreenHeight*0.5, marginHorizontal: 10, }}>
+                        <View style={styles.Content}>
                             <Text style={[styles.Heading, { marginTop: 15 }]}>EMAIL</Text>
                                 
                             <View style={{ marginBottom: 10 }}>
@@ -92,58 +92,5 @@ export default class ForgetPassword extends Component {
         )
     }
 }
-const styles = StyleSheet.create({
-    container:{
-        //height:ScreenHeight*1,    
-        //flex:1,  
-        backgroundColor:'#FFFFFF'
-    },
-    Heading:{
-        
-        color:TextColor,
-        fontSize:RFValue(12),
-        fontFamily:'Poppins',
-        fontWeight:'700',
-        marginLeft:5,
-        marginBottom:10
-        
-    },
-    companyName:{
-       
-        color:'grey',
-        fontSize:RFValue(16),
-        fontFamily:'Poppins',
-        fontWeight:'bold',
-       
-        
-    },
-    Forget:{
-        alignSelf:'center',
-        paddingVertical:5,
-        marginTop:20,
-    },
-    ForgetPassword:{
-        color:TextColor,
-        fontSize:RFValue(14),
-        fontFamily:'Poppins',
-        fontStyle:'normal',
-        fontWeight:'600'
-       },
-       SignUp:{
-        alignSelf:'center',
-        paddingVertical:5,
-        marginTop:15,
-        flexDirection:"row",
-       },
 
-       errorText: {
-        marginTop:5,
-        marginBottom:10,
-        color: RED,
-        fontFamily: 'Poppins',
-        fontSize: RFValue(14),
-        fontWeight: '500',
-        fontStyle: 'normal',
-      },
-})
 

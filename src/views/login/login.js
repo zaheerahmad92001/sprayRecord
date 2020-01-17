@@ -3,20 +3,16 @@ import {
     View,
     Text,
     Image,
-    StyleSheet,
-    Dimensions,
     ScrollView,
 } from 'react-native';
-const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 import Text_Input from '../../Components/Common/inputField';
-import { BGColor, CountColor, TextColor, forgetpass, buttonBGcolor,RED } from '../../Constants/colors'
+import {buttonBGcolor} from '../../Constants/colors'
 import { Item, Input, Icon, Button, Form } from 'native-base';
 import _Button from '../../Components/Common/_Button';
 import _Header from '../../Components/Common/AppHeader';
-import { RFValue } from 'react-native-responsive-fontsize';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import{ValidateEmail} from '../../RandFunction';
-
+import styles from '../login/styles';
 export default class Login extends Component {
     constructor(props) {
         super(props);
@@ -48,7 +44,6 @@ export default class Login extends Component {
     render() {
         const {errorMsg} = this.state;
         return (
-
             <ScrollView>
                 <View style={styles.container} >
                     <View style={styles.subcontainer}>
@@ -119,77 +114,6 @@ export default class Login extends Component {
                     </View>
                 </View>
             </ScrollView>
-
         )
     }
-};
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: 'white',
-        height: ScreenHeight,
-    },
-    subcontainer: {
-        flex: 1,
-    },
-    content: {
-        flex: 0.65,
-        paddingHorizontal: 15,
-    },
-    Input: {
-        paddingVertical: 10,
-    },
-    ButtonView: {
-        marginTop: 10,
-
-    },
-    item: {
-        backgroundColor: '#FFFFFF',
-        paddingHorizontal: 10,
-        borderTopLeftRadius: 10,
-        borderBottomRightRadius: 10,
-        borderBottomWidth: 1,
-        borderTopWidth: 1,
-        borderLeftWidth: 1,
-        borderRightWidth: 1
-
-    },
-    logoStyle: {
-        flex: 0.35,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    IconStyle: {
-        fontSize: RFValue(25),
-        color: CountColor
-    },
-    Forget: {
-        alignSelf: 'center',
-        paddingVertical: 5,
-        marginTop: 10,
-    },
-    ForgetPassword: {
-        color: TextColor,
-        fontSize: RFValue(14),
-        fontFamily: 'Poppins',
-        fontStyle: 'normal',
-        fontWeight: '600'
-    },
-    Heading: {
-        paddingHorizontal: 5,
-        color: TextColor,
-        fontSize: RFValue(14),
-        fontFamily: 'Poppins',
-        fontWeight: '500',
-
-    },
-    errorText: {
-       // marginBottom: 10,
-        color: RED,
-        fontFamily: 'Poppins',
-        fontSize: RFValue(14),
-        fontWeight: '500',
-        fontStyle: 'normal',
-        marginLeft:15,
-    },
-
-})
+}

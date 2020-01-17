@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  SafeAreaView,
   Picker,
   Keyboard
 } from 'react-native';
@@ -16,13 +15,14 @@ import Text_Input from '../../Components/Common/inputField';
 import Autocomplete from 'react-native-autocomplete-input';
 import { Container, Content, Drawer, Icon } from 'native-base';
 import Sidebar from '../../Components/sidebar/menu';
-import { TextFont_Search, HeadingFont } from '../../Constants/fontsize';
 import { RFValue } from 'react-native-responsive-fontsize';
 import DatePicker from 'react-native-datepicker';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import _Button from '../../Components/Common/_Button';
-import { CountColor, RED, TextColor, borderColor, buttonBGcolor } from '../../Constants/colors';
-import { Validate, ValidateNumber, ValidateDecimalNumber, ValidateBatchNo } from '../../RandFunction';
+import styles from '../order/styles';
+import { buttonBGcolor } from '../../Constants/colors';
+import { Validate, ValidateNumber, ValidateDecimalNumber } from '../../RandFunction';
+const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 import List from '../../views/order/list';
 import Dialog,
 {
@@ -32,9 +32,6 @@ import Dialog,
   DialogFooter,
   DialogButton,
 } from 'react-native-popup-dialog';
-
-const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
-
 const myProduct =
   [
     { Id: 1, qty: 22, name: 'abc' },
@@ -49,7 +46,7 @@ export default class NewOrder extends Component {
     super(props);
     this.state = {
       SearchValue: '',
-      qty: '', batch_no: '', weight: '', weightUnit: '', orderPrice: '',
+      qty: '', batch_no: '', weight: '', weightUnit: '', price: '',
       // date: currentDate,
       avatarSource: null,
       matchedproduct: myProduct,
@@ -144,8 +141,8 @@ export default class NewOrder extends Component {
   }
 
   render1 = () => {
-    const { date, batch_no, orderPrice } = this.state;
-    if (ValidateNumber(orderPrice)) {
+    const { date, batch_no, price } = this.state;
+    if (ValidateNumber(price)) {
       if (batch_no && batch_no.length) {
         this.setState({ nextStep: 1 })
       } else {
@@ -185,7 +182,7 @@ export default class NewOrder extends Component {
     this.CallDialogBox(keyVal)
   }
   saveInfo = () => {
-    const { SearchValue, date, qty, batch_no, weight, weightUnit, orderPrice, productArray } = this.state;
+    const { SearchValue, date, qty, batch_no, weight, weightUnit, price, productArray } = this.state;
     console.log('array length', productArray.length)
     let productWeight = weight + weightUnit;
     if (productArray.length >= 1) {
@@ -193,7 +190,7 @@ export default class NewOrder extends Component {
         productArray,
         batch_no,
         date,
-        orderPrice
+        price
       }
       console.log('data', data)
       alert('ok')
@@ -201,7 +198,6 @@ export default class NewOrder extends Component {
       this.setState({ errorMsg2: 'Enter Product first' })
     }
   }
-
 
   render() {
     let products = this.state.productArray.map((val, key) => {
@@ -213,7 +209,7 @@ export default class NewOrder extends Component {
       ></List>
     })
     console.log('new array', this.state.productArray)
-    const { SearchValue, date, errorMsg, errorMsg2, orderPrice, nextStep } = this.state;
+    const { SearchValue, date, errorMsg, errorMsg2, price, nextStep } = this.state;
     const matchedproduct = this.findProduct(SearchValue);
     const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
     return (
@@ -249,8 +245,8 @@ export default class NewOrder extends Component {
                   <Text style={styles.RsText} >Rs.</Text>
                   <Text_Input
                     styles={{ flex: 1, borderLeftWidth: 0, borderTopLeftRadius: 0, paddingLeft: 3 }}
-                    onChangeText={(value) => this.setState({ orderPrice: value, errorMsg: '' })}
-                    value={orderPrice}
+                    onChangeText={(value) => this.setState({ price: value, errorMsg: '' })}
+                    value={price}
                     keyboardType={'number-pad'}
                   />
                 </View>
@@ -419,119 +415,3 @@ export default class NewOrder extends Component {
     )
   }
 };
-const styles = StyleSheet.create({
-  container: {
-    height: ScreenHeight
-  },
-  content: {
-    paddingHorizontal: 10,
-    flex: 1,
-
-  },
-  AutocompleteStyle: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    // borderRadius: 10,
-    borderBottomRightRadius: 15,
-    borderTopLeftRadius: 15,
-    borderColor: borderColor,
-    paddingHorizontal: 15,
-    //color:'green'
-    // marginHorizontal: 10,
-
-
-  },
-  Heading: {
-    paddingHorizontal: 5,
-    color: TextColor,
-    fontSize: RFValue(14),
-    fontFamily: 'Poppins',
-    fontWeight: '500',
-
-  },
-  Input: {
-    paddingVertical: 10
-  },
-
-  avatarContainer: {
-    borderColor: '#9B9B9B',
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: RFValue(180),
-    height: RFValue(180),
-    borderRadius: RFValue(90)
-  },
-  avatar: {
-    borderRadius: RFValue(90),
-    width: RFValue(180),
-    height: RFValue(180),
-  },
-  startDInput: {
-    fontFamily: 'Poppins',
-    fontSize: RFValue(16),
-    width: '100%',
-    color: 'black',
-    fontSize: RFValue(16),
-    backgroundColor: 'white',
-    // paddingTop:10,
-    // paddingLeft:10,
-    // marginBottom:10,
-  },
-  startDContainer: {
-    backgroundColor: 'white',
-    borderColor: borderColor,
-    borderWidth: 1,
-    borderTopLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 12,
-    marginHorizontal:0,
-    marginBottom: 5
-  },
-  errorText: {
-    //marginBottom: 10,
-    color: RED,
-    fontFamily: 'Poppins',
-    fontSize: RFValue(14),
-    fontWeight: '500',
-    fontStyle: 'normal',
-  },
-  RsText: {
-    borderColor: borderColor,
-    borderWidth: 1,
-    paddingVertical: 15,
-    paddingLeft: 15,
-    borderTopLeftRadius: 10,
-    borderRightWidth: 0,
-    color: '#979797',
-    alignSelf: 'center'
-  },
-  Nextbutton: {
-    flexDirection: 'row',
-    width: RFValue(40),
-    height: RFValue(40),
-    borderRadius: RFValue(40 / 2),
-    backgroundColor: buttonBGcolor,
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: 10,
-    marginTop: 5
-
-  },
-  DialogText: {
-    fontSize: RFValue(12),
-    fontStyle: 'italic',
-    fontWeight: 'bold'
-  },
-  DialogOK_CancelButton: {
-    color: TextColor,
-    fontSize: RFValue(12),
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    fontFamily: 'Poppins'
-  }
-
-})
