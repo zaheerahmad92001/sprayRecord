@@ -1,22 +1,11 @@
 import { StyleSheet,Dimensions } from "react-native";
-import { CountColor, buttonBGcolor, TextColor, borderColor, RED, BBCOLOR } from '../../../Constants/colors';
-import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import {TextColor, borderColor, BBCOLOR } from '../../../Constants/colors';
 import { RFValue } from 'react-native-responsive-fontsize';
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
-const HEADER_HEIGHT = 200
 export default StyleSheet.create({
-    
     appbar: {
-        height: HEADER_HEIGHT,
+        height: ScreenHeight*0.3,
         backgroundColor: 'white',
-    },
-
-    toolbar: {
-        height: 56,
-    },
-
-    statusBar: {
-        height: 25,
     },
     content: {
         // marginHorizontal: 3,
@@ -34,7 +23,7 @@ export default StyleSheet.create({
     startDInput: {
         fontFamily: 'Poppins',
         fontSize: RFValue(16),
-        fontWeight: 'bold',
+        fontWeight: 'normal',
         color: TextColor,
         marginLeft: 10,
     },
@@ -58,7 +47,7 @@ export default StyleSheet.create({
     SearchView: {
         // backgroundColor: 'red',
         flexDirection: 'row',
-        marginHorizontal: 10,
+        marginHorizontal: 7,
         justifyContent: 'space-between',
         borderRadius: 10,
         borderWidth: 1,

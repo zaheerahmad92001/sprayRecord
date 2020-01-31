@@ -9,14 +9,7 @@ import _BottomSheet from '../../Components/Common/BottomSheet';
 import PaymentList from '../../Components/Common/_paymentHistory';
 import Modalize from 'react-native-modalize';
 import styles from '../SearchView/styles';
-import Dialog,
-{
-    DialogTitle,
-    DialogContent,
-    SlideAnimation,
-    DialogFooter,
-    DialogButton,
-} from 'react-native-popup-dialog';
+import Dialog,{DialogTitle,DialogContent,SlideAnimation,DialogFooter,DialogButton} from 'react-native-popup-dialog';
 import { buttonBGcolor, TextColor } from '../../Constants/colors';
 const paymentList =
     [

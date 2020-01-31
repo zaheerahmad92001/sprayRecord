@@ -11,6 +11,7 @@ import { TextColor, buttonBGcolor } from '../../../Constants/colors';
 import { RFValue } from 'react-native-responsive-fontsize';
 import _OrderDetail from '../../../Components/Common/orderHistory';
 import Modalize from 'react-native-modalize';
+import _BottomSheet from '../../../Components/Common/BottomSheet';
 import styles from '../../orderHistory/Product/styles';
 import Dialog, { DialogTitle, DialogContent, SlideAnimation, DialogFooter, DialogButton, } from 'react-native-popup-dialog';
 const myProduct =
@@ -126,24 +127,29 @@ export default class OrderProducts extends Component {
     }
     renderBottomSheet = () => {
         return (
-            <View style={{ backgroundColor: 'white', borderTopRightRadius: 5, borderTopLeftRadius: 5 }}>
-                <View style={{ marginTop: 15, }}>
+            <_BottomSheet
+            _navigateTo={() => this._navigateTo('EditOrderProduct')}
+            CallDialogBox={() => this.CallDialogBox()}
+            CancelShee={() => this.onCloseSheet()}
+            />
+            // <View style={{ backgroundColor: 'white', borderTopRightRadius: 5, borderTopLeftRadius: 5 }}>
+            //     <View style={{ marginTop: 15, }}>
 
-                    <TouchableOpacity style={styles.buttonStyle}
-                        onPress={() => this._navigateTo('EditOrderProduct')}>
-                        <Text style={styles.buttonText}>Edit</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle}
-                        onPress={() => this.CallDialogBox()}>
-                        <Text style={styles.buttonText}>Delete</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.buttonStyle, { backgroundColor: 'white', paddingVertical: 0, paddingBottom: 7 }]}
-                        onPress={() => this.onCloseSheet()}>
-                        <Text style={[styles.buttonText, { color: TextColor, fontSize: RFValue(14) }]}>Cancel</Text>
-                    </TouchableOpacity>
+            //         <TouchableOpacity style={styles.buttonStyle}
+            //             onPress={() => this._navigateTo('EditOrderProduct')}>
+            //             <Text style={styles.buttonText}>Edit</Text>
+            //         </TouchableOpacity>
+            //         <TouchableOpacity style={styles.buttonStyle}
+            //             onPress={() => this.CallDialogBox()}>
+            //             <Text style={styles.buttonText}>Delete</Text>
+            //         </TouchableOpacity>
+            //         <TouchableOpacity style={[styles.buttonStyle, { backgroundColor: 'white', paddingVertical: 0, paddingBottom: 7 }]}
+            //             onPress={() => this.onCloseSheet()}>
+            //             <Text style={[styles.buttonText, { color: TextColor, fontSize: RFValue(14) }]}>Cancel</Text>
+            //         </TouchableOpacity>
 
-                </View>
-            </View>
+            //     </View>
+            // </View>
         )
     }
     render() {

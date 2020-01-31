@@ -6,6 +6,7 @@ import {
     Dimensions,
     StyleSheet,
     Image,
+    ImageBackground,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { TextColor } from '../Constants/colors';
@@ -20,19 +21,21 @@ export default class Splash extends Component {
     componentDidMount() {
         setTimeout(() => {
             this.props.navigation.navigate('AppNavigator')
+           //this.props.navigation.navigate('LandingNavigator')
         }, 2000)
     }
 
     render() {
         return (
-            <SafeAreaView style={styles.Container}>
-                <View style={{alignItems:'center',justifyContent:'center'}}>
-                <Text style={{fontSize:RFValue(25),color:TextColor,fontStyle:'normal',fontWeight:'bold'}}>AL Yousaf Spray Center</Text> 
-                </View>
-                {/* <Image
-                   // source={require('../assets/image/squadly_logo.png')} 
-                    /> */}
-            </SafeAreaView>
+            // <SafeAreaView style={styles.Container}>
+            //     {/* <View style={{alignItems:'center',justifyContent:'center'}}>
+            //     <Text style={{fontSize:RFValue(25),color:TextColor,fontStyle:'normal',fontWeight:'bold'}}>AL Yousaf Spray Center</Text> 
+            //     </View> */}
+                <ImageBackground
+                    source={require('../assets/image/Splash.jpg')} 
+                    style={{width:screenWidth, height:screenHeight}}
+                    />
+            // </SafeAreaView>
         )
     }
 }

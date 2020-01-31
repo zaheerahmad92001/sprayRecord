@@ -1,32 +1,17 @@
 import React, { Component } from 'react';
-import {
-    View,
-    StyleSheet,
-    Dimensions,
-    FlatList,
-    Text,
-    TouchableOpacity,
-    Keyboard,
-} from 'react-native';
+import {View,FlatList,Text,TouchableOpacity,Keyboard} from 'react-native';
 import _Header from '../../Components/Common/AppHeader';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { TextFont_Search, HeadingFont } from '../../Constants/fontsize';
 import Autocomplete from 'react-native-autocomplete-input';
-import { Container, Content, Drawer, Icon } from 'native-base';
+import { Container,Drawer, Icon } from 'native-base';
 import Sidebar from '../../Components/sidebar/menu';
-import { borderColor, TextColor, buttonBGcolor } from '../../Constants/colors'
+import { TextColor, buttonBGcolor } from '../../Constants/colors'
 import _Prouduct from '../../Components/Common/_ProductList';
 import _Prouducts from '../../Components/Common/_ProductList';
 import Modalize from 'react-native-modalize';
-import Dialog,
-{
-    DialogTitle,
-    DialogContent,
-    SlideAnimation,
-    DialogFooter,
-    DialogButton,
-} from 'react-native-popup-dialog';
-const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
+import styles from '../products/styles';
+import _BottomSheet from '../../Components/Common/BottomSheet';
+import Dialog,{ DialogTitle,DialogContent,SlideAnimation,DialogFooter,DialogButton,} from 'react-native-popup-dialog';
 const myProduct =
     [
         { Id: 1, qty: 22, name: 'Tryezophas' },
@@ -48,13 +33,10 @@ export default class ProductList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            ProductList: myProduct,
-            SearchText: '',
+            ProductList: myProduct,SearchText: '',
             matchedproduct: myProduct,
             showBottomSheet: false,
-            visible: false,
-            pId: '',
-            pData: '',
+            visible: false,pId: '',pData: '',
         }
     }
     openDrawer =  () => {
@@ -107,30 +89,14 @@ export default class ProductList extends Component {
         });
         scope.onOpenSheet()
     }
-
     renderBottomSheet = () => {
         return (
-            <View style={{ backgroundColor: 'white', borderTopRightRadius: 5, borderTopLeftRadius: 5 }}>
-                <View style={{ marginTop: 15, }}>
-
-                    <TouchableOpacity style={styles.buttonStyle}
-                        onPress={() => this._navigateTo('EditProduct')}>
-                        <Text style={styles.buttonText}>Edit</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle}
-                        onPress={() => this.CallDialogBox()}>
-                        <Text style={styles.buttonText}>Delete</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.buttonStyle, { backgroundColor: 'white', paddingVertical: 0, paddingBottom: 7 }]}
-                        onPress={() => this.onCloseSheet()}>
-                        <Text style={[styles.buttonText, { color: TextColor, fontSize: RFValue(14) }]}>Cancel</Text>
-                    </TouchableOpacity>
-
-                </View>
-            </View>
-
-        )
-    }
+               <_BottomSheet
+               _navigateTo ={()=>this._navigateTo('EditProduct')}
+               CallDialogBox={() => this.CallDialogBox()}
+               CancelSheet={() => this.onCloseSheet()}
+               />
+               )}
 
     renderProductList = ({ item }) => {
         return (
@@ -183,8 +149,7 @@ export default class ProductList extends Component {
                         <Icon
                             style={styles.IconStyle}
                             name={'ios-search'}
-                            type={'Ionicons'}
-                        />
+                            type={'Ionicons'}/>
                     </View>
                     <View style={{ paddingHorizontal: 7, flex: 1, marginBottom: 5 }}>
                         <FlatList
@@ -193,8 +158,7 @@ export default class ProductList extends Component {
                             keyExtractor={(item) => item.Id}
                             renderItem={this.renderProductList}
                             numColumns={1}
-                            horizontal={false}
-                        />
+                            horizontal={false}/>
                         <Dialog
                             visible={this.state.visible}
                             onTouchOutside={() => {
@@ -228,8 +192,7 @@ export default class ProductList extends Component {
                                     }}
                                     title="Delete "
                                     style={{ backgroundColor: buttonBGcolor, color: 'white' }} />
-                            }
-                        >
+                            }>
                             <DialogContent
                                 style={{ width: 300 }}>
                                 <Text style={styles.DialogText}>Do you want to Delete ? Action can`t Undo</Text>
@@ -250,63 +213,3 @@ export default class ProductList extends Component {
         )
     }
 }
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: 'white'
-
-    },
-    AutocompleteStyle: {
-        backgroundColor: 'transparent',
-        marginRight: 5,
-        fontSize: TextFont_Search,
-
-    },
-    IconStyle: {
-        width: RFValue(35),
-        height: RFValue(40),
-        fontSize: RFValue(30),
-        marginTop: RFValue(10),
-
-    },
-    SearchView: {
-        width: ScreenWidth * 0.97,
-        // paddingVertical: 2,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        borderRadius: 10,
-        borderWidth: 1,
-        alignSelf: 'center',
-        borderColor: borderColor,
-        paddingHorizontal: 10,
-    },
-    buttonStyle: {
-        backgroundColor: TextColor,
-        marginHorizontal: 20,
-        marginVertical: 7,
-        paddingVertical: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 10
-
-    },
-    buttonText: {
-        color: 'white',
-        fontFamily: 'Poppins',
-        fontStyle: 'normal',
-        fontWeight: 'bold',
-        fontSize: RFValue(18)
-    },
-    DialogText: {
-        fontSize: RFValue(12),
-        fontStyle: 'italic',
-        fontWeight: 'bold'
-    },
-    DialogOK_CancelButton: {
-        color: TextColor,
-        fontSize: RFValue(12),
-        fontStyle: 'normal',
-        fontWeight: 'bold',
-        fontFamily: 'Poppins'
-    }
-
-})

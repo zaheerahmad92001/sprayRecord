@@ -14,6 +14,9 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import _OrderList from '../../../Components/Common/orderList';
 import Modalize from 'react-native-modalize';
 import Sidebar from '../../../Components/sidebar/menu';
+import _BottomSheet from '../../../Components/Common/BottomSheet';
+import{convertDateToString}from '../../../RandFunction';
+import DateTimePicker from "react-native-modal-datetime-picker";
 import Dialog,{DialogTitle,DialogContent,SlideAnimation,DialogFooter,DialogButton,}from 'react-native-popup-dialog';
 import RNFetchBlob from 'rn-fetch-blob';
 const myProduct =
@@ -45,8 +48,8 @@ export async function request_storage_runtime_permission() {
         }
       )
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-
-        Alert.alert("Storage Permission Granted.");
+            
+        //Alert.alert("Storage Permission Granted.");
       }
       else {
 
@@ -61,13 +64,12 @@ export async function request_storage_runtime_permission() {
 export default class Orders extends Component {
     modal = React.createRef();
     bottomSheet = React.createRef();
-
     constructor(props) {
         super(props);
         this.state = {
             //Product: myProduct,
-            SearchValue: '',
-            visible: false,
+            SearchValue: '',isDatePickerVisible: false,
+            visible: false,date: '',
             matchedproduct: myProduct,
             History: order_history,
             showModal: false,
@@ -77,13 +79,9 @@ export default class Orders extends Component {
             showSheet: false,
         }
     }
-
     async componentDidMount() {
-
         await request_storage_runtime_permission()
-
       }
-
     openDrawer = () => {
         Keyboard.dismiss();
         setTimeout(() => {
@@ -103,15 +101,28 @@ export default class Orders extends Component {
        // alert(item.Id)
        this.props.navigation.navigate('OrderProducts')
     }
-    findProduct(query) {
-        if (query === '') {
-            return [];
-        }
+    // findProduct(query) {
+    //     if (query === '') {
+    //         return [];
+    //     }
 
-        const { matchedproduct } = this.state;
-        const regex = new RegExp([query.trim()], 'i');
-        return matchedproduct.filter((product) => product.name.search(regex)>= 0);
-    }
+    //     const { matchedproduct } = this.state;
+    //     const regex = new RegExp([query.trim()], 'i');
+    //     return matchedproduct.filter((product) => product.name.search(regex)>= 0);
+    // }
+    showDateTimePicker = () => {
+        this.setState({ isDateTimePickerVisible: true });
+    };
+    handleDatePicked = date => {
+        //let dateText = this.convertDateTimeToString(date)
+        date=convertDateToString(date)
+        this.setState({ date });
+        this.hideDateTimePicker();
+
+    };
+    hideDateTimePicker = () => {
+        this.setState({ isDateTimePickerVisible: false });
+    };
     renderOrderList = ({ item }) => {
         return (
             < _OrderList
@@ -180,23 +191,11 @@ export default class Orders extends Component {
     }
     renderBottomSheet = () => {
         return (
-            <View style={{ backgroundColor: 'white', borderTopRightRadius: 5, borderTopLeftRadius: 5 }}>
-                <View style={{ marginTop: 15, }}>
-                    <TouchableOpacity style={styles.buttonStyle}
-                        onPress={()=>this._navigateTo('EditOrder')}>
-                        <Text style={styles.buttonText}>Edit</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle}
-                      onPress={()=>this.CallDialogBox()}>
-                    <Text style={styles.buttonText}>Delete</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.buttonStyle, { backgroundColor: 'white', paddingVertical: 0, paddingBottom: 7 }]}
-                        onPress={() => this.onCloseSheet()}>
-                        <Text style={[styles.buttonText, { color: TextColor, fontSize: RFValue(14) }]}>Cancel</Text>
-                    </TouchableOpacity>
-
-                </View>
-            </View>
+            <_BottomSheet
+            _navigateTo={()=>this._navigateTo('EditOrder')}
+            CallDialogBox={()=>this.CallDialogBox()}
+            CancelSheet={() => this.onCloseSheet()}
+            />
         )}
     renderSheet = () => {
         // console.log('invoice image', this.state.imageUrl)
@@ -265,10 +264,10 @@ export default class Orders extends Component {
     }
 
     render() {
-        const { Product, History } = this.state;
+        const { Product, History,date } = this.state;
         const { SearchValue } = this.state;
-        const matchedproduct = this.findProduct(SearchValue);
-        const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
+        // const matchedproduct = this.findProduct(SearchValue);
+        // const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
         return (
             <Drawer ref={(ref) => { this.drawer = ref; }}
                 content={<Sidebar navigation={this.props.navigation} drawerClose={this.closeDrawer} />}
@@ -282,7 +281,7 @@ export default class Orders extends Component {
                         ImageLeftIcon={'menu'}
                         LeftPress={() => this.openDrawer()}
                         HeadingText={'Order History'} />
-                    <View style={styles.SearchView}>
+                    {/* <View style={styles.SearchView}>
                         <Autocomplete
                             style={styles.AutocompleteStyle}
                             autoCapitalize="none"
@@ -305,7 +304,24 @@ export default class Orders extends Component {
                             name={'ios-search'}
                             type={'Ionicons'}
                         />
-                    </View>
+                    </View> */}
+                                     <View style={styles.datePickerView}>
+                                        <TouchableOpacity style={styles.selectDateStyle}
+                                            onPress={() => this.showDateTimePicker()}>
+                                            <Text style={styles.startDInput}>
+                                                {/* {this.state.date.toString().slice(3, 16)} */}
+                                                {!date || !date.length ? 'Select date' : date}
+                                            </Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.SearchIconView}
+                                            onPress={() => this.props.navigation.navigate('orderSearchView')}>
+                                            <Icon
+                                                name={'ios-search'}
+                                                type={'Ionicons'}
+                                                style={{ fontSize: RFValue(26), alignSelf: 'flex-end', marginRight: 15 }}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
                     <Content showsVerticalScrollIndicator={false} style={{ flex: 1, marginBottom: 10 }}>
                         <FlatList
                             showsVerticalScrollIndicator={false}
@@ -355,7 +371,15 @@ export default class Orders extends Component {
                                 {/* <Text style={styles.DialogText}>Action can`t Undo</Text> */}
                             </DialogContent>
                         </Dialog>
-
+                        <DateTimePicker
+                            isVisible={this.state.isDateTimePickerVisible}
+                            onConfirm={this.handleDatePicked}
+                            onCancel={this.hideDateTimePicker}
+                            is24Hour={false}
+                            mode={'date'}
+                            datePickerModeAndroid={'spinner'}
+                            timePickerModeAndroid={'spinner'}
+                        />
                     </Content>
                     <Modalize
                         adjustToContentHeight

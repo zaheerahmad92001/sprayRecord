@@ -82,15 +82,15 @@ export default StyleSheet.create({
     },
     Nextbutton: {
         flexDirection: 'row',
-        width: RFValue(40),
-        height: RFValue(40),
-        borderRadius: RFValue(40 / 2),
+        width: RFValue(35),
+        height: RFValue(35),
+        borderRadius: RFValue(35/2),
         backgroundColor: buttonBGcolor,
         alignSelf: 'flex-end',
         alignItems: 'center',
         justifyContent: 'center',
-        marginHorizontal: 10,
-        marginTop: 5
+        marginHorizontal: 0,
+        //marginTop: 5
     },
     DialogText: {
         fontSize: RFValue(12),

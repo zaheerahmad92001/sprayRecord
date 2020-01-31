@@ -1,27 +1,16 @@
 import React, { Component } from 'react';
 import {
     View,
-    StyleSheet,
     Dimensions,
-    ImageBackground,
-    FlatList,
     Text,
     Image,
-    TextInput,
-    StatusBar,
     TouchableOpacity,
 } from 'react-native';
-
-import { Item, Card, Container, Content, Icon } from 'native-base';
-import { TextFont_Search } from '../../Constants/fontsize';
-import { BGColor, CountColor, TextColor, buttonBGcolor } from '../../Constants/colors';
+import {Container, Content} from 'native-base';
 import _Header from '../../Components/Common/AppHeader';
-import Text_Input from '../../Components/Common/inputField';
-import { RFValue } from 'react-native-responsive-fontsize';
-import { borderColor } from '../../Constants/colors';
 import Swiper from 'react-native-page-swiper';
 import Modal from "react-native-modal";
-
+import styles from '../productDetail/styles';
 //import Swiper from "react-native-custom-swiper";
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 
@@ -178,68 +167,6 @@ export default class ProductDetail extends Component {
         )
     }
 }
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white'
-    },
-   
 
-    uperView: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'row',
-        height: RFValue(30),
-        backgroundColor: buttonBGcolor,
-        width: RFValue(30),
-        borderRadius: 30 / 2,
-    },
-    
-  
-    descriptionView: {
-        padding: 10,
-        backgroundColor: 'white',
-        borderWidth: 1,
-        borderColor: borderColor
-    },
-    name: {
-        fontWeight: '700',
-        fontFamily: 'Poppins',
-        fontStyle: 'italic',
-        fontSize: RFValue(14),
-        color: TextColor
-    },
-    quantity: {
-        fontWeight: '500',
-        fontFamily: 'Poppins',
-        fontStyle: 'normal',
-        fontSize: RFValue(14),
-        color: TextColor,
-        paddingTop: 5
-    },
-
-    slide1: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#9DD6EB',
-        marginTop:23,
-        width: ScreenWidth, height: ScreenHeight * 0.4,
-    },
-    text: {
-        color: '#fff',
-        fontSize: 30,
-        fontWeight: 'bold',
-    },
-    Modalstyling: {
-          width: "100%",
-      // width:ScreenWidth,
-        height: ScreenHeight*0.7,
-        backgroundColor: 'white',
-        paddingTop:10,
-        alignItems: "center",
-    }
-
-
-})
 
  

@@ -1,6 +1,6 @@
 import{StyleSheet,Dimensions}from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { BGColor, RED, TextColor, forgetpass, buttonBGcolor } from '../../Constants/colors'
+import { BGColor, RED, TextColor, forgetpass, buttonBGcolor, MenuTextColor } from '../../Constants/colors'
 const { width: ScreenWidth ,height:ScreenHeight } = Dimensions.get('window');
 export default StyleSheet.create({
     container:{
@@ -30,7 +30,7 @@ export default StyleSheet.create({
     },
     companyName:{
        
-        color:'grey',
+        color:MenuTextColor,
         fontSize:RFValue(16),
         fontFamily:'Poppins',
         fontWeight:'bold',

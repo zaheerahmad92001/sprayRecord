@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
 import {
-    View,
+    View, StatusBar,
     Text,
     Dimensions,
     StyleSheet,
     Image,
     TouchableOpacity,
-    SafeAreaView
+    SafeAreaView,
+    ImageBackground
 } from 'react-native';
-import { Icon } from 'native-base';
+import { Icon, Col } from 'native-base';
 import { AdmingIcon } from '../../Constants/fontsize';
 import styles from '../landingpage/styles';
+import { StatusColor, ADMIN_BUTTON, MenuTextColor } from '../../Constants/colors';
+import { RFValue } from 'react-native-responsive-fontsize';
+const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 export default class Landing extends Component {
 
     _OnPress = (rootName) => {
@@ -19,52 +23,35 @@ export default class Landing extends Component {
 
     render() {
         return (
-            <SafeAreaView style={styles.container}>
-                <View style={styles.logoStyle}>
-                    <Image
-                    // source={require('../assets/image/squadly_logo.png')}
-                    />
-                </View>
-
-                <View style={styles.buttonView}>
-                    <TouchableOpacity
-                        style={{ marginBottom: 10 }}
-                        onPress={() => this._OnPress('AuthNavigator')}
-                    >
-                        <View style={{ flexDirection: 'row', }}>
-                            <View style={styles.buttonstyle} >
+            <ImageBackground
+                source={require('../../assets/image/Splash.jpg')}
+                style={{ height: screenHeight, width: screenWidth }}>
+                 <StatusBar backgroundColor={MenuTextColor} barStyle="light-content" />
+                    <View style={styles.buttonView}>
+                        <TouchableOpacity style={styles.buttonStyle}
+                            onPress={() => this._OnPress('AuthNavigator')}>
+                            <View style={styles.adminButton}>
                                 <Icon
-                                    style={{ fontSize: AdmingIcon, }}
-                                    name={'user'}
-                                    type={'Entypo'} />
+                                    style={{ fontSize: RFValue(20), color: MenuTextColor }}
+                                    name={'user-tie'}
+                                    type={'FontAwesome5'} />
+                                <Text style={styles.textStyle}>Admin</Text>
                             </View>
-                            <View style={styles.AdminTextView}>
-                                <Text style={styles.AdminText}>Admin</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
 
-                    <TouchableOpacity
-                        style={{ marginTop: 10 }}
-                        onPress={() => this._OnPress('FoHome')}
-                    >
-                        <View style={{ flexDirection: 'row', }}>
-                            <View style={styles.buttonstyle} >
+                        <TouchableOpacity style={styles.buttonStyle}
+                            onPress={() => this._OnPress('FoHome')}>
+                            <View style={styles.adminButton}>
                                 <Icon
-                                    style={{ fontSize: AdmingIcon, }}
-                                    name={'user'}
-                                    type={'Entypo'}
-                                ></Icon>
+                                    style={{ fontSize: RFValue(20), color: MenuTextColor }}
+                                    name={'user-tie'}
+                                    type={'FontAwesome5'} />
+                                <Text style={styles.textStyle}>Field Officer</Text>
                             </View>
-                            <View style={styles.AdminTextView}>
-                                <Text style={styles.AdminText}>Field Officer</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-
-                </View>
-
-            </SafeAreaView>
+                        </TouchableOpacity>
+                    </View>
+               
+            </ImageBackground>
         )
     }
 }

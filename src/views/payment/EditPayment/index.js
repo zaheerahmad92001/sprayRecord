@@ -3,8 +3,6 @@ import {
     View, Text, Dimensions,
     Keyboard, StyleSheet
 } from 'react-native';
-import { Drawer, Content, TabHeading } from 'native-base';
-import { TextFont_Search, HeadingFont } from '../../../Constants/fontsize';
 import _Header from '../../../Components/Common/AppHeader';
 import Text_Input from '../../../Components/Common/inputField';
 import _Button from '../../../Components/Common/_Button';
@@ -13,9 +11,11 @@ import { Container } from 'native-base';
 import BlinkingClass from '../BlinkingText';
 import { RFValue } from 'react-native-responsive-fontsize';
 import DateTimePicker from "react-native-modal-datetime-picker";
-import { CountColor, buttonBGcolor, TextColor, borderColor, RED } from '../../../Constants/colors';
+import { CountColor, buttonBGcolor,} from '../../../Constants/colors';
 import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import _DisabledButton from '../../../Components/Common/DisabledButton';
+import {convertDateToString}from '../../../RandFunction';
+import styles from '../EditPayment/styles';
 import Dialog,
 {
     DialogTitle,
@@ -31,7 +31,7 @@ export default class EditPayment extends Component {
         this.item = this.props.navigation.getParam('paymentDetail');
         this.state = {
             price: this.item.price, errorMsg: '',
-            date: this.item.date, visible: false,
+            date: '', visible: false,
             isDatePickerVisible: false,
             buttonDisabled: true,
             batch_no:this.item.batch_no,
@@ -48,15 +48,13 @@ export default class EditPayment extends Component {
         this.setState({ isDateTimePickerVisible: true, buttonDisabled: false, });
     };
     handleDatePicked = date => {
-        this.setState({ date: date });
+        date=convertDateToString(date)
+        this.setState({ date });
         this.hideDateTimePicker();
     };
     hideDateTimePicker = () => {
         this.setState({ isDateTimePickerVisible: false });
     };
-    openDate(start) {
-        this.showDateTimePicker(start);
-    }
     CallDialogBox = () => {
         this.setState({ visible: true })
     }
@@ -100,9 +98,13 @@ export default class EditPayment extends Component {
                                 value={price}
                                 keyboardType={'number-pad'}/></View>
                         <Text style={[styles.Heading, { marginBottom: 10 }]}>Select Date</Text>
-                        <TouchableOpacity style={styles.startDContainer} onPress={() => this.openDate(true)}>
+                        <TouchableOpacity style={styles.startDContainer} 
+                        onPress={() => this.showDateTimePicker()}>
                             <View>
-                            <Text style={styles.startDInput}>{this.state.date.toString().slice(0, 16)}</Text>
+                            <Text style={styles.startDInput}>
+                                {/* {this.state.date.toString().slice(0, 16)} */}
+                                {!date || !date.length ? 'Select date' : date}
+                                </Text>
                             </View>
                         </TouchableOpacity>
                         {this.item.type==='orderPrice' ?
@@ -124,7 +126,6 @@ export default class EditPayment extends Component {
                             mode={'date'}
                             datePickerModeAndroid={'spinner'}
                             timePickerModeAndroid={'spinner'}
-                            date={date}
                         />
                         <Text style={styles.errorText}>{errorMsg}</Text>
                         <View style={{ marginTop: ScreenHeight * 0.02 }}>
@@ -174,101 +175,3 @@ export default class EditPayment extends Component {
         )
     }
 }
-const styles = StyleSheet.create({
-    content: {
-        height: ScreenHeight,
-        marginHorizontal: 10,
-        marginTop: ScreenHeight * 0.03
-        // marginTop:RFValue(40),
-
-    },
-    paymentTouch: {
-        marginTop: ScreenHeight * 0.02,
-        marginRight: 10,
-        paddingVertical: 10,
-        //width:ScreenWidth*0.35,
-
-        alignSelf: 'flex-end'
-    },
-
-    textStyle: {
-        color: 'white',
-        fontSize: RFValue(12),
-        fontWeight: 'bold',
-        fontStyle: 'normal',
-        backgroundColor: buttonBGcolor,
-        borderRadius: 5,
-        paddingVertical: 3,
-        paddingHorizontal: 5,
-        letterSpacing: 1
-    },
-    Heading: {
-        paddingHorizontal: 5,
-        color: TextColor,
-        fontSize: RFValue(14),
-        fontFamily: 'Poppins',
-        fontWeight: '500',
-        marginTop: 10,
-
-    },
-    startDContainer: {
-        backgroundColor: 'white',
-        borderColor: borderColor,
-        borderWidth: 1,
-        borderTopLeftRadius: 10,
-        borderBottomRightRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingVertical: 12,
-        marginHorizontal: 0,
-        marginBottom: 5
-    },
-    startDInput: {
-        fontFamily: 'Poppins',
-        fontSize: RFValue(16),
-        width: '100%',
-        color: 'black',
-        fontSize: RFValue(16),
-        backgroundColor: 'white',
-    },
-    DialogTitleStyle: {
-        color: 'white',
-        fontSize: RFValue(16),
-        fontStyle: 'normal',
-        fontWeight: '700',
-        fontFamily: 'Poppins'
-    },
-    DialogText: {
-        fontSize: RFValue(12),
-        fontStyle: 'italic',
-        fontWeight: 'bold'
-    },
-    DialogOK_CancelButton: {
-        color: TextColor,
-        fontSize: RFValue(12),
-        fontStyle: 'normal',
-        fontWeight: 'bold',
-        fontFamily: 'Poppins'
-    },
-    errorText: {
-        //marginBottom: 10,
-        color: RED,
-        fontFamily: 'Poppins',
-        fontSize: RFValue(14),
-        fontWeight: '500',
-        fontStyle: 'normal',
-    },
-    Input: {
-        paddingVertical: 10
-    },
-    RsText: {
-        borderColor: borderColor,
-        borderWidth: 1,
-        paddingVertical: 15,
-        paddingLeft: 15,
-        borderTopLeftRadius: 10,
-        borderRightWidth: 0,
-        color: '#979797',
-        alignSelf: 'center'
-    },
-})

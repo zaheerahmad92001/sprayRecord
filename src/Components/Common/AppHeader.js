@@ -10,12 +10,12 @@ import {
 } from 'react-native';
 
 import { Card, CardItem, Thumbnail, Left, Body, Right, Button, Header, Icon } from 'native-base';
-import { StatusColor, HeaderColor, HeadingColor } from '../../Constants/colors';
+import { StatusColor, HeaderColor, HeadingColor ,MenuTextColor} from '../../Constants/colors';
 import { HeadingFont } from '../../Constants/fontsize';
 const _Header = (props) => {
     return (
         <Header noShadow transparent>
-            <StatusBar backgroundColor={StatusColor} barStyle="dark-content" />
+            <StatusBar backgroundColor={MenuTextColor} barStyle="light-content" />
             <Left style={{flex:1,marginLeft:10}}>
 		 			<Button transparent onPress={props.LeftPress?props.LeftPress:null}>
 		 			{!props.ImageLeftIcon?
@@ -23,7 +23,7 @@ const _Header = (props) => {
 		 					style={{ width: 23, height: 23, resizeMode:"contain" }}
 		 					source={props.ImageLeft} />:
 
-		 			<Icon name={props.ImageLeftIcon} type="MaterialIcons" style={{fontSize:RFValue(24),color:'#141250'}}/>}
+		 			<Icon name={props.ImageLeftIcon} type="MaterialIcons" style={{fontSize:RFValue(24),color:MenuTextColor}}/>}
 		 			</Button>
 		 	</Left>
 			<Body style={{ flex: 3,alignItems:'center' }}>
@@ -36,7 +36,7 @@ const _Header = (props) => {
 		 					style={{ width: 23, height: 23, resizeMode:"contain" }}
 		 					source={props.ImageRight} />:
 
-		 			<Icon name={props.ImageRightIcon} type="MaterialIcons" style={{fontSize:RFValue(24),color:'#141250'}}/>}
+		 			<Icon name={props.ImageRightIcon} type="MaterialIcons" style={{fontSize:RFValue(24),color:MenuTextColor}}/>}
 		 			</Button>
 			</Right>
         </Header>
@@ -45,13 +45,13 @@ const _Header = (props) => {
 export default _Header;
 const styles = StyleSheet.create({
     HeaderHeading: {
-        color: HeadingColor,
+        color:MenuTextColor ,
         fontSize: HeadingFont,
 	},
 	dashboardHeading:{
-		color:HeadingColor,
+		color:MenuTextColor,
 		fontSize:HeadingFont,
-		fontWeight:'500',
+		fontWeight:'700',
 
 	}
 })

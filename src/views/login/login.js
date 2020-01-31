@@ -4,18 +4,22 @@ import {
     Text,
     Image,
     ScrollView,
+    StatusBar,
+    Dimensions,
 } from 'react-native';
 import Text_Input from '../../Components/Common/inputField';
-import {buttonBGcolor} from '../../Constants/colors'
-import { Item, Input, Icon, Button, Form } from 'native-base';
+import {buttonBGcolor, MenuTextColor} from '../../Constants/colors'
+import { Item, Input, Icon, Button, Form, Container, Content } from 'native-base';
 import _Button from '../../Components/Common/_Button';
 import _Header from '../../Components/Common/AppHeader';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import{ValidateEmail} from '../../RandFunction';
 import styles from '../login/styles';
+const {height:screenHeight, width:screenWidth}= Dimensions.get('window');
 export default class Login extends Component {
     constructor(props) {
         super(props);
+        this.inputRefs = {};
         this.state = {
             email: '',
             pass: '',
@@ -44,12 +48,14 @@ export default class Login extends Component {
     render() {
         const {errorMsg} = this.state;
         return (
-            <ScrollView>
-                <View style={styles.container} >
+            <Container>
+                 <StatusBar backgroundColor={MenuTextColor} barStyle="light-content" />
+                <Content style={styles.container}  showsVerticalScrollIndicator={false} >
                     <View style={styles.subcontainer}>
                         <View style={styles.logoStyle}>
                             <Image
-                            // source={require('../assets/image/squadly_logo.png')} 
+                             source={require('../../assets/image/logo.jpg')} 
+                             style={{height:screenHeight*0.3,width:screenWidth}}
                             />
                         </View>
                         <View style={styles.content}>
@@ -60,7 +66,12 @@ export default class Login extends Component {
                                     onChangeText={(value) => this.setState({ email: value })}
                                     value={this.state.email}
                                     autoCapitalize={'none'}
-                                />
+                                    // ref={(el)=>this.inputRefs.email=el}
+                                    // returnKeyType="next"
+                                    // enablesReturnKeyAutomatically
+                                    // onSubmitEditing={()=>this.pass.focus()}
+                                    />
+                               
                             </View>
                             <Text style={styles.Heading}>Password</Text>
                             <View style={styles.Input}>
@@ -73,7 +84,13 @@ export default class Login extends Component {
                                         value={this.state.pass}
                                         autoCapitalize={'none'}
                                         secureTextEntry={this.state.secureText}
+                                        // ref={(el) => {this.inputRefs.pass= el}}
+                                        // returnKeyType="next"
+                                        // enablesReturnKeyAutomatically
+                                        // onSubmitEditing={()=>this.email.focus()}
+                                    
                                     />
+                                   
                                     {this.state.secureText ?
                                         <Icon
                                             style={styles.IconStyle}
@@ -87,33 +104,34 @@ export default class Login extends Component {
                                     }
                                 </Item>
                             </View>
+                            <Text style={styles.errorText} >{errorMsg}</Text>
+
                             <TouchableOpacity
                                 style={styles.Forget}
                                 onPress={() => this._onPress('ForgetPassword')}>
                                 <Text style={styles.ForgetPassword}>Forget Your Password ? </Text>
                             </TouchableOpacity>
 
-                            <Text style={styles.errorText} >{errorMsg}</Text>
+                            {/* <Text style={styles.errorText} >{errorMsg}</Text> */}
 
                             <View style={styles.ButtonView}>
                                 <_Button
-                                    textButton={'LOGIN '}
+                                    textButton={'Login '}
                                     onPress={() => this.saveInfo()}>
-                                    //onPress={() => this._onPress('AdminHome')}>
                                 </_Button>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10, paddingVertical: 5 }}>
                                 <TouchableOpacity style={{ flexDirection: 'row' }}
                                     onPress={() => this._onPress('Signup')}>
                                     <Text style={styles.ForgetPassword}>Dont hava any account ? </Text>
-                                    <Text style={[styles.forgetpass, { color: buttonBGcolor }]}>SIGN UP </Text>
+                                    <Text style={[styles.ForgetPassword, { color: MenuTextColor }]}>SIGN UP </Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
 
                     </View>
-                </View>
-            </ScrollView>
+                </Content>
+            </Container>
         )
     }
 }

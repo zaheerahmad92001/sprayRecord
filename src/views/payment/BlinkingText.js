@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Text, View, StyleSheet, Dimensions } from 'react-native';
-import { buttonBGcolor } from '../../Constants/colors';
+import { buttonBGcolor, AdminBG, MenuTextColor } from '../../Constants/colors';
 import { RFValue } from 'react-native-responsive-fontsize';
 const {width:screenWidth , hieght:screenHeight} = Dimensions.get('window');
 export default class BlinkingClass extends Component {
@@ -26,9 +26,9 @@ export default class BlinkingClass extends Component {
       const {showText} = this.state;
       let display =this.props.text ;
       return (
-          <View style={[styles.Content, showText ?{backgroundColor:buttonBGcolor}:{backgroundColor:'green'}]}>
-           <Text style = {[styles.textStyle , showText ?{color:'black'}:{color:'white'}]}>{'Current Balance'}</Text>   
-           <Text style = {[styles.textStyle , showText ?{color:'black'}:{color:'white'}]}>{display}</Text>
+          <View style={[styles.Content, showText ?{backgroundColor:'#BBBBBB'}:{backgroundColor:AdminBG}]}>
+           <Text style = {[styles.textStyle , showText ?{color:'black'}:{color:MenuTextColor}]}>{'Current Balance'}</Text>   
+           <Text style = {[styles.textStyle , showText ?{color:'black'}:{color:MenuTextColor}]}>{display}</Text>
           </View>
         
       );
@@ -40,7 +40,8 @@ export default class BlinkingClass extends Component {
          // width:screenWidth,
          // alignSelf:'center',
           justifyContent:'space-around',
-          flexDirection:'row'
+          flexDirection:'row',
+         
       },
       textStyle:{
           textAlign:'center',

@@ -14,7 +14,7 @@ import { TextFont } from '../Constants/fontsize';
 import Sidebar from '../Components/sidebar/menu'; 
 import { Drawer } from 'native-base';
 import _ProductNameCount from '../Components/Common/ProductNameCount/ProductList';
-
+const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 const myProduct =
     [
         { Id: 1, ProductName: 'ABC', Count: 22 },
@@ -33,8 +33,6 @@ const myProduct =
         { Id: 14, ProductName: 'JKL', Count: 22 },
         { Id: 15, ProductName: 'MNP', Count: 22 },
     ]
-
-const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 export default class indexFile extends Component {
 
     constructor(props) {

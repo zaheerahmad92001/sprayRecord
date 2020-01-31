@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-
     StyleSheet,
     Text,
     View,
@@ -9,6 +8,7 @@ import {
 
 } from 'react-native';
 import {borderColor}from '../../Constants/colors';
+import { RFValue } from 'react-native-responsive-fontsize';
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 const Text_Input = (props) => { 
     return (
@@ -25,6 +25,10 @@ const Text_Input = (props) => {
                     keyboardType={props.keyboardType}
                     multiline={props.multiline}
                     secureTextEntry={props.secureTextEntry}
+                    // ref={props.ref}
+                    // returnKeyType={props.returnKeyType}
+                    // onSubmitEditing={props.onSubmitEditing}
+                    
                     
                 />
       
@@ -35,9 +39,9 @@ const styles = StyleSheet.create({
     inputStyle: {
         padding:10,
         color: 'black',
-        fontSize: 16,
+        fontSize:RFValue(16),
         backgroundColor: '#FFFFFF',
-        borderTopLeftRadius: 10,
+        borderTopLeftRadius: 15,
         borderBottomRightRadius:15,
         paddingHorizontal:15,
         fontFamily: 'normal',

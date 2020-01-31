@@ -1,4 +1,4 @@
-import {StyleSheet}from 'react-native'
+import {StyleSheet,Dimensions}from 'react-native'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { TextColor } from '../../Constants/colors'
 export default StyleSheet.create({

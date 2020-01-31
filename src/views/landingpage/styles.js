@@ -1,36 +1,31 @@
 import {StyleSheet , Dimensions}from 'react-native';
-import { BGColor } from '../../Constants/colors';
+import { MenuTextColor, AdminBG } from '../../Constants/colors';
 import { AdmingIcon, HeadingFont, TextFont } from '../../Constants/fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 
 export default StyleSheet.create({
-    container: {
-        height: ScreenHeight * 1,
-        backgroundColor:BGColor,
-    },
-    logoStyle: {
-        flex: 0.45,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    buttonView: {
-        flex: 0.55,
-    },
-    buttonstyle: {
-        flex: 0.4,
-        paddingVertical: 10,
-        justifyContent: 'center',
-        alignItems: 'flex-end'
-
-    },
-    AdminTextView: {
-        justifyContent: "center",
-        paddingLeft: 10,
-        flex: 0.6
-    },
-    AdminText:{ 
-        fontWeight: 'bold',
-         fontSize: TextFont, 
-
-}
+        textStyle:{
+            color:MenuTextColor,
+            marginLeft:RFValue(5),
+            fontStyle:'normal',
+            fontSize:RFValue(18),
+            fontWeight:'bold'
+        },
+        adminButton:{
+            flexDirection:'row',
+            alignItems:'center',
+            justifyContent:'center',
+            paddingVertical:RFValue (10),
+            borderRadius:RFValue(20),
+            backgroundColor:AdminBG
+        },
+        buttonStyle:{
+            marginHorizontal:RFValue(15),
+            marginBottom:RFValue(20)
+        },
+        buttonView:{
+            marginBottom:RFValue(35),
+            flex: 1, justifyContent: 'flex-end',
+        }
 })

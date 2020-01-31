@@ -14,7 +14,7 @@ import Autocomplete from 'react-native-autocomplete-input';
 import FoSearchList from '../../Components/Common/FoSearchList';
 import {TextColor } from '../../Constants/colors';
 import styles from '../FoHome/styles';
-import {Icon}from 'native-base';
+import {Icon, Container}from 'native-base';
 
 const myProduct =
     [
@@ -72,7 +72,6 @@ export default class FoHome extends Component {
         if (query === '') {
             return [];
         }
-
         const { matchedproduct } = this.state;
         const regex = new RegExp([query.trim()], 'i');
         return matchedproduct.filter((product) => product.name.search(regex) >= 0);
@@ -85,12 +84,12 @@ export default class FoHome extends Component {
         const matchedproduct = this.findProduct(SearchValue);
         const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
         return (
-            <View style={styles.container}>
+            <Container>
                 <_Header
                     ImageLeftIcon={'keyboard-backspace'}
                     LeftPress={() => this._Navigation('Landing')}
                     HeadingText={'Available Products'} />
-                <View style={{ marginBottom: 25, flex: 1 }}>
+                <View style={{flex: 1 }}>
                 <View style={styles.SearchView}>
                         <Autocomplete
                             style={styles.AutocompleteStyle}
@@ -142,7 +141,7 @@ export default class FoHome extends Component {
                     }
                 </View>
 
-            </View>
+            </Container>
         )
     }
 }

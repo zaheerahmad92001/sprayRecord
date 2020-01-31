@@ -25,7 +25,7 @@ export default class EditProduct extends Component {
 
     this.state = {
       avatarSource: null,
-      ProductName: this.item.name,
+      productName: this.item.name,
       errorMsg: '',
       buttonDisabled: true,
       multipleFile: [],
@@ -96,10 +96,10 @@ export default class EditProduct extends Component {
     }
   }
   saveInfo = () => {
-    const { ProductName, multipleFile } = this.state;
-    if (ProductName && ProductName.length) {
+    const { productName, multipleFile } = this.state;
+    if (productName && productName.length) {
       this.setState({ errorMsg: '' })
-      this.Create(ProductName, multipleFile)
+      this.Create(productName, multipleFile)
     } else {
       this.setState({ errorMsg: 'Enter product name' })
     }
@@ -109,7 +109,7 @@ export default class EditProduct extends Component {
   }
 
   render() {
-    const { avatarSource, ProductName, errorMsg ,buttonDisabled,multipleFile } = this.state
+    const { avatarSource, productName, errorMsg ,buttonDisabled,multipleFile } = this.state
     return (
       <Drawer ref={(ref) => { this.drawer = ref; }}
         content={<Sidebar navigation={this.props.navigation} drawerClose={this.closeDrawer} />}
@@ -172,10 +172,10 @@ export default class EditProduct extends Component {
 
               <View style={{ marginTop: 10 }}>
                 <Text_Input
-                  placeholder={'Name'}
+                  placeholder={'Product Name'}
                   autoCapitalize={true}
-                  onChangeText={(value) => this.setState({ ProductName: value, buttonDisabled: false })}
-                  value={this.state.ProductName} />
+                  onChangeText={(value) => this.setState({ productName: value, buttonDisabled: false })}
+                  value={this.state.productName} />
               </View>
               <Text style={styles.errorText}>{errorMsg}</Text>
               <View style={{ marginTop: RFValue(10) }}>

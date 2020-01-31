@@ -16,6 +16,7 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import {ValidateEmail } from '../../RandFunction';
 import { Container, Content } from 'native-base';
 import styles from '../forgetpassword/styles';
+import { MenuTextColor } from '../../Constants/colors';
 const { width: ScreenWidth ,height:ScreenHeight } = Dimensions.get('window');
 export default class ForgetPassword extends Component {
     constructor(props) {
@@ -41,15 +42,13 @@ export default class ForgetPassword extends Component {
     render() {
         const {errorMsg} = this.state;
         return (
-            <Container  >
+            <Container>
+                  <StatusBar backgroundColor={MenuTextColor}></StatusBar>
                     <_Header
                         HeadingText={'Forget Password'}
                         ImageLeftIcon={'keyboard-backspace'}
-                        LeftPress={() => this.goBack('Login')}
-                    />
+                        LeftPress={() => this.goBack('Login')}/>
                 <Content  contentContainerStyle={styles.container} showsVerticalScrollIndicator={false} >
-                    {/* <StatusBar backgroundColor={COLOR_STATUSBAR}></StatusBar> */}
-                    {/* <View style={{ flex: 1 }}> */}
                         <View style={styles.midContainer}>
                             <Text style={styles.companyName}>Forget your Password</Text>
                         </View>
@@ -75,10 +74,9 @@ export default class ForgetPassword extends Component {
 
                             <View style={styles.ButtonView}>
                                 <_Button
-                                    textButton={'RESET'}
+                                    textButton={'Reset'}
                                      onPress={() => this.saveInfo()}
-                                    styles={{ width: ScreenWidth * 0.9 }}
-                                >
+                                    >
                                 </_Button>
                             </View>
                             

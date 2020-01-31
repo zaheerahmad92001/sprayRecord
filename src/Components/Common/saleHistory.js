@@ -9,27 +9,33 @@ import {
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { borderColor, TextColor, LIGHT_WHITE, buttonBGcolor } from '../../Constants/colors';
-import { Icon, Item } from 'native-base';
+import { Icon, Item, Thumbnail } from 'native-base';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 const _SaleHistory = (props) => {
     return (
         <View style={styles.container} >
             <View style={styles.imageView}>
-                <Image
+                {/* <Image
                     style={styles.avatar}
                     source={require('../../assets/image/p.png')}
                 //source={require('../../assets/image/p.png')}
-                />
+                /> */}
+                <Thumbnail large square
+                source={require('../../assets/image/p.png')}/>
             </View>
             <View style={{flex:7, marginTop: 5 }}>
                 <View style={[styles.detailView]}>
                     <Text style={[styles.name]}>{props.item.name}</Text>
+                    <View style={{flexDirection:'row'}}>
+                     <Text style={styles.value}>{props.item.weight}</Text>
+                     <Text style={styles.value}>{props.item.unit}</Text>
+                     </View>
                 </View>
                 <View style={styles.borderBottom}></View>
                 <View style={[styles.detailView, { marginTop: 5 }]}>
                     <Text style={styles.heading}>Opening</Text>
-                    <Text style={styles.value} >{'10000000'}</Text>
+                    <Text style={styles.value} >{props.item.open}</Text>
                 </View>
                 <View style={styles.detailView}>
                     <Text style={styles.heading}>Sale</Text>
@@ -142,15 +148,15 @@ const styles = StyleSheet.create({
         marginTop: 5
     },
     imageView: {
-       // width: screenWidth * 0.35,
-       // height: screenHeight * 0.2,
-       width:RFValue(110),
-       height:RFValue(110),
-       alignItems:'center',
-       justifyContent:'center',
+ // width: screenWidth * 0.35,
+// height: screenHeight * 0.2,
+      //    width:RFValue(110),
+      //    height:RFValue(110),
+      // alignItems:'center',
+      // justifyContent:'center',
        marginTop:10,
-       flex:3
-       // padding: 5,
+      // flex:3
+// padding: 5,
     },
     avatar:{
         width: '100%',

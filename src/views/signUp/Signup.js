@@ -1,36 +1,23 @@
 import React, { Component } from 'react';
-import {
-    StyleSheet,
-    View,
-    Text,
-    Image,
-    Dimensions,
-} from 'react-native';
+import {View,Text,Image,Dimensions} from 'react-native';
 import { Content, Container, Item, Input, Icon } from 'native-base';
 import _Header from '../../Components/Common/AppHeader';
 import Text_Input from '../../Components/Common/inputField';
-import { TextColor, RED ,CountColor } from '../../Constants/colors';
-import { RFValue } from 'react-native-responsive-fontsize';
 import _Button from '../../Components/Common/_Button';
 import { Validate, ValidateEmail } from '../../RandFunction';
+import styles from '../signUp/styles';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-
 export default class Signup extends Component {
     constructor(props) {
         super(props);
         this.state = {
             secureText: true,
-            name: '',
-            email: '',
-            pass: '',
-            confirmPass: '',
-            errorMsg: ''
+            name: '',email: '',pass: '',confirmPass: '',errorMsg: ''
         }
     }
     goBack = () => {
         this.props.navigation.pop()
     }
-
     saveInfo = () => {
         const { name, email, pass, confirmPass } = this.state;
         if (Validate(name)) {
@@ -64,12 +51,12 @@ export default class Signup extends Component {
                     ImageLeftIcon={'keyboard-backspace'}
                     LeftPress={() => this.goBack()}
                     HeadingText={'SIGN UP'} />
-                <Content style={styles.content} contentContainerStyle={{ height: screenHeight }} showsVerticalScrollIndicator={false} >
-                    <View style={styles.imageView}>
+                   
+                <Content  contentContainerStyle={{ height: screenHeight }} showsVerticalScrollIndicator={false} >
+                <View style={styles.imageView}>
                         <Image
-                            style={styles.imgae}
-                            source={require('../../assets/image/squadly_logo.png')}
-                        />
+                            style={{height:screenHeight*0.15,width:screenWidth}}
+                            source={require('../../assets/image/logo.jpg')}/>
                     </View>
                     <View style={styles.InputView}>
                         <View style={styles.TextInputView}>
@@ -78,8 +65,7 @@ export default class Signup extends Component {
                                 placeholder={'User Name'}
                                 onChangeText={(value) => this.setState({ name: value })}
                                 value={this.state.name} 
-                                autoCapitalize={'none'}
-                                />
+                                autoCapitalize={'none'} />
                         </View>
                         <View style={styles.TextInputView}>
                             <Text style={styles.Heading}>Email</Text>
@@ -100,9 +86,7 @@ export default class Signup extends Component {
                                         onChangeText={(value) => this.setState({ pass: value })}
                                         value={this.state.pass}
                                         autoCapitalize={'none'}
-                                        secureTextEntry={this.state.secureText}
-                                    />
-
+                                        secureTextEntry={this.state.secureText}/>
                                     {this.state.secureText ?
                                         <Icon
                                             style={styles.IconStyle}
@@ -141,62 +125,3 @@ export default class Signup extends Component {
         )
     }
 }
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white'
-    },
-    content: {
-        marginHorizontal: 10
-    },
-    Input: {
-        paddingVertical: 10,
-    },
-    item: {
-        backgroundColor: '#FFFFFF',
-        paddingHorizontal: 10,
-        borderTopLeftRadius: 10,
-        borderBottomRightRadius: 10,
-        borderBottomWidth: 1,
-        borderTopWidth: 1,
-        borderLeftWidth: 1,
-        borderRightWidth: 1
-
-    },
-    imageView: {
-        flex: 2,
-        //justifyContent: 'center',
-        marginTop: 15,
-        alignItems: 'center',
-    },
-    InputView: {
-        flex: 8
-        // paddingHorizontal: 10,
-    },
-    TextInputView: {
-        marginBottom: 10
-    },
-    Heading: {
-        color: TextColor,
-        fontSize: RFValue(14),
-        fontFamily: 'Poppins',
-        fontWeight: '500',
-        marginBottom: 5,
-    },
-    ButtonView: {
-        marginTop: 10,
-
-    },
-    errorText: {
-        color: RED,
-        fontFamily: 'Poppins',
-        fontSize: RFValue(14),
-        fontWeight: '500',
-        fontStyle: 'normal',
-    },
-    IconStyle: {
-        fontSize: RFValue(25),
-        color: CountColor
-    },
-
-})

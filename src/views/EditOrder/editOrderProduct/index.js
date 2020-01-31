@@ -21,6 +21,7 @@ import DateTimePicker from "react-native-modal-datetime-picker";
 import _Button from '../../../Components/Common/_Button';
 import { CountColor, BGColor, TextColor, borderColor } from '../../../Constants/colors';
 import _DisabledButton from '../../../Components/Common/DisabledButton';
+import { convertDateToString } from '../../../RandFunction'
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 const myProduct =
     [
@@ -37,7 +38,7 @@ export default class EditOrderProduct extends Component {
         super(props);
         this.item = this.props.navigation.getParam('pData');
         this.state = {
-            Pname: this.item.name,
+            productName: this.item.name,
             qty: this.item.RQty,
             weight: this.item.weight,
             weightUnit: this.item.unit,
@@ -74,24 +75,23 @@ export default class EditOrderProduct extends Component {
     };
     handleDatePicked = date => {
         //let dateText = this.convertDateTimeToString(date)
-        this.setState({ date: date });
+        date = convertDateToString(date)
+        this.setState({ date });
         this.hideDateTimePicker();
 
     };
     hideDateTimePicker = () => {
         this.setState({ isDateTimePickerVisible: false });
     };
-    openDate(start) {
-        this.showDateTimePicker(start);
-    }
 
-    _save = () => {
+
+    saveInfo = () => {
         alert('save')
     }
 
     render() {
-        const { Pname, date, buttonDisabled } = this.state;
-        const matchedproduct = this.findProduct(Pname);
+        const { productName, date, buttonDisabled } = this.state;
+        const matchedproduct = this.findProduct(productName);
         const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
         return (
             <Drawer ref={(ref) => { this.drawer = ref; }}
@@ -108,27 +108,34 @@ export default class EditOrderProduct extends Component {
                         //  LeftPress={() => this.openDrawer()}
                         HeadingText={'Edit Product'} />
                     <Content style={styles.content}>
-                       
-                        <View style={{ marginBottom: 10,marginTop:15 }}>
-                            <Text style={[styles.Heading, { marginBottom: 10 }]}>Product Name</Text>
-                            <Autocomplete
+
+                        <View style={{ marginBottom: 10, marginTop: 15 }}>
+                            <Text style={[styles.Heading]}>Product Name</Text>
+                            <View style={{ marginTop: 10 }}>
+                                <Text_Input
+                                    placeholder={'Product Name'}
+                                    autoCapitalize={true}
+                                    onChangeText={(value) => this.setState({ productName: value, buttonDisabled: false })}
+                                    value={this.state.productName} />
+                            </View>
+                            {/* <Autocomplete
                                 style={styles.AutocompleteStyle}
                                 autoCapitalize="none"
                                 autoCorrect={false}
                                 inputContainerStyle={{ borderWidth: 0, color: 'red' }}
-                                data={matchedproduct.length >= 1 && comp(Pname, matchedproduct[0].name) ? [] : matchedproduct}
-                                defaultValue={Pname}
-                                onChangeText={(text) => this.setState({ Pname: text, buttonDisabled: false })}
+                                data={matchedproduct.length >= 1 && comp(productName, matchedproduct[0].name) ? [] : matchedproduct}
+                                defaultValue={productName}
+                                onChangeText={(text) => this.setState({ productName: text, buttonDisabled: false })}
                                 placeholder="Product Name "
                                 placeholderTextColor={'#979797'}
                                 renderItem={({ item }) => (
-                                    <TouchableOpacity onPress={() => this.setState({ Pname: item.name })}>
+                                    <TouchableOpacity onPress={() => this.setState({ productName: item.name })}>
                                         <Text style={styles.itemText}>
                                             {item.name}
                                         </Text>
                                     </TouchableOpacity>
                                 )}>
-                            </Autocomplete>
+                            </Autocomplete> */}
                         </View>
                         <Text style={styles.Heading}>Qty</Text>
                         <View style={styles.Input}>
@@ -162,10 +169,12 @@ export default class EditOrderProduct extends Component {
                             </Picker>
                         </View>
                         <Text style={[styles.Heading, { marginBottom: 10 }]}>Select Date</Text>
-                        <TouchableOpacity style={styles.startDContainer} onPress={() => this.openDate(true)}>
+                        <TouchableOpacity style={styles.startDContainer}
+                            onPress={() => this.showDateTimePicker()}>
                             <View>
                                 <Text style={styles.startDInput}>
-                                    {this.state.date.toString().slice(0, 16)}
+                                    {/* {this.state.date.toString().slice(0, 16)} */}
+                                    {!date || !date.length ? 'Select date' : date}
                                 </Text>
                             </View>
                         </TouchableOpacity>
@@ -177,7 +186,7 @@ export default class EditOrderProduct extends Component {
                             mode={'date'}
                             datePickerModeAndroid={'spinner'}
                             timePickerModeAndroid={'spinner'}
-                            date={date}
+
                         />
                         {/* <Text style={[styles.Heading, { marginBottom: 10 }]}>Select Date</Text>
             <DatePicker
@@ -213,15 +222,15 @@ export default class EditOrderProduct extends Component {
               }}
               onDateChange={(date) => { this.setState({ date: date }) }} /> */}
 
-                       
-                        <View style={{ marginTop: 25, marginBottom: 20 }}>
+
+                        <View style={{ marginTop: RFValue(30), }}>
                             {buttonDisabled ?
                                 <_DisabledButton
                                     textButton={'Save'}
                                 /> :
                                 <_Button
                                     textButton={'Save'}
-                                    onPress={() => this._save()} />
+                                    onPress={() => this.saveInfo()} />
                             }
                         </View>
 
@@ -243,7 +252,7 @@ const styles = StyleSheet.create({
     },
     AutocompleteStyle: {
         backgroundColor: 'transparent',
-        borderWidth: 2,
+        borderWidth: 1,
         // borderRadius: 10,
         borderBottomRightRadius: 15,
         borderTopLeftRadius: 15,
@@ -295,7 +304,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderColor: borderColor,
         borderWidth: 1,
-        borderRadius: 10,
+        borderBottomRightRadius: 15,
+        borderTopLeftRadius: 15,
         justifyContent: 'center',
         alignItems: 'center',
         paddingVertical: 12,

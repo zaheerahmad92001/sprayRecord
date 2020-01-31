@@ -1,15 +1,11 @@
 
 import React, { Component } from 'react';
 import {
-    View, Text, Dimensions,
-    Keyboard, StyleSheet,
-    FlatList,
+    View, Text, Dimensions,FlatList,
 } from 'react-native';
 import { Drawer, Content, Container, Icon } from 'native-base';
-
 import _Header from '../../../Components/Common/AppHeader';
 import DateTimePicker from "react-native-modal-datetime-picker";
-
 import { TouchableOpacity,} from 'react-native-gesture-handler';
 import PaymentList from '../../../Components/Common/_paymentHistory';
 import Modalize from 'react-native-modalize';
@@ -17,35 +13,26 @@ import BlinkingClass from '../BlinkingText';
 import _BottomSheet from '../../../Components/Common/BottomSheet'
 import { RFValue } from 'react-native-responsive-fontsize';
 import styles from '../paymentHistory/styles';
-import { AppBarLayout, CoordinatorLayout, CollapsingToolbarLayout, CollapsingParallax,
-} from 'react-native-collapsing-toolbar';
-import Dialog,
-{   DialogTitle,
-    DialogContent,
-    SlideAnimation,
-    DialogFooter,
-    DialogButton,
-} from 'react-native-popup-dialog';
+import { AppBarLayout, CoordinatorLayout, CollapsingToolbarLayout, CollapsingParallax} from 'react-native-collapsing-toolbar';
+import Dialog,{DialogTitle,DialogContent,SlideAnimation,DialogFooter,DialogButton} from 'react-native-popup-dialog';
 import NestedScrollView from 'react-native-nested-scroll-view';
 import { buttonBGcolor } from '../../../Constants/colors';
-
+import {convertDateToString}from '../../../RandFunction'
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 const paymentList =
     [
         { Id: 1, currentbalance: 20000, price: '2000', total: '22000', date: 'jan 21 2020',type:'orderPrice',ordeNo:1,batch_no:'Qskxx23xxxxkmsjdfk'},
         { Id: 2, currentbalance: 40000, price: '2000', total: '42000', date: 'jan 21 2020',type:'orderPrice',ordeNo:1,batch_no:'Wskxx23xxxxkjkalfd'},
-        { Id: 3, currentbalance: 20000, price: '2000', total: '22000', date: 'jan 21 2020',type:'payment'},
+        { Id: 3, currentbalance: 20000, price: '2000', total: '22000', date: 'jan 21 2020',type:'payment',prNO:'56706'},
         { Id: 4, currentbalance: 20000, price: '40000', total: '42000', date: 'jan 21 2020',type:'orderPrice',ordeNo:1,batch_no:'Dskkx23xxxxkkjafld'},
-        { Id: 5, currentbalance: 20000, price: '2000', total: '22000', date: 'jan 21 2020',type:'payment'},
-        { Id: 6, currentbalance: 20000, price: '2000', total: '22000', date: 'jan 21 2020',type:'payment'},
+        { Id: 5, currentbalance: 20000, price: '2000', total: '22000', date: 'jan 21 2020',type:'payment',prNO:'56706'},
+        { Id: 6, currentbalance: 20000, price: '2000', total: '22000', date: 'jan 21 2020',type:'payment',prNO:'56706'},
         { Id: 7, currentbalance: 20000, price: '2000', total: '22000', date: 'jan 21 2020',type:'orderPrice',ordeNo:1,batch_no:'Bskmmx23xxxxkjakldf'},
-        { Id: 8, currentbalance: 80000, price: '20000', total: '100000', date: 'jan 21 2020',type:'payment'},
-        { Id: 9, currentbalance: 20000, price: '42000', total: '82000', date: 'jan 21 2020',type:'payment'},
+        { Id: 8, currentbalance: 80000, price: '20000', total: '100000', date: 'jan 21 2020',type:'payment',prNO:'56706'},
+        { Id: 9, currentbalance: 20000, price: '42000', total: '82000', date: 'jan 21 2020',type:'payment',prNO:'56706'},
         { Id: 10, currentbalance: 120000,price: '2000', total: '122000', date: 'jan 21 2020',type:'orederPrice',ordeNo:1,batch_no:'Mskxx23xxxxkjkalf'},
-        { Id: 11, currentbalance: 120000,price: '2000', total: '122000', date: 'jan 21 2020',type:'payment'},
+        { Id: 11, currentbalance: 120000,price: '2000', total: '122000', date: 'jan 21 2020',type:'payment',prNO:'56706'},
     ]
-const HEADER_HEIGHT = 200
-
 export default class paymentHistory extends Component {
     bottomSheet = React.createRef();
     captureAppBarRef = (ref) => {
@@ -83,15 +70,14 @@ export default class paymentHistory extends Component {
     };
 
     handleDatePicked = date => {
-        this.setState({ date: date });
+        date=convertDateToString(date)
+        this.setState({ date });
         this.hideDateTimePicker();
     };
     hideDateTimePicker = () => {
         this.setState({ isDateTimePickerVisible: false });
     };
-    openDate(start) {
-        this.showDateTimePicker(start);
-    }
+   
     callBottomSheet = (item) => {
         const scope = this;
         scope.setState({
@@ -134,6 +120,9 @@ export default class paymentHistory extends Component {
                 navigation={this.props.navigation} />
         )
     }
+    als=()=>{
+        alert('worlijg')
+    }
     renderBottomSheet = () => {
      const {type} = this.state;
         return (
@@ -147,37 +136,39 @@ export default class paymentHistory extends Component {
         return (
             <Container>
                 <CoordinatorLayout
-                    style={{ flex: 1 }}
-                >
+                    style={{ flex: 1 }}>
                     <AppBarLayout
                         ref={this.captureAppBarRef}
                         style={styles.appbar}>
                         <CollapsingToolbarLayout
-                            title='Collapsing Toolbar'
-                            contentScrimColor='green'
-                            expandedTitleColor='blue'
-                            collapsedTitleTextColor='green'
-                            expandedTitleGravity='BOTTOM'
-                            scrimVisibleHeightTrigger={500}
-                            scrimAnimationDuration={400}
-                            expandedTitleMarginStart={22}
-                            expandedTitleMarginTop={50}
-                            expandedTitleMarginBottom={22}
-                            scrimVisibleHeightTrigger={200}
+                            // title='Collapsing Toolbar'
+                            contentScrimColor={buttonBGcolor}
+                            // expandedTitleColor='red'
+                            // collapsedTitleTextColor='green'
+                            expandedTitleGravity='center'
+                            scrimVisibleHeightTrigger={30}
+                            scrimAnimationDuration={1000}
+                            expandedTitleMarginStart={0}
+                            expandedTitleMarginTop={0}
+                            expandedTitleMarginBottom={0}
+                            scrimVisibleHeightTrigger={50}
                             scrollFlags={
-                                AppBarLayout.SCROLL_FLAG_SCROLL
-                                | AppBarLayout.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED}>
+                                  AppBarLayout.SCROLL_FLAG_SCROLL
+                                | AppBarLayout.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
+                                | AppBarLayout.SCROLL_FLAG_SNAP
+                                }>
                             <CollapsingParallax parallaxMultiplier={0.6}>
-                                <View collapsable={false} style={{ height: HEADER_HEIGHT }}>
+                                <View collapsable={false} style={{height: ScreenHeight*0.3, justifyContent: 'center' }}>
                                     <_Header
                                         ImageLeftIcon={'keyboard-backspace'}
                                         LeftPress={() => this.goBack()}
                                         HeadingText={'Payment History'} />
                                     <View style={styles.SearchView}>
                                         <TouchableOpacity style={styles.selectDateStyle}
-                                            onPress={() => this.openDate(true)}>
+                                            onPress={() => this.showDateTimePicker()}>
                                             <Text style={styles.startDInput}>
-                                                {this.state.date.toString().slice(3, 16)}
+                                                {/* {this.state.date.toString().slice(3, 16)} */}
+                                                {!date || !date.length ? 'Select date' : date}
                                             </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.SearchIconView}
@@ -190,13 +181,13 @@ export default class paymentHistory extends Component {
                                         </TouchableOpacity>
                                     </View>
                                     <View style={{ marginTop: RFValue(10) }}>
-                                        <BlinkingClass text={'300000000'} />
+                                        <BlinkingClass text={'30000'} />
                                     </View>
                                 </View>
                             </CollapsingParallax>
                         </CollapsingToolbarLayout>
                     </AppBarLayout>
-
+            
                     <View style={styles.content}>
                         <FlatList
                             showsVerticalScrollIndicator={false}
@@ -205,8 +196,7 @@ export default class paymentHistory extends Component {
                             renderItem={this.renderPayments}
                             renderScrollComponent={this.renderScroll}
                             numColumns={1}
-                            horizontal={false}
-                        />
+                            horizontal={false} />
                     </View>
                 </CoordinatorLayout>
                 <DateTimePicker
@@ -217,7 +207,6 @@ export default class paymentHistory extends Component {
                     mode={'date'}
                     datePickerModeAndroid={'spinner'}
                     timePickerModeAndroid={'spinner'}
-                    date={date}
                 />
                  <Dialog
                     visible={this.state.visible}

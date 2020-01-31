@@ -22,6 +22,7 @@ import DateTimePicker from "react-native-modal-datetime-picker";
 import _Button from '../../Components/Common/_Button';
 import { CountColor, BGColor, TextColor, borderColor } from '../../Constants/colors';
 import _DisabledButton from '../../Components/Common/DisabledButton';
+import {convertDateToString } from '../../RandFunction';
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 const myProduct =
     [
@@ -85,17 +86,15 @@ export default class EditOrder extends Component {
     };
     handleDatePicked = date => {
         //let dateText = this.convertDateTimeToString(date)
-        this.setState({ date: date });
+        date=convertDateToString(date)
+        this.setState({ date });
         this.hideDateTimePicker();
 
     };
     hideDateTimePicker = () => {
         this.setState({ isDateTimePickerVisible: false });
     };
-    openDate(start) {
-        this.showDateTimePicker(start);
-    }
-
+    
     _save = () => {
         alert('save')
     }
@@ -131,10 +130,12 @@ export default class EditOrder extends Component {
                             />
                         </View>
                         <Text style={[styles.Heading, { marginBottom: 10 }]}>Select Date</Text>
-                        <TouchableOpacity style={styles.startDContainer} onPress={() => this.openDate(true)}>
+                        <TouchableOpacity style={styles.startDContainer}
+                         onPress={() => this.showDateTimePicker()}>
                             <View>
                                 <Text style={styles.startDInput}>
-                                    {this.state.date.toString().slice(0, 16)}
+                                    {/* {this.state.date.toString().slice(0, 16)} */}
+                                    {!date || !date.length ? 'Select date' : date}
                                 </Text>
                             </View>
                         </TouchableOpacity>
@@ -146,7 +147,7 @@ export default class EditOrder extends Component {
                             mode={'date'}
                             datePickerModeAndroid={'spinner'}
                             timePickerModeAndroid={'spinner'}
-                            date={date}
+                    
                         />
                         
                         <View style={{ marginTop: 25, marginBottom: 20 }}>
@@ -229,7 +230,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderColor: borderColor,
         borderWidth: 1,
-        borderRadius: 10,
+        borderBottomRightRadius: 15,
+        borderTopLeftRadius: 15,
+       // borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
         paddingVertical: 12,

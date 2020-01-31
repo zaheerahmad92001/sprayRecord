@@ -12,7 +12,7 @@ export default StyleSheet.create({
     },
     content: {
         flex: 0.65,
-        paddingHorizontal: 15,
+        paddingHorizontal: 10,
     },
     Input: {
         paddingVertical: 10,

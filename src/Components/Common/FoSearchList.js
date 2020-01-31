@@ -38,7 +38,7 @@ export default class FoSearchList extends Component {
                     </View>
                    <Text style={styles.count}>{name}</Text>
                     <View style={styles.priceAvailableView}>
-                        <Text style={styles.count}>Quantity</Text>
+                        <Text style={styles.count}>Qty</Text>
                         <Text style={styles.count}>{qty}</Text>
                     </View>
                 </View>

@@ -4,7 +4,7 @@ import{
     View,StyleSheet,
     Text,
 }from 'react-native';
-import {TextColor}from '../../Constants/colors';
+import {TextColor, buttonBGcolor}from '../../Constants/colors';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 const _BottomSheet=(props)=>{
@@ -33,7 +33,8 @@ const _BottomSheet=(props)=>{
 export default _BottomSheet;
 const styles = StyleSheet.create({
     buttonStyle: {
-        backgroundColor: TextColor,
+       // backgroundColor: TextColor,
+       backgroundColor:buttonBGcolor,
         marginHorizontal: 20,
         marginVertical: 7,
         paddingVertical: 10,

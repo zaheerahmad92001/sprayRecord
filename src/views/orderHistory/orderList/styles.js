@@ -1,6 +1,6 @@
 import {StyleSheet,Dimensions}from 'react-native';
 import { TextFont_Search,} from '../../../Constants/fontsize';
-import { TextColor, borderColor } from '../../../Constants/colors';
+import { TextColor, borderColor, BBCOLOR } from '../../../Constants/colors';
 import { RFValue } from 'react-native-responsive-fontsize';
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 export default StyleSheet.create({
@@ -79,5 +79,30 @@ export default StyleSheet.create({
         fontStyle:'normal',
         fontWeight:'bold',
         fontFamily:'Poppins'
-     }
+     },
+     datePickerView:{
+        flexDirection: 'row',
+        marginTop:5,
+        marginHorizontal:5,
+        justifyContent: 'space-between',
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: BBCOLOR,
+    },
+    SearchIconView:{
+        width: ScreenWidth * 0.2,
+        paddingVertical: 10
+    },
+    selectDateStyle: {
+        // backgroundColor: 'green',
+        paddingVertical: 12,
+        width: ScreenWidth * 0.75,
+    },
+    startDInput: {
+        fontFamily: 'Poppins',
+        fontSize: RFValue(16),
+        fontWeight: 'normal',
+        color: TextColor,
+        marginLeft: 10,
+    },
 })

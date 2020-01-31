@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import Splash from '../views/splash';
@@ -25,13 +24,20 @@ import payment from '../views/payment/payment';
 import paymentHistory from '../views/payment/paymentHistory'; 
 import EditPayment from '../views/payment/EditPayment';
 import SearchView from '../views/SearchView';
+import orderSearchView from '../views/orderSearchView';
+import saleSearcView from '../views/saleSearchView';
+import ReturnedProductList from '../views/ReturnedProductList';
+import ReturnProducts from '../views/ReturnProduct';
+import EditRetrunProducts from '../views/EditReturnProduct';
 
+import { fromRight,fromBottom } from 'react-navigation-transitions';
 
 const LoadingNavigator = createStackNavigator({
     Splas: Splash,
 },
     {
         initialRouteName: 'Splas',
+        transitionConfig: () => fromBottom(),
         headerMode: 'none',
     });
 const AuthNavigator = createStackNavigator({
@@ -40,6 +46,7 @@ const AuthNavigator = createStackNavigator({
     ForgetPassword:ForgetPassword,
 }, {
      initialRouteName: 'Login',
+     transitionConfig:()=>fromBottom(),
      headerMode: 'none'
 }
 );
@@ -64,10 +71,17 @@ const AppNavigator = createStackNavigator({
     paymentHistory:paymentHistory,
     EditPayment:EditPayment,
     SearchView:SearchView,
+    orderSearchView:orderSearchView,
+    saleSearcView:saleSearcView,
+    ReturnedProductList:ReturnedProductList,
+    ReturnProducts:ReturnProducts,
+    EditRetrunProducts:EditRetrunProducts,
 },
+
     {
-       // initialRouteName: 'Landing',
-        initialRouteName:'AdminHome',
+        initialRouteName: 'Landing',
+       // initialRouteName:'AdminHome',
+        transitionConfig: () => fromBottom(),
         headerMode: 'none',
     },
 );
@@ -87,6 +101,7 @@ const RootNavigator = createSwitchNavigator({
 },
     {
         initialRouteName: 'LoadingNavigator',
+        transitionConfig: () => fromBottom(),
         headerMode: 'none',
         navigationOptions:{
             headerTransparent: true

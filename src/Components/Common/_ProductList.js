@@ -21,7 +21,7 @@ const _Prouducts = (props) => {
             <CardItem
                 button onLongPress={props.BottomSheet}
                 >
-                <Thumbnail 
+                <Thumbnail square 
                 style={{backgroundColor:'white'}}
                 source={require('../../assets/image/p.png')} 
                 /> 

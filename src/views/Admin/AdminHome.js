@@ -30,7 +30,7 @@ const myProduct =
         { Id: 10, qty: 28, name: 'adc' },
         { Id: 10, qty: 28, name: 'adc' },
     ]
-export default class FoHome extends Component {
+export default class AdminHome extends Component {
 
     constructor(props) {
         super(props);
@@ -104,7 +104,7 @@ export default class FoHome extends Component {
                 <Container>
                     <_Header
                         ImageLeftIcon={'menu'}
-                        LeftPress={() => this.openDrawer()}
+                        LeftPress={() => {this.openDrawer()}}
                         HeadingText={'Available Products'} />
 
                     <View style={styles.SearchView}>

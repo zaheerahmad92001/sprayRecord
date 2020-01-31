@@ -1,43 +1,18 @@
 import React, { Component } from 'react';
-import {
-    View,
-    Text,
-    Dimensions,
-    StyleSheet,
-    Image,
-    TouchableOpacity,
-    SafeAreaView,
-    Keyboard,
-    Picker
-} from 'react-native';
+import { View, Text, Image, TouchableOpacity, Keyboard, Picker } from 'react-native';
 import _Header from '../../Components/Common/AppHeader';
 import Autocomplete from 'react-native-autocomplete-input';
 import Text_Input from '../../Components/Common/inputField';
-import { CountColor, RED, TextColor, borderColor } from '../../Constants/colors';
-import { Container, Content, Drawer } from 'native-base';
+import { Container, Content, Drawer,Icon } from 'native-base';
 import Sidebar from '../../Components/sidebar/menu';
 import { RFValue } from 'react-native-responsive-fontsize';
 import DatePicker from 'react-native-datepicker';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import _Button from '../../Components/Common/_Button';
-import { ValidateNumber, Validate ,ValidateDecimalNumber } from '../../RandFunction';
-const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
-
-// var date = new Date().getDate();
-// var month = new Date().getMonth() + 1;
-// var year = new Date().getFullYear();
-
-// if (month <= 9 && date <= 9) {
-//     var currentDate = year + '-' + '0' + month + '-' + '0'+ date;
-// } else if(month > 9 && date <= 9) {
-//     var currentDate = year + '-' + month + '-' + '0'+ date;
-// } else if (month <= 9 && date > 9){
-//     var currentDate = year + '-' + '0'+ month + '-' + date;
-
-// } else {
-//     var currentDate = year + '-' +  month + '-' + date;
-// }
-
+import RNPickerSelect from 'react-native-picker-select';
+import { ValidateNumber, Validate, ValidateDecimalNumber, convertDateToString } from '../../RandFunction';
+import styles from '../sale/styles';
+import { TextColor, BBCOLOR } from '../../Constants/colors';
 
 const myProduct =
     [
@@ -48,30 +23,27 @@ const myProduct =
         { Id: 5, qty: 22, name: 'jkl' },
         { Id: 10, qty: 22, name: 'adc' },
     ]
-
 export default class DailySale extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
-            SearchValue: '',
-            qty: '',
-            isDatePickerVisible: false,
-            date: new Date(),
-            errorMsg: '',
-            //date:currentDate,
-            matchedproduct: myProduct,
+            SearchValue: '', qty: '',isDatePickerVisible: false,
+            date: '',errorMsg: '', //matchedproduct: myProduct,
+            selected: "None", mapOnce:true,
+            populate:[],
+
         }
     }
-    findProduct(query) {
-        if (query === '') {
-            return [];
-        }
+    
+    // findProduct(query) {
+    //     if (query === '') {
+    //         return [];
+    //     }
 
-        const { matchedproduct } = this.state;
-        const regex = new RegExp([query.trim()], 'i');
-        return matchedproduct.filter((product) => product.name.search(regex) >= 0);
-    };
+    //     const { matchedproduct } = this.state;
+    //     const regex = new RegExp([query.trim()], 'i');
+    //     return matchedproduct.filter((product) => product.name.search(regex) >= 0);
+    // };
 
     openDrawer = async () => {
         await Keyboard.dismiss()
@@ -91,25 +63,26 @@ export default class DailySale extends Component {
     };
     handleDatePicked = date => {
         //let dateText = this.convertDateTimeToString(date)
-        this.setState({ date: date });
+        date=convertDateToString(date)
+        this.setState({ date });
         this.hideDateTimePicker();
 
     };
     hideDateTimePicker = () => {
         this.setState({ isDateTimePickerVisible: false });
     };
-    openDate(start) {
-        this.showDateTimePicker(start);
-    }
+   
+
     saveInfo = () => {
-        const { SearchValue, date, qty , weight, weightUnit } = this.state;
-        if (Validate(SearchValue)) {
+        const { SearchValue, date, qty, weight, weightUnit ,selected } = this.state;
+        // if (Validate(selected))
+          if(selected!='' && selected!='None') {
             if (ValidateNumber(qty)) {
-                if(weightUnit && weightUnit.length && ValidateDecimalNumber(weight)){
-                this.setState({ errorMsg: '' })
-                this.Create(SearchValue, date, qty,weight,weightUnit)
-                } else{
-                    this.setState({errorMsg:'Enter weight in KG or ML without space and special character'})
+                if (weightUnit && weightUnit.length && ValidateDecimalNumber(weight)) {
+                    this.setState({ errorMsg: '' })
+                    this.Create(SearchValue, date, qty, weight, weightUnit)
+                } else {
+                    this.setState({ errorMsg: 'Enter weight in KG, ML or gm  without space and special character' })
                 }
             } else {
                 this.setState({ errorMsg: 'Enter quantity without space and special character' })
@@ -122,9 +95,27 @@ export default class DailySale extends Component {
         alert(name)
     }
     render() {
-        const { SearchValue, date, qty, errorMsg } = this.state;
-        const matchedproduct = this.findProduct(SearchValue);
-        const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
+        const { SearchValue, date, qty, errorMsg  } = this.state;
+        //const matchedproduct = this.findProduct(SearchValue);
+       // const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
+    
+        { this.state.mapOnce ?
+         myProduct.map((value)=>{
+        this.state.populate.push({
+        label:value.name,
+        value:value.name
+    })
+    this.setState({mapOnce:false})
+}) : null }
+
+// console.log('populate',this.state.populate)
+        const placeholder = {
+            label: 'Product Name',
+            value: '',
+            color: '#979797',
+            placeholderTextColor: '#979797',
+            fontSize: RFValue(16)
+        };
         return (
             <Drawer ref={(ref) => { this.drawer = ref; }}
                 content={<Sidebar navigation={this.props.navigation} drawerClose={this.closeDrawer} />}
@@ -139,24 +130,22 @@ export default class DailySale extends Component {
                         LeftPress={() => this.openDrawer()}
                         HeadingText={'Daily Sale'} />
                     <Content style={styles.content}>
-                        <View style={styles.logo}>
+                        {/* <View style={styles.logo}>
                             <Image
-                                source={require('../../assets/image/squadly_logo.png')}
-
-                            />
-                        </View>
+                                source={require('../../assets/image/squadly_logo.png')} />
+                        </View> */}
 
 
                         <View style={{ marginBottom: RFValue(10), marginTop: RFValue(35) }}>
                             <Text style={[styles.Heading], { marginBottom: 10 }}>Product Name</Text>
-                            <Autocomplete
+                            {/* <Autocomplete
                                 style={styles.AutocompleteStyle}
                                 autoCapitalize="none"
                                 autoCorrect={false}
                                 inputContainerStyle={{ borderWidth: 0, color: 'red' }}
                                 data={matchedproduct.length >= 1 && comp(SearchValue, matchedproduct[0].name) ? [] : matchedproduct}
                                 defaultValue={SearchValue}
-                                onChangeText={(text) => this.setState({ SearchValue: text ,errorMsg:'' })}
+                                onChangeText={(text) => this.setState({ SearchValue: text, errorMsg: '' })}
                                 placeholder="Product Name "
                                 placeholderTextColor={'#979797'}
                                 renderItem={({ item }) => (
@@ -164,13 +153,44 @@ export default class DailySale extends Component {
                                         <Text style={styles.itemText}>{item.name}</Text>
                                     </TouchableOpacity>
                                 )}>
-                            </Autocomplete>
+                            </Autocomplete> */}
+
+
+                           <View style={{borderWidth:1,borderColor:BBCOLOR ,borderBottomRightRadius:15,borderTopLeftRadius:15}}>
+                            <RNPickerSelect
+                                useNativeAndroidPickerStyle={false}
+                                placeholder={placeholder}
+                                style={{
+                                    inputAndroid: {
+                                        fontSize: RFValue(16),
+                                        paddingHorizontal: 10,
+                                        borderRadius: 10,
+                                        color: TextColor,
+                                    },
+                                    inputIOS: {
+                                        fontSize: RFValue(16),
+                                        paddingHorizontal: 10,
+                                        paddingVertical: 5,
+                                        borderRadius: 10,
+                                        placeholderTextColor: '#979797',
+                                        color: TextColor,
+                                    },
+                                }}
+                                onValueChange={(value) => this.setState({selected: value ,errorMsg:''})}
+                                items={this.state.populate}
+                                Icon={() => {
+                                    return <Icon
+                                        style={{position: 'absolute', top: Platform.OS === 'ios' ? 5 : 10, right: 10,color:'grey' }}
+                                        name="md-arrow-dropdown" type={'Ionicons'} />;
+                                         }} />
+                                    </View>
                         </View>
                         <Text style={styles.Heading}>Qty</Text>
                         <View style={styles.Input}>
                             <Text_Input
                                 placeholder={'Quantity'}
-                                onChangeText={(value) => this.setState({ qty: value , errorMsg:''})}
+                                placeholderTextColor={'#979797'}
+                                onChangeText={(value) => this.setState({ qty: value, errorMsg: '' })}
                                 value={this.state.qty}
                                 keyboardType={'number-pad'}
                             />
@@ -180,7 +200,7 @@ export default class DailySale extends Component {
                             <Text_Input
                                 styles={{ flex: 0.7 }}
                                 placeholder={'Product weight'}
-                                onChangeText={(value) => this.setState({ weight: value ,errorMsg:'' })}
+                                onChangeText={(value) => this.setState({ weight: value, errorMsg: '' })}
                                 value={this.state.weight}
                                 keyboardType={'numeric'}
                             />
@@ -189,19 +209,22 @@ export default class DailySale extends Component {
                                 enabled={true}
                                 selectedValue={this.state.weightUnit}
                                 style={{ flex: 0.5 }}
-                                onValueChange={(Value, Index) => this.setState({ weightUnit: Value , errorMsg:'' })}
+                                onValueChange={(Value, Index) => this.setState({ weightUnit: Value, errorMsg: '' })}
                             >
                                 <Picker.Item label="select Unit..." value="" />
                                 <Picker.Item label="kg" value="kg" />
                                 <Picker.Item label="ml" value="ml" />
+                                <Picker.Item label="gram" value="gram" />
                             </Picker>
                         </View>
 
                         <Text style={[styles.Heading, { marginBottom: 10 }]}>Select Date</Text>
-                        <TouchableOpacity style={styles.startDContainer} onPress={() => this.openDate(true)}>
+                        <TouchableOpacity style={styles.startDContainer} 
+                             onPress={() => this.showDateTimePicker()}>
                             <View>
                                 <Text style={styles.startDInput}>
-                                    {this.state.date.toString().slice(3, 16)}
+                                    {/* {this.state.date.toString().slice(3, 16)} */}
+                                    {!date || !date.length ? 'Select date' : date}
                                 </Text>
                             </View>
                         </TouchableOpacity>
@@ -213,7 +236,6 @@ export default class DailySale extends Component {
                             mode={'date'}
                             datePickerModeAndroid={'spinner'}
                             timePickerModeAndroid={'spinner'}
-                            date={date}
                         />
                         {/* <DatePicker
                          style={{width:ScreenWidth*0.9,
@@ -258,86 +280,3 @@ export default class DailySale extends Component {
         )
     }
 };
-const styles = StyleSheet.create({
-    container: {
-        height: ScreenHeight
-    },
-    content: {
-        paddingHorizontal: 10,
-        flex: 1,
-        marginTop: 15,
-        //  paddingVertical: 40
-
-    },
-    AutocompleteStyle: {
-        backgroundColor: 'transparent',
-        borderWidth: 1,
-        borderBottomRightRadius: 15,
-        borderTopLeftRadius: 15,
-        borderColor: borderColor,
-        paddingHorizontal: 15,
-        //color:'green'
-        // marginHorizontal: 10,
-
-
-    },
-    Heading: {
-        paddingHorizontal: 5,
-        color: TextColor,
-        fontSize: RFValue(14),
-        fontFamily: 'Poppins',
-        fontWeight: '500',
-
-    },
-    logo: {
-        flex: 0.35,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    Input: {
-        paddingVertical: 10
-    },
-
-    avatarContainer: {
-        borderColor: '#9B9B9B',
-        borderWidth: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: 150,
-        height: 150,
-        borderRadius: 75
-    },
-    avatar: {
-        borderRadius: RFValue(75),
-        width: RFValue(150),
-        height: RFValue(150),
-    },
-    startDInput: {
-        fontFamily: 'Poppins',
-        fontSize: RFValue(16),
-        width: '100%',
-        color: 'black',
-        fontSize: RFValue(16),
-        backgroundColor: 'white',
-    },
-    startDContainer: {
-        backgroundColor: 'white',
-        borderColor: borderColor,
-        borderWidth: 1,
-        borderBottomRightRadius: 15,
-        borderTopLeftRadius: 15,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingVertical: 12,
-        marginBottom: 5
-    },
-    errorText: {
-        marginTop: 5,
-        marginBottom: 5,
-        color: RED,
-        fontFamily: 'Poppins',
-        fontSize: RFValue(14),
-        fontWeight: '500',
-        fontStyle: 'normal',
-    },
-})

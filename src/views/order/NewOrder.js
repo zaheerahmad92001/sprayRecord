@@ -20,18 +20,13 @@ import DatePicker from 'react-native-datepicker';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import _Button from '../../Components/Common/_Button';
 import styles from '../order/styles';
-import { buttonBGcolor } from '../../Constants/colors';
-import { Validate, ValidateNumber, ValidateDecimalNumber } from '../../RandFunction';
+import { buttonBGcolor, BBCOLOR, TextColor } from '../../Constants/colors';
+import { Validate, ValidateNumber, ValidateDecimalNumber, convertDateToString } from '../../RandFunction';
+import _DisabledButton from '../../Components/Common/DisabledButton';
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 import List from '../../views/order/list';
-import Dialog,
-{
-  DialogTitle,
-  DialogContent,
-  SlideAnimation,
-  DialogFooter,
-  DialogButton,
-} from 'react-native-popup-dialog';
+import RNPickerSelect from 'react-native-picker-select';
+import Dialog, { DialogTitle, DialogContent, SlideAnimation, DialogFooter, DialogButton, } from 'react-native-popup-dialog';
 const myProduct =
   [
     { Id: 1, qty: 22, name: 'abc' },
@@ -49,23 +44,25 @@ export default class NewOrder extends Component {
       qty: '', batch_no: '', weight: '', weightUnit: '', price: '',
       // date: currentDate,
       avatarSource: null,
-      matchedproduct: myProduct,
+     // matchedproduct: myProduct,
       date: new Date(),
       isDatePickerVisible: false,
       enabled: false, nextStep: 0,
       errorMsg: '', errorMsg2: '', itemKey: '',
       productArray: [], visible: false,
+      buttonDisabled: true, selected: "None", mapOnce: true,
+      populate: [],
     }
   }
-  findProduct(query) {
-    if (query === '') {
-      return [];
-    }
+  // findProduct(query) {
+  //   if (query === '') {
+  //     return [];
+  //   }
 
-    const { matchedproduct } = this.state;
-    const regex = new RegExp([query.trim()], 'i');
-    return matchedproduct.filter((product) => product.name.search(regex) >= 0);
-  };
+  //   const { matchedproduct } = this.state;
+  //   const regex = new RegExp([query.trim()], 'i');
+  //   return matchedproduct.filter((product) => product.name.search(regex) >= 0);
+  // };
 
   openDrawer = () => {
     Keyboard.dismiss();
@@ -129,16 +126,15 @@ export default class NewOrder extends Component {
   };
   handleDatePicked = date => {
     //let dateText = this.convertDateTimeToString(date)
-    this.setState({ date: date });
+    date = convertDateToString(date)
+    this.setState({ date });
     this.hideDateTimePicker();
 
   };
   hideDateTimePicker = () => {
     this.setState({ isDateTimePickerVisible: false });
   };
-  openDate(start) {
-    this.showDateTimePicker(start);
-  }
+
 
   render1 = () => {
     const { date, batch_no, price } = this.state;
@@ -155,17 +151,18 @@ export default class NewOrder extends Component {
   }
 
   AddMoreProduct = () => {
-    const { SearchValue, qty, weight, weightUnit, } = this.state;
-    if (Validate(SearchValue)) {
+    const { SearchValue,selected, qty, weight, weightUnit, } = this.state;
+    // if (Validate(SearchValue)) 
+      if(selected!='' && selected!='None'){
       if (ValidateNumber(qty)) {
         if (weightUnit && weightUnit.length && ValidateDecimalNumber(weight)) {
           this.state.productArray.push({
-            name: SearchValue,
+            name: selected,
             qty: qty,
             weight: weight,
             unit: weightUnit
           })
-          this.setState({ productArray: this.state.productArray })
+          this.setState({ productArray: this.state.productArray, buttonDisabled: false })
         } else {
           this.setState({ errorMsg2: 'Enter weight in KG ,ML or gram without space and special character  ' })
         }
@@ -182,7 +179,7 @@ export default class NewOrder extends Component {
     this.CallDialogBox(keyVal)
   }
   saveInfo = () => {
-    const { SearchValue, date, qty, batch_no, weight, weightUnit, price, productArray } = this.state;
+    const { SearchValue, date, qty, batch_no, weight, weightUnit, price, productArray ,selected } = this.state;
     console.log('array length', productArray.length)
     let productWeight = weight + weightUnit;
     if (productArray.length >= 1) {
@@ -200,6 +197,7 @@ export default class NewOrder extends Component {
   }
 
   render() {
+    const { buttonDisabled } = this.state;
     let products = this.state.productArray.map((val, key) => {
       return <List
         key={key}
@@ -208,10 +206,26 @@ export default class NewOrder extends Component {
         deleteProduct={() => this.deleteProduct(key)}
       ></List>
     })
+    {this.state.mapOnce ?
+       myProduct.map((value) => {
+        this.state.populate.push({
+          label: value.name,
+          value: value.name
+        })
+        this.setState({ mapOnce: false })
+      }) : null
+    }
     console.log('new array', this.state.productArray)
-    const { SearchValue, date, errorMsg, errorMsg2, price, nextStep } = this.state;
-    const matchedproduct = this.findProduct(SearchValue);
-    const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
+    const { SearchValue, date, errorMsg, errorMsg2, price, nextStep ,selected } = this.state;
+    const placeholder = {
+      label: 'Product Name',
+      value: '',
+      color: '#979797',
+      placeholderTextColor: '#979797',
+      fontSize: RFValue(16)
+  };
+    // const matchedproduct = this.findProduct(SearchValue);
+    // const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
     return (
       <Drawer ref={(ref) => { this.drawer = ref; }}
         content={<Sidebar navigation={this.props.navigation} drawerClose={this.closeDrawer} />}
@@ -260,10 +274,12 @@ export default class NewOrder extends Component {
                   />
                 </View>
                 <Text style={[styles.Heading, { marginBottom: 10 }]}>Select Date</Text>
-                <TouchableOpacity style={styles.startDContainer} onPress={() => this.openDate(true)}>
+                <TouchableOpacity style={styles.startDContainer}
+                  onPress={() => this.showDateTimePicker()}>
                   <View>
                     <Text style={styles.startDInput}>
-                      {this.state.date.toString().slice(3, 16)}
+                      {/* {this.state.date.toString().slice(3, 16)} */}
+                      {!date || !date.length ? 'Select date' : date}
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -275,14 +291,13 @@ export default class NewOrder extends Component {
                   mode={'date'}
                   datePickerModeAndroid={'spinner'}
                   timePickerModeAndroid={'spinner'}
-                  date={date}
                 />
               </View>
               :
               <View>
-                <View style={{ marginBottom: 10 }}>
+                <View style={{marginTop: 10 }}>
                   <Text style={[styles.Heading, { marginBottom: 10 }]}>Product Name</Text>
-                  <Autocomplete
+                  {/* <Autocomplete
                     style={styles.AutocompleteStyle}
                     autoCapitalize="none"
                     autoCorrect={false}
@@ -299,7 +314,35 @@ export default class NewOrder extends Component {
                         </Text>
                       </TouchableOpacity>
                     )}>
-                  </Autocomplete>
+                  </Autocomplete> */}
+                  <View style={{ borderWidth: 1, borderColor: BBCOLOR, borderBottomRightRadius: 15, borderTopLeftRadius: 15 }}>
+                    <RNPickerSelect
+                      useNativeAndroidPickerStyle={false}
+                      placeholder={placeholder}
+                      style={{
+                        inputAndroid: {
+                          fontSize: RFValue(16),
+                          paddingHorizontal: 10,
+                          borderRadius: 10,
+                          color: TextColor,
+                        },
+                        inputIOS: {
+                          fontSize: RFValue(16),
+                          paddingHorizontal: 10,
+                          paddingVertical: 5,
+                          borderRadius: 10,
+                          placeholderTextColor: '#979797',
+                          color: TextColor,
+                        },
+                      }}
+                      onValueChange={(value) => this.setState({ selected: value,errorMsg2:'' })}
+                      items={this.state.populate}
+                      Icon={() => {
+                        return <Icon
+                          style={{ position: 'absolute', top: Platform.OS === 'ios' ? 5 : 10, right: 10,color:'grey' }}
+                          name="md-arrow-dropdown" type={'Ionicons'} />;
+                      }} />
+                  </View>
                 </View>
                 <Text style={styles.Heading}>Qty</Text>
                 <View style={styles.Input}>
@@ -346,17 +389,18 @@ export default class NewOrder extends Component {
             }
 
             <Text style={styles.errorText}>{errorMsg}</Text>
-            <View style={{ marginTop: 10, marginBottom: 20 }}>
+            <View style={{marginBottom: 10 }}>
               {nextStep === 0 ?
                 <_Button
                   styles={{ width: ScreenWidth * 0.3 }}
                   IconNmae={'arrow-right'}
                   textButton={'NEXT'}
-                  onPress={() => this.render1()} /> :
-
-                <_Button
-                  textButton={'SAVE'}
-                  onPress={() => this.saveInfo()} />
+                  onPress={() => this.render1()} /> : buttonDisabled ?
+                  <_DisabledButton
+                    textButton={'SAVE'} /> :
+                  <_Button
+                    textButton={'SAVE'}
+                    onPress={() => this.saveInfo()} />
               }
 
             </View>

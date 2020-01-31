@@ -40,7 +40,7 @@ export default class FoProductList extends Component {
                     {/* <Text>kdjk ak aljlakj akfda fjkalfdalfj alkorlksdlg;poirpw dfdf[pfaep;fvkdl;gg kljilejglk zaheer</Text> */}
                     <Text style={styles.name}>{name}</Text>
                     <View style={{ flexDirection: 'row', justifyContent:'space-between',marginTop:3}}>
-                        <Text style={styles.name}>QTY</Text>
+                        <Text style={styles.name}>Qty</Text>
                     <Text style={styles.name}>{qty}</Text>
                     </View>
                 </View>

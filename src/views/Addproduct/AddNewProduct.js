@@ -181,7 +181,7 @@ export default class AddNewProduct extends Component {
               <Text style={styles.Heading}> Product Name</Text>
               <View style={{ marginTop: 10 }}>
                 <Text_Input
-                  placeholder={'Name'}
+                  placeholder={'Product Name'}
                   autoCapitalize={true}
                   onChangeText={(value) => this.setState({ ProductName: value })}
                   value={this.state.ProductName} />
