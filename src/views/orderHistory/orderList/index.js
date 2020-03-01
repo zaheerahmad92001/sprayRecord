@@ -2,23 +2,24 @@ import React, { Component } from 'react';
 import {
     View,Text,Image,Dimensions,
     TouchableOpacity,FlatList,Alert,
-    PermissionsAndroid,Keyboard
+    PermissionsAndroid,Keyboard, ActivityIndicator
 } from 'react-native';
 import {Container,Content,Icon,Drawer} from 'native-base';
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 import _Header from '../../../Components/Common/AppHeader';
 import Autocomplete from 'react-native-autocomplete-input';
 import styles from '../orderList/styles';
-import { TextColor, buttonBGcolor } from '../../../Constants/colors';
+import { TextColor, buttonBGcolor, MenuTextColor } from '../../../Constants/colors';
 import { RFValue } from 'react-native-responsive-fontsize';
 import _OrderList from '../../../Components/Common/orderList';
 import Modalize from 'react-native-modalize';
 import Sidebar from '../../../Components/sidebar/menu';
 import _BottomSheet from '../../../Components/Common/BottomSheet';
-import{convertDateToString}from '../../../RandFunction';
+import{convertDateToString, IMAGEURL}from '../../../RandFunction';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import Dialog,{DialogTitle,DialogContent,SlideAnimation,DialogFooter,DialogButton,}from 'react-native-popup-dialog';
 import RNFetchBlob from 'rn-fetch-blob';
+import OrderModal from '../../../../Utils/modal/order';
 const myProduct =
     [
         { Id: 1, qty: 22, name: 'Tryezophas' },
@@ -28,15 +29,15 @@ const myProduct =
         { Id: 5, qty: 25, name: 'PhasPhoras' },
         { Id: 6, qty: 22, name: 'Jugni' },
     ]
-const order_history =
-    [
-        { Id: 1, name: 'Tryezophas', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '1', batchNO: 'XxB12345678BAS',weight:'200',unit:'ml'},
-        { Id: 2, name: 'Lemda', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '2', batchNO: 'XxB12345678BAS',weight:'200',unit:'kg' },
-        { Id: 3, name: 'Karatay', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '3', batchNO: 'XxB12345678BAS',weight:'200',unit:'ml' },
-        { Id: 4, name: 'Danydar', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '4', batchNO: 'XxB12345678BAS',weight:'500',unit:'kg' },
-        { Id: 5, name: 'PhasPhoras', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '5', batchNO: 'XxB12345678BAS',weight:'300',unit:'ml' },
-        { Id: 6, name: 'Jugni', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '6', batchNO: 'XxB12345678BAS',weight:'200',unit:'kg' },
-    ]
+// const order_history =
+//     [
+//         { Id: 1, name: 'Tryezophas', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '1', batchNO: 'XxB12345678BAS',weight:'200',unit:'ml'},
+//         { Id: 2, name: 'Lemda', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '2', batchNO: 'XxB12345678BAS',weight:'200',unit:'kg' },
+//         { Id: 3, name: 'Karatay', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '3', batchNO: 'XxB12345678BAS',weight:'200',unit:'ml' },
+//         { Id: 4, name: 'Danydar', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '4', batchNO: 'XxB12345678BAS',weight:'500',unit:'kg' },
+//         { Id: 5, name: 'PhasPhoras', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '5', batchNO: 'XxB12345678BAS',weight:'300',unit:'ml' },
+//         { Id: 6, name: 'Jugni', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '6', batchNO: 'XxB12345678BAS',weight:'200',unit:'kg' },
+//     ]
 
 export async function request_storage_runtime_permission() {
     try {
@@ -68,10 +69,14 @@ export default class Orders extends Component {
         super(props);
         this.state = {
             //Product: myProduct,
-            SearchValue: '',isDatePickerVisible: false,
-            visible: false,date: '',
+            SearchValue: '',
+            isDatePickerVisible: false,
+            visible: false,
+            date: '',
             matchedproduct: myProduct,
-            History: order_history,
+           // History: order_history,
+            orders:[],
+            loading:true,
             showModal: false,
             imageUrl: '',
             pId: '',
@@ -80,7 +85,25 @@ export default class Orders extends Component {
         }
     }
     async componentDidMount() {
-        await request_storage_runtime_permission()
+        const scope = this;
+        await request_storage_runtime_permission();
+        OrderModal.orderList().then(
+            (res)=>{
+              if(res.success){
+               this.setState({
+                   orders:res.data.collection,
+                   loading:false
+               })
+              }else{
+               alert('server error')
+               console.log('data',res)
+              }
+            },(error)=>{
+              alert('response fail');
+              console.log('error',error)
+            }
+        )
+
       }
     openDrawer = () => {
         Keyboard.dismiss();
@@ -99,7 +122,9 @@ export default class Orders extends Component {
     }
     showProduct =(item)=>{
        // alert(item.Id)
-       this.props.navigation.navigate('OrderProducts')
+       this.props.navigation.navigate('OrderProducts',{
+           item:item
+       })
     }
     // findProduct(query) {
     //     if (query === '') {
@@ -129,7 +154,7 @@ export default class Orders extends Component {
                 item={item}
                 key={item.Id}
                 invoice={() => this.Invoice(item)}
-                EditDelete={() => this.editDelete(item)}
+               // EditDelete={() => this.editDelete(item)}
                 showProducts={()=>this.showProduct(item)}
                 navigation={this.props.navigation} />
         )
@@ -164,8 +189,8 @@ export default class Orders extends Component {
 
     Invoice = (item) => {
         const scope = this;
-        //console.log('item image', item.invoiceimg)
-        this.setState({ imageUrl: item.invoiceimg })
+     //  console.log('item image', item.invoice)
+       this.setState({ imageUrl: item.invoice })
         this.onOpen()
     };
 
@@ -201,8 +226,8 @@ export default class Orders extends Component {
         // console.log('invoice image', this.state.imageUrl)
         // console.log('product data for Edit',this.state.pData.name)
         // console.log('product id',this.state.pId)
+        const {imageUrl} = this.state;
         return (
-
             <View style={{ backgroundColor: 'white', borderTopRightRadius: 5, borderTopLeftRadius: 5 }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
                     <TouchableOpacity style={{ paddingVertical: 5, paddingLeft: 10, }}
@@ -228,10 +253,9 @@ export default class Orders extends Component {
                 <View style={styles.borderBottom} />
                 <View style={styles.imgView}>
                     <Image
-                        style={{ height: ScreenHeight * 0.8, width: ScreenWidth * 0.98, alignSelf: 'center', backgroundColor: 'green' }}
-                        // source={require('../assets/image/7.jpg')}
-                        source={{ uri: 'https://reactnativecode.com/wp-content/uploads/2018/02/motorcycle.jpg' }}
-                    //source={require('../../assets/image/p.png')}
+                        style={{ height: ScreenHeight * 0.8, width: ScreenWidth * 0.98, alignSelf: 'center', }}
+                        //source={{ uri: 'https://reactnativecode.com/wp-content/uploads/2018/02/motorcycle.jpg' }}
+                        source={{ uri:IMAGEURL+imageUrl }}
                     />
                 </View>
             </View>
@@ -239,7 +263,10 @@ export default class Orders extends Component {
     }
     downloadImage = () => {
         var date = new Date();
-        var image_URL = 'https://reactnativecode.com/wp-content/uploads/2018/02/motorcycle.jpg';
+         let {imageUrl} = this.state
+      //  var image_URL = 'https://reactnativecode.com/wp-content/uploads/2018/02/motorcycle.jpg ';
+      var image_URL=IMAGEURL+imageUrl;
+       
         var ext = this.getExtention(image_URL);
         ext = "." + ext[0];
         const { config, fs } = RNFetchBlob;
@@ -264,10 +291,10 @@ export default class Orders extends Component {
     }
 
     render() {
-        const { Product, History,date } = this.state;
-        const { SearchValue } = this.state;
+        const { Product, History,date,loading,SearchValue,orders } = this.state;
         // const matchedproduct = this.findProduct(SearchValue);
         // const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
+        console.log('image url',)
         return (
             <Drawer ref={(ref) => { this.drawer = ref; }}
                 content={<Sidebar navigation={this.props.navigation} drawerClose={this.closeDrawer} />}
@@ -323,14 +350,20 @@ export default class Orders extends Component {
                                         </TouchableOpacity>
                                     </View>
                     <Content showsVerticalScrollIndicator={false} style={{ flex: 1, marginBottom: 10 }}>
+                        {loading ?
+                        <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                         <ActivityIndicator
+                         color={MenuTextColor}
+                         size={'large'}/>
+                        </View> :
                         <FlatList
                             showsVerticalScrollIndicator={false}
-                            data={History}
+                            data={orders}
                             keyExtractor={(item) => item.Id}
                             renderItem={this.renderOrderList}
                             numColumns={1}
-                            horizontal={false}
-                        />
+                            horizontal={false} /> 
+                        }
                         <Dialog
                             visible={this.state.visible}
                             onTouchOutside={() => {
@@ -380,6 +413,7 @@ export default class Orders extends Component {
                             datePickerModeAndroid={'spinner'}
                             timePickerModeAndroid={'spinner'}
                         />
+       
                     </Content>
                     <Modalize
                         adjustToContentHeight

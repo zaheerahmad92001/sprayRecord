@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   IconStyle:{
-    color:'white',
+    color:MenuTextColor,
     alignItems:'center',
     fontSize:RFValue(26),
     marginLeft:5

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, TouchableOpacity, Keyboard, Picker } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Keyboard, Picker, AccessibilityInfo, ToastAndroid } from 'react-native';
 import _Header from '../../Components/Common/AppHeader';
 import Autocomplete from 'react-native-autocomplete-input';
 import Text_Input from '../../Components/Common/inputField';
@@ -10,27 +10,34 @@ import DatePicker from 'react-native-datepicker';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import _Button from '../../Components/Common/_Button';
 import RNPickerSelect from 'react-native-picker-select';
-import { ValidateNumber, Validate, ValidateDecimalNumber, convertDateToString } from '../../RandFunction';
+import { ValidateNumber, Validate, ValidateDecimalNumber, convertDateToString, getDateInUTC ,convertDateToUTC} from '../../RandFunction';
 import styles from '../sale/styles';
 import { TextColor, BBCOLOR } from '../../Constants/colors';
+import SaleModal from '../../../Utils/modal/Sale';
+import ProuductModal from '../../../Utils/modal/Product';
 
-const myProduct =
-    [
-        { Id: 1, qty: 22, name: 'abc' },
-        { Id: 2, qty: 22, name: 'abc' },
-        { Id: 3, qty: 22, name: 'def' },
-        { Id: 4, qty: 22, name: 'ghi' },
-        { Id: 5, qty: 22, name: 'jkl' },
-        { Id: 10, qty: 22, name: 'adc' },
-    ]
+// const myProduct =
+//     [
+//         { Id: 1, qty: 22, name: 'abc' },
+//         { Id: 2, qty: 22, name: 'abc' },
+//         { Id: 3, qty: 22, name: 'def' },
+//         { Id: 4, qty: 22, name: 'ghi' },
+//         { Id: 5, qty: 22, name: 'jkl' },
+//         { Id: 10, qty: 22, name: 'adc' },
+//     ]
 export default class DailySale extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            SearchValue: '', qty: '',isDatePickerVisible: false,
-            date: '',errorMsg: '', //matchedproduct: myProduct,
-            selected: "None", mapOnce:true,
+           // SearchValue: '',
+             qty: '',weight:'',weightUnit:'',
+             isDatePickerVisible: false,
+            date: '',order_date:'',
+            errorMsg: '', //matchedproduct: myProduct,
+            selected: "None", 
+            mapOnce:true,
             populate:[],
+            products:[],
 
         }
     }
@@ -45,6 +52,23 @@ export default class DailySale extends Component {
     //     return matchedproduct.filter((product) => product.name.search(regex) >= 0);
     // };
 
+    componentDidMount(){
+        ProuductModal.ProductListing().then(
+            (res)=>{
+                if(res.success){
+                    this.setState({
+                        products:res.data.collection,
+                    })
+                }else{
+                    alert('server error')
+                    console.log('DailySale server error',res)
+                }
+            },(error)=>{
+                alert('fail')
+                console.log('Daily sale error',error)
+            }
+        )
+    }
     openDrawer = async () => {
         await Keyboard.dismiss()
         setTimeout(() => {
@@ -62,10 +86,14 @@ export default class DailySale extends Component {
         this.setState({ isDateTimePickerVisible: true });
     };
     handleDatePicked = date => {
-        //let dateText = this.convertDateTimeToString(date)
-        date=convertDateToString(date)
-        this.setState({ date });
-        this.hideDateTimePicker();
+    var DateTime = new Date(date).getTime();
+   // console.log('date in timespan',DateTime);
+    let aa= new  Date(DateTime)
+    //console.log('converted back',aa);
+    date=convertDateToString(aa)
+    //console.log('want to show',date);
+    this.setState({ date ,order_date:DateTime});
+    this.hideDateTimePicker();
 
     };
     hideDateTimePicker = () => {
@@ -74,13 +102,13 @@ export default class DailySale extends Component {
    
 
     saveInfo = () => {
-        const { SearchValue, date, qty, weight, weightUnit ,selected } = this.state;
-        // if (Validate(selected))
+        const {order_date, qty, weight, weightUnit ,selected } = this.state;
+
           if(selected!='' && selected!='None') {
             if (ValidateNumber(qty)) {
                 if (weightUnit && weightUnit.length && ValidateDecimalNumber(weight)) {
                     this.setState({ errorMsg: '' })
-                    this.Create(SearchValue, date, qty, weight, weightUnit)
+                    this.Create(selected,qty, weight,weightUnit,order_date)
                 } else {
                     this.setState({ errorMsg: 'Enter weight in KG, ML or gm  without space and special character' })
                 }
@@ -91,19 +119,38 @@ export default class DailySale extends Component {
             this.setState({ errorMsg: 'Enter product name white no white space in the beginning ' })
         }
     }
-    Create = (name, qty, date) => {
-        alert(name)
+
+///////////////////////////////////////////////////////////////////////////////////  
+    Create = (id,qty,weight,unit,date) => {
+        const scope = this;
+        SaleModal.sale(id,qty,weight,unit,date).then(
+            (res)=>{
+                if(res.success){
+                    scope.setState({
+                        order_date:'',qty:'',date:'',
+                        weight:'',weightUnit:'',selected:'None'
+                    })
+                    ToastAndroid.show('Product Added',ToastAndroid.SHORT)   
+                }else{
+                    alert('server error'),
+                    console.log('Daily sale save errror',res)
+                }
+            },(error)=>{
+              alert('fail'),
+            console.log('error',error)
+            })
     }
+/////////////////////////////////////////////////////////////////////////////////// 
     render() {
-        const { SearchValue, date, qty, errorMsg  } = this.state;
+        const { date, qty, errorMsg,products,selected  } = this.state;
         //const matchedproduct = this.findProduct(SearchValue);
        // const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
     
         { this.state.mapOnce ?
-         myProduct.map((value)=>{
+        products.map((value)=>{
         this.state.populate.push({
-        label:value.name,
-        value:value.name
+        label:value.title,
+        value:value.id
     })
     this.setState({mapOnce:false})
 }) : null }
@@ -167,17 +214,10 @@ export default class DailySale extends Component {
                                         borderRadius: 10,
                                         color: TextColor,
                                     },
-                                    inputIOS: {
-                                        fontSize: RFValue(16),
-                                        paddingHorizontal: 10,
-                                        paddingVertical: 5,
-                                        borderRadius: 10,
-                                        placeholderTextColor: '#979797',
-                                        color: TextColor,
-                                    },
                                 }}
                                 onValueChange={(value) => this.setState({selected: value ,errorMsg:''})}
                                 items={this.state.populate}
+                                value={this.state.selected}
                                 Icon={() => {
                                     return <Icon
                                         style={{position: 'absolute', top: Platform.OS === 'ios' ? 5 : 10, right: 10,color:'grey' }}

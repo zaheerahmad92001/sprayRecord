@@ -10,6 +10,7 @@ const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 import _SaleHistory from '../../Components/Common/saleHistory';
 import { convertDateToString } from '../../RandFunction';
 import styles from '../saleSearchView/styles';
+import SaleModal from '../../../Utils/modal/Sale';
 
 const sale_history =
     [
@@ -24,17 +25,39 @@ export default class saleSearchView extends Component {
 
     constructor(props) {
         super(props)
+        this.param = this.props.navigation.getParam('item');
         this.state = {
             Stock: sale_history, input: '', matchedValue: sale_history,
-            isDatePickerVisible: false, date: '', report: 0, index: 0,
-            matchedproduct: sale_history, 
-            routes: [
-                { key: 'daily', title: 'Daily' },
-                { key: 'weekly', title: 'Weekly' },
-                { key: 'monthly', title: 'Monthly' },
-            ],
+            isDatePickerVisible: false, date: '', report: 0,
+            matchedproduct: sale_history, daily:0,weekly:0,monthly:0
+           
         };
     }
+componentDidMount(){
+    const value = this.param.filter;
+    let page= 1;
+    const{daily,weekly,monthly}= this.state;
+    if(value===0){
+        this.setState({daily:1})
+    }else if(value===1){
+        this.setState({weekly:1})
+    }else if(value===2){
+        this.setState({monthly:1})
+    }
+//    SaleModal.saleFilter(page,daily,weekly,monthly).then(
+//        (res)=>{
+//            if(res.success){
+//                alert('success zaheer')
+//            }else{
+//                alert('server error')
+//                console.log('server error',res)
+//            }
+//        },(error)=>{
+//            alert('request fail')
+//            console.log('request fail',error)
+//        }) 
+}
+
     goBack = () => {
         this.props.navigation.pop();
     }
@@ -55,6 +78,7 @@ export default class saleSearchView extends Component {
         )
     };
     render() {
+        
         let { input, date, Stock, Sale  } = this.state;
         const matchedproduct = this.findProduct(input);
         const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();

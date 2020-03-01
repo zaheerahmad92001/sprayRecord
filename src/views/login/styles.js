@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, I18nManager } from 'react-native';
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 import { CountColor, TextColor, RED } from '../../Constants/colors'
 import { RFValue } from 'react-native-responsive-fontsize';
@@ -59,7 +59,7 @@ export default StyleSheet.create({
         fontSize: RFValue(14),
         fontFamily: 'Poppins',
         fontWeight: '500',
-
+        
     },
     errorText: {
         // marginBottom: 10,

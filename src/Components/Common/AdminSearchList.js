@@ -13,11 +13,12 @@ import { Card, } from 'native-base';
 import { TextFont_Search } from '../../Constants/fontsize';
 import { CountColor, BBCOLOR, TextColor } from '../../Constants/colors'
 import { RFValue } from 'react-native-responsive-fontsize';
+import { IMAGEURL } from '../../RandFunction';
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 
 export default class AdminSearchList extends Component {
     render() {
-        const { qty, Id, name } = this.props;
+        const { qty, Id, name ,img } = this.props;
         return (
             <TouchableOpacity style={styles.Container}
                 onPress={() => this.props.navigation.navigate('ProductDetail', {
@@ -32,7 +33,7 @@ export default class AdminSearchList extends Component {
                     <View style={styles.imageView} >
                         <Image
                             style={styles.imageStyle}
-                             source={require('../../assets/image/p.png')}/>
+                             source={{uri:IMAGEURL+img}}/>
                     </View>
                    <Text style={styles.count}>{name}</Text>
                     <View style={styles.priceAvailableView}>

@@ -1,18 +1,11 @@
 import React, { Component } from 'react';
 import {
-  View,
-  Text,
-  Dimensions,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  Picker,
-  Keyboard
+  View,Text,Dimensions,Image,
+  TouchableOpacity,Picker,Keyboard
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import _Header from '../../Components/Common/AppHeader';
 import Text_Input from '../../Components/Common/inputField';
-import Autocomplete from 'react-native-autocomplete-input';
 import { Container, Content, Drawer, Icon } from 'native-base';
 import Sidebar from '../../Components/sidebar/menu';
 import { RFValue } from 'react-native-responsive-fontsize';
@@ -27,43 +20,52 @@ const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 import List from '../../views/order/list';
 import RNPickerSelect from 'react-native-picker-select';
 import Dialog, { DialogTitle, DialogContent, SlideAnimation, DialogFooter, DialogButton, } from 'react-native-popup-dialog';
-const myProduct =
-  [
-    { Id: 1, qty: 22, name: 'abc' },
-    { Id: 2, qty: 22, name: 'abc' },
-    { Id: 3, qty: 22, name: 'def' },
-    { Id: 4, qty: 22, name: 'ghi' },
-    { Id: 5, qty: 22, name: 'jkl' },
-    { Id: 10, qty: 22, name: 'adc' },
-  ]
+import OrderModal from '../../../Utils/modal/order';
+import ProuductModal from '../../../Utils/modal/Product';
+// const myProduct =
+//   [
+//     { Id: 1, qty: 22, name: 'abc' },
+//     { Id: 2, qty: 22, name: 'abc' },
+//     { Id: 3, qty: 22, name: 'def' },
+//     { Id: 4, qty: 22, name: 'ghi' },
+//     { Id: 5, qty: 22, name: 'jkl' },
+//     { Id: 10, qty: 22, name: 'adc' },
+//   ]
 export default class NewOrder extends Component {
   constructor(props) {
     super(props);
     this.state = {
       SearchValue: '',
       qty: '', batch_no: '', weight: '', weightUnit: '', price: '',
-      // date: currentDate,
       avatarSource: null,
-     // matchedproduct: myProduct,
-      date: new Date(),
+      date: '',
+      order_date:'',
       isDatePickerVisible: false,
       enabled: false, nextStep: 0,
       errorMsg: '', errorMsg2: '', itemKey: '',
-      productArray: [], visible: false,
-      buttonDisabled: true, selected: "None", mapOnce: true,
-      populate: [],
+      products: [], visible: false,
+      buttonDisabled: true, product_id: "None", mapOnce: true,
+      populate: [],productsList:[],
     }
   }
-  // findProduct(query) {
-  //   if (query === '') {
-  //     return [];
-  //   }
-
-  //   const { matchedproduct } = this.state;
-  //   const regex = new RegExp([query.trim()], 'i');
-  //   return matchedproduct.filter((product) => product.name.search(regex) >= 0);
-  // };
-
+  
+  componentDidMount(){
+    ProuductModal.ProductListing().then(
+      (res)=>{
+          if(res.success){
+              this.setState({
+                productsList:res.data.collection,
+              })
+          }else{
+              alert('server error')
+              console.log('NewOrder server error',res)
+          }
+      },(error)=>{
+          alert('fail')
+          console.log('NewOrder error',error)
+      }
+  )
+  }
   openDrawer = () => {
     Keyboard.dismiss();
     setTimeout(() => {
@@ -86,8 +88,8 @@ export default class NewOrder extends Component {
   Delete = () => {
     const { itemKey } = this.state
     this.CancelDialog()
-    this.state.productArray.splice(itemKey, 1)
-    this.setState({ productArray: this.state.productArray })
+    this.state.products.splice(itemKey, 1)
+    this.setState({ products: this.state.products })
 
   }
 
@@ -99,12 +101,12 @@ export default class NewOrder extends Component {
       maxHeight: 500,
       storageOptions: {
         skipBackup: true,
-        path: 'images',
+        path: 'image',
       },
     };
 
     ImagePicker.showImagePicker(options, response => {
-      console.log('Response = ', response);
+     // console.log('Response = ', response);
 
       if (response.didCancel) {
         console.log('User cancelled photo picker');
@@ -114,20 +116,41 @@ export default class NewOrder extends Component {
         console.log('User tapped custom button: ', response.customButton);
       } else {
         let source = { uri: response.uri };
-        this.setState({
-          avatarSource: source,
-        });
+        this.setState({avatarSource: source});  
+        this.UploadImage(response) 
       }
     });
   };
 
-  showDateTimePicker = (from) => {
+  UploadImage =(response)=>{
+    var formdata = new FormData();
+    formdata.append("image",{uri: response.uri, type:response.type, name:response.fileName})
+   // console.log('test',formdata)
+   console.log('typeeeeeee',response.type)
+
+    OrderModal.imageUpload(formdata).then(
+      (res)=>{
+        if(res.success){
+          console.log('SUCCESS',res);
+          alert('success')
+        }else{
+          alert('server error')
+          console.log('server error',res)
+        }
+      },(error)=>{
+        alert('fail')
+        console.log('request fail',error)
+      }
+    )}
+      
+  showDateTimePicker = () => {
     this.setState({ isDateTimePickerVisible: true });
   };
   handleDatePicked = date => {
-    //let dateText = this.convertDateTimeToString(date)
-    date = convertDateToString(date)
-    this.setState({ date });
+    var DateTime = new Date(date).getTime();
+    let aa = new Date(DateTime);
+    date = convertDateToString(aa)
+    this.setState({ date,order_date:DateTime  });
     this.hideDateTimePicker();
 
   };
@@ -137,7 +160,7 @@ export default class NewOrder extends Component {
 
 
   render1 = () => {
-    const { date, batch_no, price } = this.state;
+    const { order_date, batch_no, price } = this.state;
     if (ValidateNumber(price)) {
       if (batch_no && batch_no.length) {
         this.setState({ nextStep: 1 })
@@ -151,18 +174,19 @@ export default class NewOrder extends Component {
   }
 
   AddMoreProduct = () => {
-    const { SearchValue,selected, qty, weight, weightUnit, } = this.state;
+    const { product_id, qty, weight, weightUnit, products } = this.state;
     // if (Validate(SearchValue)) 
-      if(selected!='' && selected!='None'){
+      if(product_id!='' && product_id!='None'){
       if (ValidateNumber(qty)) {
         if (weightUnit && weightUnit.length && ValidateDecimalNumber(weight)) {
-          this.state.productArray.push({
-            name: selected,
-            qty: qty,
+          products.push({
+            product_id: product_id,
+            quantity: qty,
             weight: weight,
-            unit: weightUnit
+            weight_unit: weightUnit
           })
-          this.setState({ productArray: this.state.productArray, buttonDisabled: false })
+         
+          this.setState({ products: this.state.products, buttonDisabled: false })
         } else {
           this.setState({ errorMsg2: 'Enter weight in KG ,ML or gram without space and special character  ' })
         }
@@ -178,45 +202,46 @@ export default class NewOrder extends Component {
     // this.setState({ productArray: this.state.productArray })
     this.CallDialogBox(keyVal)
   }
+  
   saveInfo = () => {
-    const { SearchValue, date, qty, batch_no, weight, weightUnit, price, productArray ,selected } = this.state;
-    console.log('array length', productArray.length)
-    let productWeight = weight + weightUnit;
-    if (productArray.length >= 1) {
+    const {product_id, order_date, qty, batch_no, weight, weightUnit, price, products} = this.state;
+    console.log('array length', products.length)
+    // let productWeight = weight + weightUnit;
+    if (products.length >= 1) {
       let data = {
-        productArray,
+        products,
         batch_no,
-        date,
+        order_date,
         price
       }
-      console.log('data', data)
-      alert('ok')
+       console.log(data)
     } else {
       this.setState({ errorMsg2: 'Enter Product first' })
     }
   }
 
   render() {
-    const { buttonDisabled } = this.state;
-    let products = this.state.productArray.map((val, key) => {
+    const { buttonDisabled,productsList,populate } = this.state;
+    let product = this.state.products.map((val, key) => {
       return <List
         key={key}
         keyVal={key}
         val={val}
         deleteProduct={() => this.deleteProduct(key)}
+        
       ></List>
     })
     {this.state.mapOnce ?
-       myProduct.map((value) => {
+      productsList.map((value) => {
         this.state.populate.push({
-          label: value.name,
-          value: value.name
+          label: value.title,
+          value: value.id
         })
         this.setState({ mapOnce: false })
       }) : null
     }
-    console.log('new array', this.state.productArray)
-    const { SearchValue, date, errorMsg, errorMsg2, price, nextStep ,selected } = this.state;
+    //console.log('new array', this.state.productArray)
+    const { SearchValue, date, errorMsg, errorMsg2, price, nextStep ,product_id } = this.state;
     const placeholder = {
       label: 'Product Name',
       value: '',
@@ -261,7 +286,7 @@ export default class NewOrder extends Component {
                     styles={{ flex: 1, borderLeftWidth: 0, borderTopLeftRadius: 0, paddingLeft: 3 }}
                     onChangeText={(value) => this.setState({ price: value, errorMsg: '' })}
                     value={price}
-                    keyboardType={'number-pad'}
+                    keyboardType={'phone-pad'}
                   />
                 </View>
 
@@ -271,6 +296,7 @@ export default class NewOrder extends Component {
                     placeholder={'Batch No'}
                     onChangeText={(value) => this.setState({ batch_no: value, errorMsg: '' })}
                     value={this.state.batch_no}
+                    keyboardType={'phone-pad'}
                   />
                 </View>
                 <Text style={[styles.Heading, { marginBottom: 10 }]}>Select Date</Text>
@@ -297,24 +323,6 @@ export default class NewOrder extends Component {
               <View>
                 <View style={{marginTop: 10 }}>
                   <Text style={[styles.Heading, { marginBottom: 10 }]}>Product Name</Text>
-                  {/* <Autocomplete
-                    style={styles.AutocompleteStyle}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    inputContainerStyle={{ borderWidth: 0, color: 'red' }}
-                    data={matchedproduct.length >= 1 && comp(SearchValue, matchedproduct[0].name) ? [] : matchedproduct}
-                    defaultValue={SearchValue}
-                    onChangeText={(text) => this.setState({ SearchValue: text, errorMsg2: '' })}
-                    placeholder="Product Name "
-                    placeholderTextColor={'#979797'}
-                    renderItem={({ item }) => (
-                      <TouchableOpacity onPress={() => this.setState({ SearchValue: item.name })}>
-                        <Text style={styles.itemText}>
-                          {item.name}
-                        </Text>
-                      </TouchableOpacity>
-                    )}>
-                  </Autocomplete> */}
                   <View style={{ borderWidth: 1, borderColor: BBCOLOR, borderBottomRightRadius: 15, borderTopLeftRadius: 15 }}>
                     <RNPickerSelect
                       useNativeAndroidPickerStyle={false}
@@ -326,17 +334,11 @@ export default class NewOrder extends Component {
                           borderRadius: 10,
                           color: TextColor,
                         },
-                        inputIOS: {
-                          fontSize: RFValue(16),
-                          paddingHorizontal: 10,
-                          paddingVertical: 5,
-                          borderRadius: 10,
-                          placeholderTextColor: '#979797',
-                          color: TextColor,
-                        },
                       }}
-                      onValueChange={(value) => this.setState({ selected: value,errorMsg2:'' })}
+                      onValueChange={(value) => this.setState({ product_id: value, errorMsg2:'' })}
+                     // onValueChange={(value)=>this.PickerValue(value)}
                       items={this.state.populate}
+                      value={product_id}
                       Icon={() => {
                         return <Icon
                           style={{ position: 'absolute', top: Platform.OS === 'ios' ? 5 : 10, right: 10,color:'grey' }}
@@ -360,7 +362,7 @@ export default class NewOrder extends Component {
                     placeholder={'Product weight'}
                     onChangeText={(value) => this.setState({ weight: value, errorMsg2: '' })}
                     value={this.state.weight}
-                    keyboardType={'numeric'}
+                    keyboardType={'number-pad'}
                   />
                   <Picker
                     mode={'dropdown'}
@@ -406,7 +408,7 @@ export default class NewOrder extends Component {
             </View>
             {nextStep === 1 ?
               <View>
-                {products}
+                {product}
               </View>
 
               : null

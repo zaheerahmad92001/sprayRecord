@@ -28,7 +28,10 @@ const Text_Input = (props) => {
                     // ref={props.ref}
                     // returnKeyType={props.returnKeyType}
                     // onSubmitEditing={props.onSubmitEditing}
-                    
+                    ref={props.ref}
+                    returnKeyType = {props.returnKeyType}
+                    onSubmitEditing={props.onSubmitEditing}
+                    blurOnSubmit={props.blurOnSubmit}
                     
                 />
       

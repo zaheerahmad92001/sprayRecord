@@ -33,10 +33,11 @@ export default StyleSheet.create({
     quantity: {
         fontWeight: '500',
         fontFamily: 'Poppins',
-        fontStyle: 'normal',
+        fontStyle: 'italic',
         fontSize: RFValue(14),
         color: TextColor,
-        paddingTop: 5
+        paddingTop: 5,
+
     },
 
     slide1: {

@@ -29,7 +29,8 @@ import saleSearcView from '../views/saleSearchView';
 import ReturnedProductList from '../views/ReturnedProductList';
 import ReturnProducts from '../views/ReturnProduct';
 import EditRetrunProducts from '../views/EditReturnProduct';
-
+import Settings from '../views/settings';
+import PasswordChange from '../views/PasswordChange'
 import { fromRight,fromBottom } from 'react-navigation-transitions';
 
 const LoadingNavigator = createStackNavigator({
@@ -76,6 +77,9 @@ const AppNavigator = createStackNavigator({
     ReturnedProductList:ReturnedProductList,
     ReturnProducts:ReturnProducts,
     EditRetrunProducts:EditRetrunProducts,
+    Settings:Settings,
+    PasswordChange:PasswordChange,
+
 },
 
     {

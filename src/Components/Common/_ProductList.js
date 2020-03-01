@@ -14,6 +14,7 @@ import { TextFont_Stnadered } from '../../Constants/fontsize';
 import { CountColor, borderColor, TextColor } from '../../Constants/colors'
 import { RFValue } from 'react-native-responsive-fontsize';
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
+import {IMAGEURL} from '../../RandFunction'
 
 const _Prouducts = (props) => {
     return (
@@ -21,18 +22,13 @@ const _Prouducts = (props) => {
             <CardItem
                 button onLongPress={props.BottomSheet}
                 >
-                <Thumbnail square 
-                style={{backgroundColor:'white'}}
-                source={require('../../assets/image/p.png')} 
+                <Thumbnail circle  
+                 style={{backgroundColor:'white'}}
+                source={{uri:IMAGEURL+props.item.default_image}} 
                 /> 
                    <View style={{flex:1,marginLeft:15,marginRight:3}}>
-                    <Text numberOfLines={2} style={styles.Text}>{props.item.name}</Text>
+                    <Text numberOfLines={2} style={styles.Text}>{props.item.title}</Text>
                     </View>
-                    {/* <Icon
-                        name={'dots-vertical'}
-                        type={'MaterialCommunityIcons'}
-                        onPress={props.BottomSheet}
-                    /> */}
             </CardItem>
         </Card>
     )

@@ -17,6 +17,7 @@ import {ValidateEmail } from '../../RandFunction';
 import { Container, Content } from 'native-base';
 import styles from '../forgetpassword/styles';
 import { MenuTextColor } from '../../Constants/colors';
+import AuthModal from '../../../Utils/modal/Auth';
 const { width: ScreenWidth ,height:ScreenHeight } = Dimensions.get('window');
 export default class ForgetPassword extends Component {
     constructor(props) {
@@ -33,7 +34,21 @@ export default class ForgetPassword extends Component {
         const { email} = this.state;
         if(email && email.length && ValidateEmail(email)){
            this.setState({errorMsg:''})
-           alert(email)
+ /////////////////////////////////////////////////////////
+             AuthModal.ForgetPass(email).then(
+                 (response)=>{
+                    if(response.success){
+                        console.log('response success',response.success)
+                        alert('Instructions has been sent to your account')
+                    } else{
+                        console.log('response server error',response)
+                        alert('Server Error')
+                    }
+                 },(error)=>{
+                   console.log('Error forget password',error)
+                 }
+             )
+ ////////////////////////////////////////////////////////            
         }else{
             this.setState({errorMsg:'Enter valid email'})
         }

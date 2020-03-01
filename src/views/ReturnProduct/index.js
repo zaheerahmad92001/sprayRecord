@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, TouchableOpacity, Keyboard, Picker } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Keyboard, Picker, ToastAndroid } from 'react-native';
 import _Header from '../../Components/Common/AppHeader';
 import Autocomplete from 'react-native-autocomplete-input';
 import Text_Input from '../../Components/Common/inputField';
@@ -13,28 +13,47 @@ import RNPickerSelect from 'react-native-picker-select';
 import { ValidateNumber, Validate, ValidateDecimalNumber, convertDateToString } from '../../RandFunction';
 import styles from '../ReturnProduct/styles';
 import { TextColor, BBCOLOR,borderColor } from '../../Constants/colors';
+import ProuductModal from '../../../Utils/modal/Product';
+import SaleModal from '../../../Utils/modal/Sale';
 
-const myProduct =
-    [
-        { Id: 1, qty: 22, name: 'abc' },
-        { Id: 2, qty: 22, name: 'abc' },
-        { Id: 3, qty: 22, name: 'def' },
-        { Id: 4, qty: 22, name: 'ghi' },
-        { Id: 5, qty: 22, name: 'jkl' },
-        { Id: 10, qty: 22, name: 'adc' },
-    ]
+// const myProduct =
+//     [
+//         { Id: 1, qty: 22, name: 'abc' },
+//         { Id: 2, qty: 22, name: 'abc' },
+//         { Id: 3, qty: 22, name: 'def' },
+//         { Id: 4, qty: 22, name: 'ghi' },
+//         { Id: 5, qty: 22, name: 'jkl' },
+//         { Id: 10, qty: 22, name: 'adc' },
+//     ]
 export default class ReturnProducts extends Component {
     constructor(props) {
         super(props);
         this.state = {
             qty: '', isDatePickerVisible: false,
-            date: '', errorMsg: '',
+            date: '', return_date:'', errorMsg: '',
             selected: "None", mapOnce: true,
-            populate: [],
+           populate: [],
+           products:[],
 
         }
     }
-
+    componentDidMount(){
+        ProuductModal.ProductListing().then(
+            (res)=>{
+                if(res.success){
+                   this.setState({
+                       products:res.data.collection,
+                   })
+                }else{
+                    alert('server error');
+                    console.log('Return product error',res)
+                }
+            },(error)=>{
+              alert('fail');
+              console.log('Return product error',error)
+            }
+        )
+    }
     goBack = () => {
         this.props.navigation.pop()
     }
@@ -43,8 +62,10 @@ export default class ReturnProducts extends Component {
         this.setState({ isDateTimePickerVisible: true });
     };
     handleDatePicked = date => {
-        date = convertDateToString(date)
-        this.setState({ date });
+        var DateTime = new Date(date).getTime();
+        let aa= new  Date(DateTime)
+        date = convertDateToString(aa)
+        this.setState({ date ,return_date:DateTime });
         this.hideDateTimePicker();
 
     };
@@ -54,12 +75,12 @@ export default class ReturnProducts extends Component {
 
 
     saveInfo = () => {
-        const { date, qty, weight, weightUnit, selected } = this.state;
+        const { return_date, qty, weight, weightUnit, selected } = this.state;
         if (selected != '' && selected != 'None') {
             if (ValidateNumber(qty)) {
                 if (weightUnit && weightUnit.length && ValidateDecimalNumber(weight)) {
                     this.setState({ errorMsg: '' })
-                    this.Create(selected, date, qty, weight, weightUnit)
+                    this.Create(selected, qty, weight, weightUnit,return_date)
                 } else {
                     this.setState({ errorMsg: 'Enter weight in KG, ML or gm  without space and special character' })
                 }
@@ -70,22 +91,44 @@ export default class ReturnProducts extends Component {
             this.setState({ errorMsg: 'Enter product name white no white space in the beginning ' })
         }
     }
-    Create = (name, qty, date) => {
-        alert(name)
+//////////////////////////////////////////////////////////////////////////////////
+    Create = (id, qty,weight,weightUnit,return_date) => {
+        const scope = this;
+        SaleModal.ReturnProduct(id,qty,weight,weightUnit,return_date).then(
+            (res)=>{
+                if(res.success){
+                   scope.setState({
+                       selected:'None',
+                       qty:'',date:'',return_date:'',
+                       weight:'',weightUnit:'',
+                   })
+                   ToastAndroid.show('Product added',ToastAndroid.SHORT)
+                }else{
+                   alert('server error')
+                   console.log('server error',res)
+                }
+            },(error)=>{
+                alert('fail'),
+                console.log('reqeust fail',error)
+            } 
+        )
     }
+//////////////////////////////////////////////////////////////////////////////////    
     render() {
-        const { date, qty, errorMsg } = this.state;
+        const { date, qty, errorMsg,products,selected } = this.state;
+        console.log('selected data',this.state.selected)
         {
             this.state.mapOnce ?
-            myProduct.map((value) => {
+            products.map((value) => {
                 this.state.populate.push({
-                    label: value.name,
-                    value: value.name
+                    label: value.title,
+                    value: value.id
                 })
                 this.setState({ mapOnce: false })
             }) : null
         }
 
+        
         const placeholder = {
             label: 'Product Name',
             value: '',
@@ -94,12 +137,12 @@ export default class ReturnProducts extends Component {
             fontSize: RFValue(16)
         };
         return (
-
             <Container style={styles.container}>
                 <_Header
                     ImageLeftIcon={'keyboard-backspace'}
                     LeftPress={() => this.goBack()}
-                    HeadingText={'Add product'} />
+                    HeadingText={'Add product'} 
+                    />
                 <Content style={styles.content}>
 
                     <View style={{ marginBottom: RFValue(10), marginTop: RFValue(35) }}>
@@ -115,17 +158,11 @@ export default class ReturnProducts extends Component {
                                         borderRadius: 10,
                                         color: TextColor,
                                     },
-                                    inputIOS: {
-                                        fontSize: RFValue(16),
-                                        paddingHorizontal: 10,
-                                        paddingVertical: 5,
-                                        borderRadius: 10,
-                                        placeholderTextColor: '#979797',
-                                        color: TextColor,
-                                    },
+                                   
                                 }}
                                 onValueChange={(value) => this.setState({ selected: value, errorMsg: '' })}
                                 items={this.state.populate}
+                                value={selected}
                                 Icon={() => {
                                     return <Icon
                                         style={{ position: 'absolute', top: Platform.OS === 'ios' ? 5 : 10, right: 10,color:'grey' }}

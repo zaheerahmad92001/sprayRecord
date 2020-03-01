@@ -51,5 +51,14 @@ container: {
     marginTop: 10,
     marginHorizontal: 20,
     backgroundColor: buttonBGcolor
-  }
+  },
+  avatarContainer: {
+    borderColor: '#9B9B9B',
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: RFValue(180),
+    height: RFValue(180),
+    borderRadius: RFValue(90)
+},
 })

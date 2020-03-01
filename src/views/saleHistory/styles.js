@@ -32,12 +32,25 @@ export default StyleSheet.create({
     },
     SearchIconView:{
         width: ScreenWidth * 0.2,
-        paddingVertical: 10
+        paddingVertical: 10,
+       // backgroundColor:'yellow'
     },
     selectDateStyle: {
-        // backgroundColor: 'green',
+         //backgroundColor: 'green',
         paddingVertical: 12,
-        width: ScreenWidth * 0.75,
+        width: ScreenWidth * 0.34,
+    },
+    Toview:{
+    justifyContent:'center',
+   // backgroundColor:'blue',
+    alignItems:'flex-start'
+    
+    },
+    to:{
+      // backgroundColor:'red',
+      // textAlign:'center',
+       alignSelf:'center'
+
     },
     IconStyle: {
         width: RFValue(35),

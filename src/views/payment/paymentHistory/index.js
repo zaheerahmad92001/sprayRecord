@@ -45,9 +45,10 @@ export default class paymentHistory extends Component {
     }
     constructor(props) {
         super(props);
+        this.param = this.props.navigation.getParam('currentBalance')
         this.state = {
             payment: '',
-            date: new Date(), visible: false,
+            date:'', visible: false,
             isDatePickerVisible: false,
             showBottomSheet: false,
             type: '',
@@ -132,6 +133,7 @@ export default class paymentHistory extends Component {
             CancelSheet={()=>this.onCloseSheet()}
             /> )}
     render() {
+        console.log('param',this.param)
         const { date } = this.state;
         return (
             <Container>
@@ -181,7 +183,7 @@ export default class paymentHistory extends Component {
                                         </TouchableOpacity>
                                     </View>
                                     <View style={{ marginTop: RFValue(10) }}>
-                                        <BlinkingClass text={'30000'} />
+                                        <BlinkingClass text={this.param} />
                                     </View>
                                 </View>
                             </CollapsingParallax>

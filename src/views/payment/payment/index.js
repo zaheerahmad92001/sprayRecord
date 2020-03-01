@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import {
     View, Text, Dimensions,
-    Keyboard, StyleSheet
+    Keyboard, StyleSheet, ToastAndroid
 } from 'react-native';
-import { Drawer} from 'native-base';
+import { Drawer, Content } from 'native-base';
 import _Header from '../../../Components/Common/AppHeader';
 import Sidebar from '../../../Components/sidebar/menu';
 import Text_Input from '../../../Components/Common/inputField';
@@ -13,26 +13,50 @@ import { Container } from 'native-base';
 import BlinkingClass from '../BlinkingText';
 import { RFValue } from 'react-native-responsive-fontsize';
 import DateTimePicker from "react-native-modal-datetime-picker";
-import { CountColor, buttonBGcolor} from '../../../Constants/colors';
+import { CountColor, buttonBGcolor } from '../../../Constants/colors';
 import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import styles from '../payment/styles';
-import Dialog,
-{
-    DialogTitle,
-    DialogContent,
-    SlideAnimation,
-    DialogFooter,
-    DialogButton,
-} from 'react-native-popup-dialog';
+import Dialog, { DialogTitle, DialogContent, SlideAnimation, DialogFooter, DialogButton, } from 'react-native-popup-dialog';
 import { ValidateDecimalNumber, convertDateToString } from '../../../RandFunction';
+import PaymentModal from '../../../../Utils/modal/Payment';
 export default class payment extends Component {
     constructor(props) {
         super(props);
         this.state = {
             price: '', errorMsg: '', prNo: '',
-            date: new Date(), visible: false,
-            isDatePickerVisible: false,
+            date: '', paymentDate: '', visible: false,
+            isDatePickerVisible: false,currentBalance:'',
         }
+    }
+    componentDidMount(){
+        PaymentModal.Balance().then(
+            (res)=>{
+                if(res.success){
+                   this.setState({currentBalance:res.data.collection.balance})
+                }else{
+                  alert('server error')
+                  console.log('server error',res)
+                }
+            },(error)=>{
+              alert('request fail')
+              console.log('server error',error)
+            }
+        )
+    }
+    updateCurrentBalance=()=>{
+        PaymentModal.Balance().then(
+            (res)=>{
+                if(res.success){
+                   this.setState({currentBalance:res.data.collection.balance})
+                }else{
+                  alert('server error')
+                  console.log('server error',res)
+                }
+            },(error)=>{
+              alert('request fail')
+              console.log('server error',error)
+            }
+        )
     }
     openDrawer = () => {
         Keyboard.dismiss();
@@ -47,29 +71,56 @@ export default class payment extends Component {
         Keyboard.dismiss()
     }
     navigation = (routeName) => {
-        this.props.navigation.navigate(routeName);
+        const {currentBalance}= this.state;
+        this.props.navigation.navigate(routeName,{currentBalance});
     }
-    showDateTimePicker = (from) => {
+    showDateTimePicker = () => {
         this.setState({ isDateTimePickerVisible: true });
     };
     handleDatePicked = date => {
         //let dateText = this.convertDateTimeToString(date)
-        date=convertDateToString(date)
-        this.setState({ date });
+        var DateTime = new Date(date).getTime()
+        let aa = new Date(DateTime)
+        date = convertDateToString(aa)
+        this.setState({ date, paymentDate: DateTime });
         this.hideDateTimePicker();
     };
     hideDateTimePicker = () => {
         this.setState({ isDateTimePickerVisible: false });
     };
-    openDate(start) {
-        this.showDateTimePicker(start);
-    }
+  
     CallDialogBox = () => {
         this.setState({ visible: true })
     }
     CancelDialog = () => {
         this.setState({ visible: false });
     }
+
+    savePayment = () => {
+        const {paymentDate,price,prNo, } = this.state;
+        this.CancelDialog();
+/////////////////////////////////////////////////////////////////////////////////////////
+PaymentModal.AddPayment(paymentDate,price,prNo).then(
+    (res)=>{
+    if(res.success){
+       this.setState({
+           paymentDate:'',date:'',
+           price:'',prNo:''
+       })
+       this.updateCurrentBalance()
+       ToastAndroid.show('Payment Add',ToastAndroid.SHORT)
+    }else{
+        alert('server error')
+        console.log('server error',res)
+    }
+    },(error)=>{
+     alert('fail')
+     console.log('fail',error)
+    }
+)
+/////////////////////////////////////////////////////////////////////////////////////////
+    }
+
     saveInfo = () => {
         const { price, prNo } = this.state;
         if (ValidateDecimalNumber(price)) {
@@ -83,13 +134,10 @@ export default class payment extends Component {
             this.setState({ errorMsg: 'Enter Payment in digits ' })
         }
     };
-    savePayment = () => {
-        const { payment } = this.state;
-        this.CancelDialog();
-        alert('payment saved')
-    }
+
+    
     render() {
-        const { date, price, isDatePickerVisible, errorMsg } = this.state;
+        const { date, price, isDatePickerVisible, errorMsg,currentBalance } = this.state;
         return (
             <Drawer ref={(ref) => this.drawer = ref}
                 content={<Sidebar navigation={this.props.navigation} drawerClose={this.closeDrawer} />}
@@ -98,28 +146,23 @@ export default class payment extends Component {
                 panOpenMask={0.2}
                 negotiatePan={true}
                 tapToClose={true}
-            //side='right'
+               //side='right'
             >
-                <Container style={{ flex: 1 }}>
+                <Container>
 
                     <_Header
                         ImageLeftIcon={'menu'}
                         LeftPress={() => this.openDrawer()}
                         HeadingText={'Payment'} />
-                    <TouchableWithoutFeedback onPress={() => this.keyboardDismiss()}>
+                    {/* <TouchableWithoutFeedback onPress={() => this.keyboardDismiss()}> */}
+                    <Content showsVerticalScrollIndicator={false}>
                         <View style={{ marginTop: RFValue(10) }}>
-                            <BlinkingClass text={'300000000'} />
+                            <BlinkingClass text={currentBalance} />
                         </View>
-                        <View style={{ marginTop: ScreenHeight * 0.03 }}>
+                        <View style={{marginTop:RFValue(15)}}>
                             <Text style={{ textAlign: 'center', color: CountColor }}>This amount will be added into your current balance</Text>
                         </View>
-                        <View style={styles.content}>
-                            {/* <Text style={[styles.Heading, { marginBottom: 10 }]}>Payment</Text>
-                            <Text_Input
-                                placeholder={'Amount'}
-                                onChangeText={(value) => this.setState({ price: value, errorMsg:'' })}
-                                value={this.state.price}
-                                keyboardType={'number-pad'} /> */}
+                        <View style={{marginHorizontal:10}}>
                             <Text style={styles.Heading}>Payment</Text>
                             <View style={[styles.Input, { flexDirection: 'row' }]}>
                                 <Text style={styles.RsText} >Rs.</Text>
@@ -130,18 +173,18 @@ export default class payment extends Component {
                                     keyboardType={'number-pad'}
                                 />
                             </View>
-                            <Text style={[styles.Heading,{marginTop:0}]}>PR No</Text>
+                            <Text style={[styles.Heading, { marginTop: 0 }]}>PR No</Text>
                             <View style={styles.Input}>
                                 <Text_Input
                                     placeholder={'PR NO'}
                                     onChangeText={(value) => this.setState({ prNo: value, errorMsg: '' })}
                                     value={this.state.prNo}
-                                    keyboardType={'number-pad'}
+                                    keyboardType={'default'}
                                 />
                             </View>
-                            <Text style={[styles.Heading, { marginBottom: 10 ,marginTop:0}]}>Select Date</Text>
-                            <TouchableOpacity style={styles.startDContainer} 
-                            onPress={() => this.showDateTimePicker()}>
+                            <Text style={[styles.Heading, { marginBottom: 10, marginTop: 0 }]}>Select Date</Text>
+                            <TouchableOpacity style={styles.startDContainer}
+                                onPress={() => this.showDateTimePicker()}>
                                 <View>
                                     <Text style={styles.startDInput}>
                                         {/* {this.state.date.toString().slice(3, 16)} */}
@@ -162,8 +205,7 @@ export default class payment extends Component {
                             <View style={{ marginTop: ScreenHeight * 0.02 }}>
                                 <_Button
                                     textButton={'SAVE '}
-                                    onPress={() => this.saveInfo()}
-                                >
+                                    onPress={() => this.saveInfo()}>
                                 </_Button>
                             </View>
                             <View style={styles.paymentTouch}>
@@ -173,7 +215,8 @@ export default class payment extends Component {
                                 </TouchableOpacity>
                             </View>
                         </View>
-                    </TouchableWithoutFeedback>
+                        </Content>
+                    {/* </TouchableWithoutFeedback> */}
                     <Dialog
                         visible={this.state.visible}
                         onTouchOutside={() => {

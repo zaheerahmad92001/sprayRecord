@@ -7,14 +7,23 @@ import {
     Dimensions,
     SafeAreaView
 } from 'react-native';
-import { Button, Container, Drawer } from 'native-base';
+import { Button,Icon } from 'native-base';
 import { RFValue } from 'react-native-responsive-fontsize';
+import AsyncStorage from "@react-native-community/async-storage"
+import { MenuTextColor } from '../../Constants/colors';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 export default class Sidebar extends Component {
 
     _onPress = (name) => {
+        this.props.navigation.pop()
         this.props.navigation.navigate({ routeName: name })
         this.props.drawerClose();
+    }
+    _signOut =()=>{
+        const scope = this;
+        AsyncStorage.removeItem("user").then(()=>{
+           scope.props.navigation.navigate('Login')
+        })
     }
     render() {
         return (
@@ -23,7 +32,7 @@ export default class Sidebar extends Component {
                     <Image
                       style={{width:screenWidth*0.80,height:screenHeight*0.2,//marginTop:RFValue(13)
                     }}
-                       source={require('../../assets/image/Banner.jpg')}
+                       source={require('../../assets/image/banner2.jpeg')}
                     />
                     {/* <View style={{ marginVertical: 20 }}></View> */}
                 </View>
@@ -102,11 +111,26 @@ export default class Sidebar extends Component {
                         </Image>
                         <Text style={styles.Text}>Payment</Text>
                     </Button>
+                    <Button transparent
+                        style={[styles.Button,{paddingHorizontal:0}]}
+                        onPress={() => this._onPress('Settings')}>
+                        {/* <Image
+                            style={styles.Icon}
+                        source={require('../../assets/image/Payment.png')}>
+                        </Image> */}
+                        
+                        <Icon
+                        name={'settings-outline'}
+                        type={'MaterialCommunityIcons'}
+                        style={{color:MenuTextColor,fontSize:RFValue(28)}}
+                        />
+                        <Text style={[styles.Text,{paddingLeft:0}]}>Settings</Text>
+                    </Button>
                 </View>
                 <View style={{ flex: 0.1, bottom: 20, }}>
                     <Button transparent
                         style={styles.Button}
-                        onPress={() => this._onPress('Login')}>
+                        onPress={() => this._signOut()}>
                         <Image
                             style={styles.Icon}
                             source={require('../../assets/image/Logout.png')}/>

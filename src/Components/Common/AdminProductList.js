@@ -13,54 +13,30 @@ import { Card, } from 'native-base';
 import { TextFont_Stnadered } from '../../Constants/fontsize';
 import { CountColor, borderColor, TextColor } from '../../Constants/colors'
 import { RFValue } from 'react-native-responsive-fontsize';
+import { IMAGEURL } from '../../RandFunction';
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 
 export default class AdminProductList extends Component {
     render() {
-        const { qty, Id, name } = this.props;
+        const { qty, Id, name,price,img } = this.props;
         return (
             <TouchableOpacity style={{ width: ScreenWidth * 0.47, borderWidth: 1, borderColor:borderColor, marginHorizontal: 5, marginBottom: 5, paddingVertical: 10 }}
                 onPress={() => this.props.navigation.navigate('ProductDetail', {
                     item: {
                         Id: Id,
-                        qty: qty,
-                        name: name,
+                        // qty: qty,
+                        // name: name,
+                        // img:img,
+                        // price:price,
                         from:'admin'
                     }
                 })}
             >
-                {/* <View style={styles.cardStyle}>
-                    <View style={styles.imageView} >
-                        <Image
-                            style={styles.imageStyle}
-                             source={require('../../assets/image/p.png')}
-                            //source={require('../../assets/image/1.jpg')}
-                        />
-                    </View>
-                   
-                    <View style={styles.priceAvailableView}>
-                        <Text style={styles.heading}>
-                            Name
-                          </Text>
-                        <Text numberOfLines={3} ellipsizeMode={'tail'} style={styles.count}>
-                            {name}
-                          </Text>
-                    </View>
-                    
-                    <View style={styles.priceAvailableView}>
-                        <Text style={styles.heading}>
-                            Quantity
-                          </Text>
-                        <Text style={styles.count}>
-                            {qty}
-                          </Text>
 
-                    </View>
-                </View> */}
                 <View style={{ alignItems: 'center', justifyContent: 'center' }} >
                     <Image style={styles.imageStyle}
-                        //source={require('../../assets/image/3.jpg')}
-                        source={require('../../assets/image/p.png')}
+                          source={{uri:IMAGEURL+img}}
+                       // source={require('../../assets/image/p.png')}
                          />
                 </View>
 

@@ -1,0 +1,81 @@
+{
+    "login":{
+        "method":"POST",
+        "route":"/login"
+    },
+    "register":{
+        "method":"POST",
+        "route":"/register"
+    },
+    "forgot-password":{
+        "method": "POST",
+        "route":"/forgot-password"
+    },
+    "change-password":{
+        "method":"POST",
+        "route":"/auth/change-password"
+    },
+    "products-filter" :{
+        "method":"POST",
+        "route":"/products-filter"
+    },
+    
+    "product-details":{
+        "method":"GET",
+        "route":"/product-details"
+    },
+    "product-delete":{
+        "method":"GET",
+        "route":"/auth/product-delete"
+    },
+    "product-edit":{
+     "method":"GET",
+     "route":"/auth/product-edit"
+    },
+    "productEdit":{
+       "method":"POST",
+       "route":"/auth/product/save" 
+    },
+    "product-save":{
+      "method":"POST",
+      "route":"/auth/product/save"
+    },
+    "orders-listing":{
+        "method":"GET",
+        "route":"/auth/orders-listing"
+    },
+    "order-detail":{
+        "method":"GET",
+        "route":"/auth/order-detail"
+    },
+    "sale":{
+        "method":"POST",
+        "route":"/auth/sale"
+    },
+    "return-sale":{
+        "method":"POST",
+        "route":"/auth/return-sale"
+    },
+    "filter-sale":{
+    "method":"POST",
+    "route":"/auth/filter-sale"
+    },
+    "image-upload":{
+        "method":"POST",
+        "route":"/auth/image-upload"
+    },
+    "save-order":{
+        "method" :"POST",
+        "route" :"/auth/save-order"
+    },
+    "payment":{
+        "method":"POST",
+        "route":"/auth/payment"
+    },
+    "balance":{
+        "method":"GET",
+        "route":"/auth/balance"
+    }
+
+    
+}

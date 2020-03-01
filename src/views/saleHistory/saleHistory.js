@@ -15,6 +15,8 @@ const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 import _SaleHistory from '../../Components/Common/saleHistory';
 import { convertDateToString } from '../../RandFunction';
 import styles from '../saleHistory/styles';
+import moment from 'moment';
+
 var radio_props = [
     { label: 'Daily', value: 0 },
     { label: 'Weekly', value: 1 },
@@ -41,13 +43,9 @@ export default class SaleHistory extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            Stock: sale_history, input: '', matchedValue: sale_history,
-            isDatePickerVisible: false, date: '', report: 0, index: 0,
-            routes: [
-                { key: 'daily', title: 'Daily' },
-                { key: 'weekly', title: 'Weekly' },
-                { key: 'monthly', title: 'Monthly' },
-            ],
+            Stock: sale_history, input: '', matchedValue: sale_history,isDatePicker: false,
+            isDatePickerVisible: false, FromDate: '',fDate:'',ToDate:'',tDate:'', 
+            report:''
         };
     }
     openDrawer = () => {
@@ -65,13 +63,30 @@ export default class SaleHistory extends Component {
         this.setState({ isDateTimePickerVisible: true });
     };
     handleDatePicked = (date) => {
-        date = convertDateToString(date)
-        this.setState({ date });
+        let DateTime = new Date(date).getTime()
+        let aa = new Date(DateTime);
+        date = convertDateToString(aa)
+        this.setState({FromDate: date,fDate:DateTime });
         this.hideDateTimePicker();
 
     };
     hideDateTimePicker = () => {
         this.setState({ isDateTimePickerVisible: false });
+    };
+
+    show_DateTimePicker = () => {
+        this.setState({ isDateTimePicker: true });
+    };
+    handle_DatePicked = (date) => {
+        let DateTime = new Date(date).getTime()
+        let aa = new Date(DateTime);
+        date = convertDateToString(aa)
+        this.setState({ToDate: date,tDate:DateTime });
+        this.hideDateTimePicker();
+
+    };
+    hide_DateTimePicker = () => {
+        this.setState({ isDateTimePicker: false });
     };
     findProduct(query) {
         if (query === '') {
@@ -91,7 +106,19 @@ export default class SaleHistory extends Component {
         )
     };
     render() {
-        let { input, date, Stock, Sale } = this.state;
+        var date = new Date()
+        console.log('current date',date.getTime())
+        var aa= new Date()
+        aa.setDate(date.getDate()+5)
+        console.log('new date',aa.getTime())
+
+        // var newdate = moment(date,'DD/MM/YYYY').add(5,'day').format('X')
+        // console.log('new date',newdate)
+        // var ab = moment(newdate).format('DD/MM/YYYY')
+        // console.log('ab',ab)
+        
+
+        let { input, FromDate,fDate,ToDate,tDate, Stock, Sale,report } = this.state;
         const matchedValue = this.findProduct(input);
         const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
         return (
@@ -136,7 +163,7 @@ export default class SaleHistory extends Component {
                                         <RadioForm
                                             style={{ justifyContent: 'space-around', marginHorizontal: 8, }}
                                             radio_props={radio_props}
-                                            initial={0}
+                                            initial={-1}
                                             onPress={(value) => this.setState({ report: value })}
                                             formHorizontal={true}
                                             labelHorizontal={true}
@@ -175,11 +202,25 @@ export default class SaleHistory extends Component {
                                             onPress={() => this.showDateTimePicker()}>
                                             <Text style={styles.startDInput}>
                                                 {/* {this.state.date.toString().slice(3, 16)} */}
-                                                {!date || !date.length ? 'Select date' : date}
+                                                {!FromDate || !FromDate.length ? 'From' : FromDate}
+                                            </Text>
+                                        </TouchableOpacity>
+                                        <View style={styles.Toview}>
+                                        <Text style={styles.to}>-</Text>
+                                        </View>
+                                        <TouchableOpacity style={[styles.selectDateStyle,{justifyContent:'center',alignItems:'center'}]}
+                                            onPress={() => this.show_DateTimePicker()}>
+                                            <Text style={styles.startDInput}>
+                                                {/* {this.state.date.toString().slice(3, 16)} */}
+                                                {!ToDate || !ToDate.length ? 'To' : ToDate}
                                             </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.SearchIconView}
-                                            onPress={() => this.props.navigation.navigate('saleSearcView')}>
+                                            onPress={() => this.props.navigation.navigate('saleSearcView',{
+                                                item:{
+                                                    filter:report
+                                                }
+                                            })}>
                                             <Icon
                                                 name={'ios-search'}
                                                 type={'Ionicons'}
@@ -220,7 +261,17 @@ export default class SaleHistory extends Component {
                     {/* <KeyboardAvoidingView
                     style={{ flex: 1 }}
                     behavior={'height'}> */}
-                    <View>
+                   
+                            <FlatList
+                                showsVerticalScrollIndicator={false}
+                                data={Stock}
+                                keyExtractor={(item) => item.Id}
+                                renderItem={this.renderSaleHistory}
+                                renderScrollComponent={this.renderScroll}
+                                numColumns={1}
+                                horizontal={false}
+                            />
+                    {/* <View>
                         {input === '' ?
                             <FlatList
                                 showsVerticalScrollIndicator={false}
@@ -247,7 +298,7 @@ export default class SaleHistory extends Component {
 
                         }
 
-                    </View>
+                    </View> */}
 
                     {/* </KeyboardAvoidingView> */}
                 </CoordinatorLayout>
@@ -255,6 +306,15 @@ export default class SaleHistory extends Component {
                     isVisible={this.state.isDateTimePickerVisible}
                     onConfirm={this.handleDatePicked}
                     onCancel={this.hideDateTimePicker}
+                    is24Hour={false}
+                    mode={'date'}
+                    datePickerModeAndroid={'spinner'}
+                    timePickerModeAndroid={'spinner'}
+                />
+                 <DateTimePicker
+                    isVisible={this.state.isDateTimePicker}
+                    onConfirm={this.handle_DatePicked}
+                    onCancel={this.hide_DateTimePicker}
                     is24Hour={false}
                     mode={'date'}
                     datePickerModeAndroid={'spinner'}

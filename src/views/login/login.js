@@ -6,6 +6,8 @@ import {
     ScrollView,
     StatusBar,
     Dimensions,
+    ToastAndroid,
+    ActivityIndicator,
 } from 'react-native';
 import Text_Input from '../../Components/Common/inputField';
 import {buttonBGcolor, MenuTextColor} from '../../Constants/colors'
@@ -15,7 +17,11 @@ import _Header from '../../Components/Common/AppHeader';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import{ValidateEmail} from '../../RandFunction';
 import styles from '../login/styles';
+import { requestHandler } from '../../../Utils/requestHandler';
+import AuthModal from '../../../Utils/modal/Auth';
+import AsyncStorage from '@react-native-community/async-storage';
 const {height:screenHeight, width:screenWidth}= Dimensions.get('window');
+
 export default class Login extends Component {
     constructor(props) {
         super(props);
@@ -24,29 +30,63 @@ export default class Login extends Component {
             email: '',
             pass: '',
             errorMsg:'',
-            secureText: true
+            secureText: true,
+            isFetch:false,
         }
     }
     _onPress = (rootName) => {
         this.props.navigation.navigate(rootName)
     }
+    
     saveInfo =()=>{
     const {email,pass} = this.state
-     if(email && email.length && ValidateEmail(email) ){
+     if(email && email.length && ValidateEmail(email.trim()) ){
         if(pass && pass.length){
-             this.setState({errorMsg:''})
+             this.setState({errorMsg:'' , isFetch:true})
              this.Create(email,pass)
         }else{ this.setState({errorMsg:'Enter password'}) }
      }else{ this.setState({errorMsg:'Enter valid email'}) }
     }
 
     Create =(email,pass)=>{
-     this.props.navigation.navigate('AdminHome')
+        const scope = this;
+         let USERINFO = {}
+    //////////////////////////////////////////////////////////    
+        AuthModal.Login(email,pass).then(
+            (response)=>{
+                if(response.success){
+                console.log('success',response.success)
+                ToastAndroid.show('login success' , ToastAndroid.SHORT);
+                
+                USERINFO={
+                    token:response.data.collection.authorization,
+                    email:email,
+                    pass:pass
+                }
+                   AsyncStorage.setItem('user',JSON.stringify(USERINFO)).then(
+                       ()=>{scope.props.navigation.navigate('AdminHome')}
+                       )
+                // AsyncStorage.setItem('token',JSON.stringify(response.data.collection.authorization)).then(()=>{
+                //     this.props.navigation.navigate('AdminHome')
+                // })
+               
+            }else{
+               alert('Check your Email and password')
+               this.setState({
+                   isFetch:false
+               })
+            }
+        }, (error)=>{
+                console.log('error',error)
+                ToastAndroid.show('something went wrong')
+            }
+        )
+   ////////////////////////////////////////////////////////////////     
     }
 
    
     render() {
-        const {errorMsg} = this.state;
+        const {errorMsg ,isFetch} = this.state;
         return (
             <Container>
                  <StatusBar backgroundColor={MenuTextColor} barStyle="light-content" />
@@ -70,6 +110,7 @@ export default class Login extends Component {
                                     // returnKeyType="next"
                                     // enablesReturnKeyAutomatically
                                     // onSubmitEditing={()=>this.pass.focus()}
+                                   
                                     />
                                
                             </View>
@@ -88,24 +129,23 @@ export default class Login extends Component {
                                         // returnKeyType="next"
                                         // enablesReturnKeyAutomatically
                                         // onSubmitEditing={()=>this.email.focus()}
-                                    
+                                        
                                     />
                                    
                                     {this.state.secureText ?
                                         <Icon
                                             style={styles.IconStyle}
-                                            name={'ios-eye'}
+                                            name={'ios-eye-off'}
                                             onPress={() => this.setState({ secureText: false })}
                                         /> :
                                         <Icon
                                             style={styles.IconStyle}
-                                            name={'ios-eye-off'}
+                                            name={'ios-eye'}
                                             onPress={() => this.setState({ secureText: true })} />
                                     }
                                 </Item>
                             </View>
                             <Text style={styles.errorText} >{errorMsg}</Text>
-
                             <TouchableOpacity
                                 style={styles.Forget}
                                 onPress={() => this._onPress('ForgetPassword')}>
@@ -115,10 +155,17 @@ export default class Login extends Component {
                             {/* <Text style={styles.errorText} >{errorMsg}</Text> */}
 
                             <View style={styles.ButtonView}>
+                                { isFetch ?
+                                
+                               <ActivityIndicator
+                               color={MenuTextColor}
+                               size={'large'}
+                               /> :   
+                            
                                 <_Button
                                     textButton={'Login '}
                                     onPress={() => this.saveInfo()}>
-                                </_Button>
+                                </_Button> }
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10, paddingVertical: 5 }}>
                                 <TouchableOpacity style={{ flexDirection: 'row' }}

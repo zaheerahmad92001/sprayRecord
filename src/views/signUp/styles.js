@@ -32,7 +32,7 @@ export default StyleSheet.create({
         justifyContent:'center'
     },
     InputView: {
-        flex: 8,
+       // flex: 8,
         marginHorizontal: 10
         // paddingHorizontal: 10,
     },
@@ -48,7 +48,7 @@ export default StyleSheet.create({
     },
     ButtonView: {
         marginTop: 10,
-
+        marginBottom:20
     },
     errorText: {
         color: RED,

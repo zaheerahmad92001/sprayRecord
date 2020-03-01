@@ -10,63 +10,52 @@ import {
 import { RFValue } from 'react-native-responsive-fontsize';
 import { borderColor, TextColor, LIGHT_WHITE, buttonBGcolor } from '../../Constants/colors';
 import { Icon, Item, Thumbnail } from 'native-base';
+import { IMAGEURL } from '../../RandFunction';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 const _OrderDetail = (props) => {
+    console.log('image url',IMAGEURL+props.item.product.default_image)
     return (
         <TouchableOpacity style={styles.container}
-        onLongPress={props.EditDelete}
-        >
+        onLongPress={props.EditDelete}>
             <View style={styles.imageView}>
-                {/* <Image
-                    style={styles.avatar}
-                    source={require('../../assets/image/p.png')}
-                /> */}
                 <Thumbnail square large 
-                source={require('../../assets/image/p.png')}
+               // source={require('../../assets/image/p.png')}
+                source={{uri:IMAGEURL+props.item.product.default_image}}
                 />
             </View>
             <View style={{ width: screenWidth * 0.65, backgroundColor: 'white', marginTop: 5 }}>
                 <View style={[styles.detailView]}>
-                    <Text style={[styles.name]}>{props.item.name}</Text>
+                    <Text style={[styles.name]}>{props.item.product.title}</Text>
                     <View style={{flexDirection:'row'}}>
                      <Text style={styles.value}>{props.item.weight}</Text>
-                     <Text style={styles.value}>{props.item.unit}</Text>
+                     <Text style={styles.value}>{props.item.weight_unit}</Text>
                      </View>
                 </View>
                 <View style={styles.borderBottom}></View>
                 <View style={[styles.detailView, { marginTop: 5 }]}>
                     <Text style={styles.heading}>Available</Text>
-                    <Text style={styles.value} >{props.item.AQty}</Text>
+                    <Text style={styles.value} >{props.item.opening_stock}</Text>
                 </View>
                 <View style={styles.detailView}>
                     <Text style={styles.heading}>Received</Text>
-                    <Text style={styles.value} >{props.item.RQty}</Text>
+                    <Text style={styles.value} >{props.item.quantity}</Text>
                 </View>
                 <View style={styles.borderBottom}></View>
 
                 <View style={[styles.detailView, { marginBottom: 8 }]}>
                     <Text style={styles.heading}>Total Quantity</Text>
-                    <Text style={[styles.value, { fontWeight: 'bold' }]} >{props.item.TQty}</Text>
+                    <Text style={[styles.value, { fontWeight: 'bold' }]} >{props.item.closing_stock}</Text>
                 </View>
-                <View style={styles.detailView}>
+                
+                {/* <View style={styles.detailView}>
                     <Text style={[styles.heading]}>Date</Text>
                     <Text style={[styles.value, { color: TextColor, fontWeight: '500' }]} >{props.item.date}</Text>
                 </View>
                 <View style={styles.detailView}>
                     <Text style={[styles.heading]}>Batch</Text>
                     <Text style={[styles.value, { color: TextColor, fontWeight: '500' }]} >{props.item.batchNO}</Text>
-                </View>
-
-                {/* <View style={{ flexDirection: 'row',justifyContent:'flex-end' }}>
-                   
-                    <Icon
-                        name={'dots-vertical'}
-                        type={'MaterialCommunityIcons'}
-                        onPress={props.EditDelete}
-                    />
                 </View> */}
-
             </View>
 
 
