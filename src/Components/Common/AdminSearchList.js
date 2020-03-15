@@ -9,7 +9,7 @@ import {
     ScrollView,
     Dimensions
 } from 'react-native';
-import { Card, } from 'native-base';
+import { Card, Thumbnail, } from 'native-base';
 import { TextFont_Search } from '../../Constants/fontsize';
 import { CountColor, BBCOLOR, TextColor } from '../../Constants/colors'
 import { RFValue } from 'react-native-responsive-fontsize';
@@ -18,7 +18,7 @@ const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 
 export default class AdminSearchList extends Component {
     render() {
-        const { qty, Id, name ,img } = this.props;
+        const { qty, Id, name, img } = this.props;
         return (
             <TouchableOpacity style={styles.Container}
                 onPress={() => this.props.navigation.navigate('ProductDetail', {
@@ -26,19 +26,17 @@ export default class AdminSearchList extends Component {
                         Id: Id,
                         qty: qty,
                         name: name,
-                        from:'admin'
+                        from: 'admin'
                     }
                 })}>
                 <View style={styles.cardStyle}>
-                    <View style={styles.imageView} >
-                        <Image
-                            style={styles.imageStyle}
-                             source={{uri:IMAGEURL+img}}/>
-                    </View>
-                   <Text style={styles.count}>{name}</Text>
-                    <View style={styles.priceAvailableView}>
-                        <Text style={styles.count}>Qty</Text>
-                        <Text style={styles.count}>{qty}</Text>
+                    <Thumbnail large square source={{ uri: IMAGEURL + img }} />
+                    <View style={styles.textStyle}>
+                        <Text style={styles.count}>{name}</Text>
+                        <View style={styles.priceAvailableView}>
+                            <Text style={styles.count}>Qty</Text>
+                            <Text style={styles.count}>{qty}</Text>
+                        </View>
                     </View>
                 </View>
 
@@ -50,47 +48,33 @@ export default class AdminSearchList extends Component {
 }
 const styles = StyleSheet.create({
     Container: {
-        justifyContent: 'center',
         flex: 1,
-
-    },
-    imageStyle: {
-        width:RFValue(200),
-        height:RFValue(200),
-    },
-    imageView: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor:'white'
     },
     priceAvailableView: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-
-    },
-    heading: {
-        fontSize: RFValue(16),
-        fontWeight: '500',
-        color: TextColor,
-        
+        justifyContent: 'space-between',    
     },
     count: {
         fontSize: RFValue(14),
-        fontWeight: 'bold',
-        fontStyle:'italic',
+        fontWeight: 'normal',
+        fontStyle: 'italic',
         color: TextColor,
-        marginTop:5
-        
+        marginTop: 5
     },
     cardStyle: {
-        borderRadius: 10,
-        paddingVertical:10,
-        marginBottom:10,
-        paddingHorizontal:RFValue(30),
-        marginLeft: 10,
-        marginRight: 10,
-        borderColor:BBCOLOR,
-        borderWidth:1,
+        borderRadius: RFValue(10),
+        paddingVertical: RFValue(5),
+        marginBottom: RFValue(10),
+        paddingHorizontal: RFValue(10),
+        marginLeft: RFValue(10),
+        marginRight: RFValue(10),
+        borderColor: BBCOLOR,
+        borderWidth: 1,
+        flexDirection: 'row',
+    },
+    textStyle: {
+        marginHorizontal: RFValue(15),
+        flex:1
     }
 
 })

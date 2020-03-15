@@ -18,10 +18,20 @@ export default StyleSheet.create({
         borderRadius: 30 / 2,
     },
     descriptionView: {
-        padding: 10,
+        //padding: 10,
+        marginHorizontal:RFValue(15),
+        marginTop:RFValue(10),
         backgroundColor: 'white',
-        borderWidth: 1,
-        borderColor: borderColor
+       // borderWidth: 1,
+       // borderColor: borderColor
+    },
+    borderBottom: {
+        borderBottomColor: borderColor,
+        borderBottomWidth: 1,
+        width: '95%',
+        justifyContent: "center",
+        alignSelf: 'center',
+        marginTop: RFValue(10)
     },
     name: {
         fontWeight: '700',

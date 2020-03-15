@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Keyboard, KeyboardAvoidingView, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Keyboard, KeyboardAvoidingView, Dimensions, ActivityIndicator, ToastAndroid } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { TextColor, buttonBGcolor } from '../../Constants/colors';
+import { TextColor, buttonBGcolor, MenuTextColor } from '../../Constants/colors';
 import { Icon, Drawer, Container } from 'native-base';
 import _Header from '../../Components/Common/AppHeader';
 import Sidebar from '../../Components/sidebar/menu';
@@ -16,21 +16,14 @@ import _SaleHistory from '../../Components/Common/saleHistory';
 import { convertDateToString } from '../../RandFunction';
 import styles from '../saleHistory/styles';
 import moment from 'moment';
-
+import SaleModal from '../../../Utils/modal/Sale';
+let pageNo = 1;
 var radio_props = [
     { label: 'Daily', value: 0 },
     { label: 'Weekly', value: 1 },
     { label: 'Monthly', value: 2 }
 ];
-const sale_history =
-    [
-        { Id: 1, name: 'Tryezophas', open: '1000', sale: '400', close: '600', date: '20-Aug-2019', weight: '200', unit: 'ml' },
-        { Id: 2, name: 'Lemda', open: '1000', sale: '400', close: '600', date: '20-Aug-2019', weight: '200', unit: 'gram' },
-        { Id: 3, name: 'Karatay', open: '1000', sale: '400', close: '600', date: '20-Aug-2019', weight: '200', unit: 'kg' },
-        { Id: 4, name: 'Danydar', open: '1000', sale: '400', close: '600', date: '20-Aug-2019', weight: '200', unit: 'gram' },
-        { Id: 5, name: 'PhasPhoras', open: '200', sale: '400', close: '600', date: '20-Aug-2019', weight: '200', unit: 'ml' },
-        { Id: 6, name: 'Jugni', open: '200', sale: '400', close: '600', date: '20-Aug-2019', weight: '200', unit: 'kg' },
-    ]
+
 export default class SaleHistory extends Component {
     captureAppBarRef = (ref) => {
         this.appBar = ref
@@ -42,60 +35,106 @@ export default class SaleHistory extends Component {
     }
     constructor(props) {
         super(props)
+        this.onEndReachedCalledDuringMomentum = true;
         this.state = {
-            Stock: sale_history, input: '', matchedValue: sale_history,isDatePicker: false,
-            isDatePickerVisible: false, FromDate: '',fDate:'',ToDate:'',tDate:'', 
-            report:''
+            Stock: [], moreProduct: [], input: '', isDatePicker: false,
+            isDatePickerVisible: false, FromDate: '', fDate: '', ToDate: '', tDate: '',
+            report: '', duration: false,datePicked:false, daily: 0, monthly: 0, weekly: 0,
+             loading: true,pagination:'',
         };
+    }
+    componentDidMount() {
+        const { report, daily, monthly, weekly, tDate, fDate } = this.state;
+        SaleModal.saleFilter(pageNo).then(
+            (res) => {
+                if (res.success) {
+                    this.setState({
+                        Stock: res.data.collection,
+                        loading: false,
+                        pagination:res.data.pagination,
+                    })
+                   //  console.log('success pagination', this.state.pagination.last_page)
+                } else {
+                    alert('something went wrong')
+                    console.log('something went wrong', res)
+                }
+            }, (error) => {
+                alert('Network error')
+                console.log('network error', error)
+            }
+        )
     }
     openDrawer = () => {
         Keyboard.dismiss();
         setTimeout(() => {
             this.drawer && this.drawer._root && this.drawer._root.open();
         }, 500)
-
     };
-    closeDrawer = () => {
-        this.drawer && this.drawer._root && this.drawer._root.close();
+    setTodate = () => {
+        const { daily, weekly, monthly, fDate, } = this.state;
+        if (daily === 1) {
+            let aa = new Date(fDate);
+            let date = convertDateToString(aa)
+            this.setState({ ToDate: date, tDate: fDate });
+        } else if (weekly === 1) {
+            let aa = new Date(fDate)
+            let DateTime = aa.setDate(aa.getDate() + 6)
+            let date = convertDateToString(new Date(DateTime))
+            this.setState({ ToDate: date, tDate: DateTime });
+        } else if (monthly === 1) {
+            let aa = new Date(fDate)
+            let DateTime = aa.setMonth(aa.getMonth() + 1)
+            let date = convertDateToString(new Date(DateTime))
+            this.setState({ ToDate: date, tDate: DateTime });
+        }
+    }
 
-    };
-    showDateTimePicker = () => {
+    closeDrawer = () => { this.drawer && this.drawer._root && this.drawer._root.close(); };
+
+    FromDateTimePicker = () => {
+        const {duration} = this.state;
+        if(duration){
         this.setState({ isDateTimePickerVisible: true });
+        }else{
+            alert('Please select a duration from Daily ,weekly ,monthly ')
+        }
     };
-    handleDatePicked = (date) => {
+    FromDatePicked = (date) => {
         let DateTime = new Date(date).getTime()
         let aa = new Date(DateTime);
         date = convertDateToString(aa)
-        this.setState({FromDate: date,fDate:DateTime });
-        this.hideDateTimePicker();
-
+        this.setState({ FromDate: date, fDate: DateTime ,datePicked:true  });
+        this.FromhideDateTimePicker();
+        this.setTodate()
     };
-    hideDateTimePicker = () => {
+    FromhideDateTimePicker = () => {
         this.setState({ isDateTimePickerVisible: false });
     };
-
-    show_DateTimePicker = () => {
-        this.setState({ isDateTimePicker: true });
-    };
-    handle_DatePicked = (date) => {
-        let DateTime = new Date(date).getTime()
-        let aa = new Date(DateTime);
-        date = convertDateToString(aa)
-        this.setState({ToDate: date,tDate:DateTime });
-        this.hideDateTimePicker();
-
-    };
-    hide_DateTimePicker = () => {
-        this.setState({ isDateTimePicker: false });
-    };
-    findProduct(query) {
-        if (query === '') {
-            return [];
+    callAlert=()=>{
+        alert('Please select duration and Date for search')
+    }
+    // ToDateTimePicker = () => {
+    //     this.setState({ isDateTimePicker: true });
+    // };
+    // ToDatePicked = (date) => {
+    //     let DateTime = new Date(date).getTime()
+    //     let aa = new Date(DateTime);
+    //     date = convertDateToString(aa)
+    //     this.setState({ ToDate: date, tDate: DateTime });
+    //     this.TohideDateTimePicker();
+    // };
+    // TohideDateTimePicker = () => {
+    //     this.setState({ isDateTimePicker: false });
+    // };
+    setValues = (value) => {
+        this.setState({ duration: true })
+        if (value === 0) {
+            this.setState({ daily: 1, weekly: 0, monthly: 0 })
+        } else if (value === 1) {
+            this.setState({ weekly: 1, daily: 0, monthly: 0 })
+        } else if (value === 2) {
+            this.setState({ monthly: 1, daily: 0, weekly: 0 })
         }
-
-        const { matchedValue } = this.state;
-        const regex = new RegExp([query.trim()], 'i');
-        return matchedValue.filter((Stock) => Stock.name.search(regex) >= 0);
     }
     renderSaleHistory = ({ item }) => {
         return (
@@ -103,24 +142,40 @@ export default class SaleHistory extends Component {
                 item={item}
                 key={item.Id}
                 navigation={this.props.navigation} />
-        )
-    };
+                )
+            };
+    onEndReached = ({ distanceFromEnd }) => {
+        const scope = this;
+        const { weekly, daily, monthly ,pagination } = this.state;
+        pageNo = pageNo + 1;
+        if (!this.onEndReachedCalledDuringMomentum) {
+            if(pageNo <= pagination.last_page){
+                ToastAndroid.show('More data available',ToastAndroid.SHORT)
+//////////////////////////////////////////////////////////////////////////////////////////////////
+            SaleModal.saleFilter(pageNo, daily, weekly, monthly).then(
+                (res) => {
+                    if (res.success) {
+                        scope.setState({ moreProduct: res.data.collection })
+                        scope.setState({ Stock: scope.state.Stock.concat(scope.state.moreProduct) })
+                    } else {
+                        alert('Something went wrong')
+                        console.log('something went wrong', res)
+                    }
+                }, (error) => {
+                    alert('Network error')
+                    console.log('network error', error)
+                })
+//////////////////////////////////////////////////////////////////////////////////////////////////     
+             }else{
+                ToastAndroid.show('No more data',ToastAndroid.LONG)
+             }
+          this.onEndReachedCalledDuringMomentum = true;
+        }
+    }
     render() {
-        var date = new Date()
-        console.log('current date',date.getTime())
-        var aa= new Date()
-        aa.setDate(date.getDate()+5)
-        console.log('new date',aa.getTime())
 
-        // var newdate = moment(date,'DD/MM/YYYY').add(5,'day').format('X')
-        // console.log('new date',newdate)
-        // var ab = moment(newdate).format('DD/MM/YYYY')
-        // console.log('ab',ab)
-        
-
-        let { input, FromDate,fDate,ToDate,tDate, Stock, Sale,report } = this.state;
-        const matchedValue = this.findProduct(input);
-        const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
+        console.log('tDate', this.state.tDate, 'Fdate', this.state.fDate)
+        let { input, FromDate, fDate, ToDate, tDate, Stock, Sale, report, loading, daily, weekly, monthly,datePicked } = this.state;
         return (
             <Drawer ref={(ref) => this.drawer = ref}
                 content={<Sidebar navigation={this.props.navigation} drawerClose={this.closeDrawer} />}
@@ -129,139 +184,160 @@ export default class SaleHistory extends Component {
                 panOpenMask={0.2}
                 negotiatePan={true}
                 tapToClose={true}>
-                    <Container style={{flex:1,marginBottom:10}}>
-                <CoordinatorLayout
-                    style={{ flex: 1}}>
-                    <AppBarLayout
-                        ref={this.captureAppBarRef}
-                        style={styles.appbar}>
-                        <CollapsingToolbarLayout
-                            // title='Collapsing Toolbar'
-                            contentScrimColor={buttonBGcolor}
-                            // expandedTitleColor='red'
-                            // collapsedTitleTextColor='green'
-                            expandedTitleGravity='center'
-                            scrimVisibleHeightTrigger={30}
-                            scrimAnimationDuration={1000}
-                            expandedTitleMarginStart={0}
-                            expandedTitleMarginTop={0}
-                            expandedTitleMarginBottom={0}
-                            scrimVisibleHeightTrigger={50}
-                            scrollFlags={
-                                AppBarLayout.SCROLL_FLAG_SCROLL
-                                | AppBarLayout.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
-                                | AppBarLayout.SCROLL_FLAG_SNAP
-                            }>
-                            <CollapsingParallax parallaxMultiplier={0.6}>
-                                <View collapsable={false} style={{ height: ScreenHeight * 0.29, justifyContent: 'center' }}>
-                                    <_Header
-                                        ImageLeftIcon={'menu'}
-                                        LeftPress={() => this.openDrawer()}
-                                        HeadingText={'Sale History'} />
+                <Container style={{ flex: 1, marginBottom: 10 }}>
+                    {loading ?
+                        <View style={{ flex: 1, }}>
 
-                                    <View style={styles.radiobutton}>
-                                        <RadioForm
-                                            style={{ justifyContent: 'space-around', marginHorizontal: 8, }}
-                                            radio_props={radio_props}
-                                            initial={-1}
-                                            onPress={(value) => this.setState({ report: value })}
-                                            formHorizontal={true}
-                                            labelHorizontal={true}
-                                            labelColor={'red'}
-                                            buttonColor={buttonBGcolor}
-                                            selectedButtonColor={buttonBGcolor}
-                                            buttonInnerColor={'red'}
-                                            buttonOuterColor={'black'}
-                                            animation={true}
-                                            buttonWrapStyle={{ marginLeft: 10 }}
-                                            buttonSize={10}
-                                            labelStyle={{ fontSize: RFValue(13), color: 'black', paddingRight: 20 }}
-                                        />
-                                    </View>
-                                    {/* <View style={{ marginHorizontal: 5 }}> */}
-                                    {/* <TouchableOpacity style={styles.startDContainer}
-                                            onPress={() => this.showDateTimePicker()}>
-                                            <Text style={styles.startDInput}>
-                                                {/* {this.state.date.toString().slice(3, 16)} */}
-                                    {/* {!date || !date.length ? 'Select date' : date} */}
-                                    {/* </Text> */}
-                                    {/* </TouchableOpacity> */} 
-                                        {/* <DateTimePicker
-                                            isVisible={this.state.isDateTimePickerVisible}
-                                            onConfirm={this.handleDatePicked}
-                                            onCancel={this.hideDateTimePicker}
-                                            is24Hour={false}
-                                            mode={'date'}
-                                            datePickerModeAndroid={'spinner'}
-                                            timePickerModeAndroid={'spinner'}
-                                        /> */}
-                                    {/* </View> */}
+                            <_Header
+                                ImageLeftIcon={'menu'}
+                                HeadingText={'Sale History'} />
+                            <View style={styles.radiobutton}>
+                                <RadioForm
+                                    style={{ justifyContent: 'space-around', marginHorizontal: 8, }}
+                                    radio_props={radio_props}
+                                    initial={-1}
+                                    formHorizontal={true}
+                                    labelHorizontal={true}
+                                    labelColor={'red'}
+                                    buttonColor={buttonBGcolor}
+                                    selectedButtonColor={buttonBGcolor}
+                                    onPress={(value) => this.setState({ report: value })}
+                                    buttonInnerColor={'red'}
+                                    buttonOuterColor={'black'}
+                                    animation={true}
+                                    buttonWrapStyle={{ marginLeft: 10 }}
+                                    buttonSize={10}
+                                    labelStyle={{ fontSize: RFValue(13), color: 'black', paddingRight: 20 }}
+                                />
+                            </View>
+                            <View style={styles.datePickerView}>
+                                <TouchableOpacity style={styles.selectDateStyle}>
+                                    <Text style={styles.startDInput}>
+                                        {!FromDate || !FromDate.length ? 'From' : FromDate}
+                                    </Text>
+                                </TouchableOpacity>
+                                <View style={styles.Toview}>
+                                    <Text style={styles.to}>-</Text>
+                                </View>
+                                <TouchableOpacity style={[styles.selectDateStyle, { justifyContent: 'center', alignItems: 'center' }]}>
+                                    <Text style={styles.startDInput}>
+                                        {!ToDate || !ToDate.length ? 'To' : ToDate}
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.SearchIconView}>
+                                    <Icon
+                                        name={'ios-search'}
+                                        type={'Ionicons'}
+                                        style={{ fontSize: RFValue(26), alignSelf: 'flex-end', marginRight: 15 }}
+                                    />
+                                </TouchableOpacity>
+                            </View></View> : null
+                    }
+                    {loading ?
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <ActivityIndicator
+                                color={MenuTextColor}
+                                size={'large'}
+                            /></View> :
 
-                                    <View style={styles.datePickerView}>
-                                        <TouchableOpacity style={styles.selectDateStyle}
-                                            onPress={() => this.showDateTimePicker()}>
-                                            <Text style={styles.startDInput}>
-                                                {/* {this.state.date.toString().slice(3, 16)} */}
-                                                {!FromDate || !FromDate.length ? 'From' : FromDate}
-                                            </Text>
-                                        </TouchableOpacity>
-                                        <View style={styles.Toview}>
-                                        <Text style={styles.to}>-</Text>
+                        <CoordinatorLayout
+                            style={{ flex: 1 }}>
+                            <AppBarLayout
+                                ref={this.captureAppBarRef}
+                                style={styles.appbar}>
+                                <CollapsingToolbarLayout
+                                    // title='Collapsing Toolbar'
+                                    contentScrimColor={buttonBGcolor}
+                                    // expandedTitleColor='red'
+                                    // collapsedTitleTextColor='green'
+                                    expandedTitleGravity='center'
+                                    scrimVisibleHeightTrigger={30}
+                                    scrimAnimationDuration={1000}
+                                    expandedTitleMarginStart={0}
+                                    expandedTitleMarginTop={0}
+                                    expandedTitleMarginBottom={0}
+                                    scrimVisibleHeightTrigger={50}
+                                    scrollFlags={
+                                        AppBarLayout.SCROLL_FLAG_SCROLL
+                                        | AppBarLayout.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
+                                        | AppBarLayout.SCROLL_FLAG_SNAP
+                                    }>
+                                    <CollapsingParallax parallaxMultiplier={0.6}>
+                                        <View collapsable={false} style={{ height: ScreenHeight * 0.26, justifyContent: 'center' }}>
+                                            <_Header
+                                                ImageLeftIcon={'menu'}
+                                                LeftPress={() => this.openDrawer()}
+                                                HeadingText={'Sale History'} />
+                                            <View style={styles.radiobutton}>
+                                                <RadioForm
+                                                    style={{ justifyContent: 'space-around', marginHorizontal: 8, }}
+                                                    radio_props={radio_props}
+                                                    initial={-1}
+                                                    // onPress={(value) => this.setState({ report: value })}
+                                                    onPress={(value) => this.setValues(value)}
+                                                    formHorizontal={true}
+                                                    labelHorizontal={true}
+                                                    labelColor={'red'}
+                                                    buttonColor={buttonBGcolor}
+                                                    selectedButtonColor={buttonBGcolor}
+                                                    buttonInnerColor={'red'}
+                                                    buttonOuterColor={'black'}
+                                                    animation={true}
+                                                    buttonWrapStyle={{ marginLeft: 10 }}
+                                                    buttonSize={10}
+                                                    labelStyle={{ fontSize: RFValue(13), color: 'black', paddingRight: 20 }}
+                                                />
+                                            </View>
+                                            <View style={styles.datePickerView}>
+                                                <TouchableOpacity style={styles.selectDateStyle}
+                                                    onPress={() => this.FromDateTimePicker()}>
+                                                    <Text style={styles.startDInput}>
+                                                        {!FromDate || !FromDate.length ? 'From' : FromDate}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                                <View style={styles.Toview}>
+                                                    <Text style={styles.to}>-</Text>
+                                                </View>
+                                                <TouchableOpacity style={[styles.selectDateStyle, { justifyContent: 'center', alignItems: 'center' }]}
+                                                // onPress={() => this.ToDateTimePicker()}
+                                                >
+                                                    <Text style={styles.startDInput}>
+                                                        {!ToDate || !ToDate.length ? 'To' : ToDate}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                                {datePicked ?
+                                                <TouchableOpacity style={styles.SearchIconView}
+                                                    onPress={() => this.props.navigation.navigate('saleSearcView', {
+                                                        item: {
+                                                            daily: daily,
+                                                            weekly: weekly,
+                                                            monthly: monthly,
+                                                            fromDate: fDate,
+                                                            toDate: tDate,
+                                                            Stock: Stock
+                                                        }
+                                                    })
+                                                    }>
+                                                    <Icon
+                                                        name={'ios-search'}
+                                                        type={'Ionicons'}
+                                                        style={{ fontSize: RFValue(26), alignSelf: 'flex-end', marginRight: 15 }}
+                                                    />
+                                                </TouchableOpacity> :
+                                                <TouchableOpacity style={styles.SearchIconView}
+                                                    onPress={()=>this.callAlert()}>
+                                                    <Icon
+                                                        name={'ios-search'}
+                                                        type={'Ionicons'}
+                                                        style={{ fontSize: RFValue(26), alignSelf: 'flex-end', marginRight: 15 }}
+                                                    />
+                                                </TouchableOpacity> }
+                                            </View>
                                         </View>
-                                        <TouchableOpacity style={[styles.selectDateStyle,{justifyContent:'center',alignItems:'center'}]}
-                                            onPress={() => this.show_DateTimePicker()}>
-                                            <Text style={styles.startDInput}>
-                                                {/* {this.state.date.toString().slice(3, 16)} */}
-                                                {!ToDate || !ToDate.length ? 'To' : ToDate}
-                                            </Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.SearchIconView}
-                                            onPress={() => this.props.navigation.navigate('saleSearcView',{
-                                                item:{
-                                                    filter:report
-                                                }
-                                            })}>
-                                            <Icon
-                                                name={'ios-search'}
-                                                type={'Ionicons'}
-                                                style={{ fontSize: RFValue(26), alignSelf: 'flex-end', marginRight: 15 }}
-                                            />
-                                        </TouchableOpacity>
-                                    </View>
+                                    </CollapsingParallax>
+                                </CollapsingToolbarLayout>
+                            </AppBarLayout>
 
-                                    {/* <View style={styles.SearchView}>
-                                        <Autocomplete
-                                            style={styles.AutocompleteStyle}
-                                            autoCapitalize="none"
-                                            hideResults={true}
-                                            autoCorrect={false}
-                                            autoFocus={false}
-                                            inputContainerStyle={{ borderWidth: 0, }}
-                                            listStyle={{ borderWidth: 0, }}
-                                            data={matchedValue.length >= 1 && comp(input, matchedValue[0].name) ? [] : matchedValue}
-                                            defaultValue={input}
-                                            onChangeText={(text) => this.setState({ input: text })}
-                                            placeholder="Search "
-                                            placeholderTextColor={TextColor}
-                                            renderItem={({ item }) => (
-                                                <TouchableOpacity onPress={() => this.setState({ input: item.name })}>
-                                                    <Text style={styles.itemText}>{item.name}</Text>
-                                                </TouchaFleOpacity>
-                                            )}>
-                                        </Autocomplete>
-                                        <Icon
-                                            style={styles.IconStyle}
-                                            name={'ios-search'}
-                                            type={'Ionicons'} />
-                                    </View> */}
-                                </View>
-                            </CollapsingParallax>
-                        </CollapsingToolbarLayout>
-                    </AppBarLayout>
-                    {/* <KeyboardAvoidingView
-                    style={{ flex: 1 }}
-                    behavior={'height'}> */}
-                   
                             <FlatList
                                 showsVerticalScrollIndicator={false}
                                 data={Stock}
@@ -270,56 +346,30 @@ export default class SaleHistory extends Component {
                                 renderScrollComponent={this.renderScroll}
                                 numColumns={1}
                                 horizontal={false}
+                                onEndReached={this.onEndReached.bind(this)}
+                                onEndReachedThreshold={0.5}
+                                onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}
                             />
-                    {/* <View>
-                        {input === '' ?
-                            <FlatList
-                                showsVerticalScrollIndicator={false}
-                                data={Stock}
-                                keyExtractor={(item) => item.Id}
-                                renderItem={this.renderSaleHistory}
-                                renderScrollComponent={this.renderScroll}
-                                numColumns={1}
-                                horizontal={false}
-                            /> :
-                            matchedValue.length >= 1 ?
-                                <FlatList
-                                    showsVerticalScrollIndicator={false}
-                                    data={matchedValue}
-                                    keyExtractor={(item) => item.Id}
-                                    renderItem={this.renderSaleHistory}
-                                    renderScrollComponent={this.renderScroll}
-                                    numColumns={1}
-                                    horizontal={false}
-                                /> :
-                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                    <Text style={styles.NotFound}>No Search Result</Text>
-                                </View>
-
-                        }
-
-                    </View> */}
-
-                    {/* </KeyboardAvoidingView> */}
-                </CoordinatorLayout>
-                <DateTimePicker
-                    isVisible={this.state.isDateTimePickerVisible}
-                    onConfirm={this.handleDatePicked}
-                    onCancel={this.hideDateTimePicker}
-                    is24Hour={false}
-                    mode={'date'}
-                    datePickerModeAndroid={'spinner'}
-                    timePickerModeAndroid={'spinner'}
-                />
-                 <DateTimePicker
-                    isVisible={this.state.isDateTimePicker}
-                    onConfirm={this.handle_DatePicked}
-                    onCancel={this.hide_DateTimePicker}
-                    is24Hour={false}
-                    mode={'date'}
-                    datePickerModeAndroid={'spinner'}
-                    timePickerModeAndroid={'spinner'}
-                />
+                        </CoordinatorLayout>
+                    }
+                    <DateTimePicker
+                        isVisible={this.state.isDateTimePickerVisible}
+                        onConfirm={this.FromDatePicked}
+                        onCancel={this.FromDateTimePicker}
+                        is24Hour={false}
+                        mode={'date'}
+                        datePickerModeAndroid={'spinner'}
+                        timePickerModeAndroid={'spinner'}
+                    />
+ {/* <DateTimePicker
+isVisible={this.state.isDateTimePicker}
+onConfirm={this.ToDatePicked}
+onCancel={this.ToDateTimePicker}
+is24Hour={false}
+mode={'date'}
+datePickerModeAndroid={'spinner'}
+timePickerModeAndroid={'spinner'}
+/> */}
                 </Container>
             </Drawer>
 

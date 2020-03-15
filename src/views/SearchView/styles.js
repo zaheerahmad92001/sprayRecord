@@ -1,6 +1,7 @@
 import {StyleSheet,Dimensions}from 'react-native'
 import { RFValue } from 'react-native-responsive-fontsize'
-import { TextColor } from '../../Constants/colors'
+import { TextColor, CountColor } from '../../Constants/colors'
+import { HeadingFont } from '../../Constants/fontsize'
 export default StyleSheet.create({
     container: {
         marginHorizontal: 10,
@@ -25,4 +26,9 @@ export default StyleSheet.create({
         fontWeight: 'bold',
         fontFamily: 'Poppins'
     },  
+    NotFound: {
+        fontSize: HeadingFont,
+        color: CountColor,
+        fontWeight: '700',
+    },
 })

@@ -31,6 +31,14 @@ export default class AuthModal extends Component{
             password:newPass,
             password_confirmation:confirmPass
         })
-    }
+    };
+static EditProfile(fname,lname,email,phone){
+    return requestHandler('edit-profile',{
+        first_name:fname,
+        last_name:lname,
+        email:email,
+        phone:phone  
+    })
+}
   
 }

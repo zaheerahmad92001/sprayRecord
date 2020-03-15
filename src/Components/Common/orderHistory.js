@@ -20,11 +20,10 @@ const _OrderDetail = (props) => {
         onLongPress={props.EditDelete}>
             <View style={styles.imageView}>
                 <Thumbnail square large 
-               // source={require('../../assets/image/p.png')}
                 source={{uri:IMAGEURL+props.item.product.default_image}}
                 />
             </View>
-            <View style={{ width: screenWidth * 0.65, backgroundColor: 'white', marginTop: 5 }}>
+            <View style={{ width:screenWidth*0.65, backgroundColor: 'white', marginTop: 5 }}>
                 <View style={[styles.detailView]}>
                     <Text style={[styles.name]}>{props.item.product.title}</Text>
                     <View style={{flexDirection:'row'}}>
@@ -47,15 +46,6 @@ const _OrderDetail = (props) => {
                     <Text style={styles.heading}>Total Quantity</Text>
                     <Text style={[styles.value, { fontWeight: 'bold' }]} >{props.item.closing_stock}</Text>
                 </View>
-                
-                {/* <View style={styles.detailView}>
-                    <Text style={[styles.heading]}>Date</Text>
-                    <Text style={[styles.value, { color: TextColor, fontWeight: '500' }]} >{props.item.date}</Text>
-                </View>
-                <View style={styles.detailView}>
-                    <Text style={[styles.heading]}>Batch</Text>
-                    <Text style={[styles.value, { color: TextColor, fontWeight: '500' }]} >{props.item.batchNO}</Text>
-                </View> */}
             </View>
 
 
@@ -78,23 +68,15 @@ const styles = StyleSheet.create({
         margin: 7,
         justifyContent: 'center',
         alignItems: 'center',
-        // width:screenWidth*0.35,
-        //height:screenHeight*0.2,
         width: '40%',
         height: '80%',
-        //  alignSelf:'center',
         backgroundColor: 'red'
 
     },
     detailView: {
-        // justifyContent:'space-between',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingLeft: 5, paddingRight: 10
-        //alignItems:'center',
-        // paddingHorizontal:15,
-        // marginTop: 5,
-        //marginBottom:3
+        paddingLeft: 5, paddingRight: 10 
     },
     name: {
         fontWeight: '700',
@@ -134,18 +116,13 @@ const styles = StyleSheet.create({
     imageView: {
         //width: screenWidth * 0.35,
         //height: screenHeight * 0.2,
-        width: RFValue(110),
+        width: RFValue(90),
         height: RFValue(110),
-        marginTop:10,
+        margin:10,
         //padding: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
        // backgroundColor: 'green'
     },
-    avatar:{
-   width:'100%',
-   height:'100%'
-    },
-   
 
 })

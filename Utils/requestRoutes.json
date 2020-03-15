@@ -1,81 +1,90 @@
 {
-    "login":{
-        "method":"POST",
-        "route":"/login"
-    },
-    "register":{
-        "method":"POST",
-        "route":"/register"
-    },
-    "forgot-password":{
+    "login": {
         "method": "POST",
-        "route":"/forgot-password"
+        "route": "/login"
     },
-    "change-password":{
-        "method":"POST",
-        "route":"/auth/change-password"
+    "register": {
+        "method": "POST",
+        "route": "/register"
     },
-    "products-filter" :{
-        "method":"POST",
-        "route":"/products-filter"
+    "forgot-password": {
+        "method": "POST",
+        "route": "/forgot-password"
     },
-    
-    "product-details":{
-        "method":"GET",
-        "route":"/product-details"
+    "change-password": {
+        "method": "POST",
+        "route": "/auth/change-password"
     },
-    "product-delete":{
-        "method":"GET",
-        "route":"/auth/product-delete"
+    "edit-profile":{
+     "method":"POST",
+     "route":"/auth/edit-profile"
     },
-    "product-edit":{
-     "method":"GET",
-     "route":"/auth/product-edit"
+    "products-filter": {
+        "method": "POST",
+        "route": "/products-filter"
     },
-    "productEdit":{
-       "method":"POST",
-       "route":"/auth/product/save" 
+    "product-details": {
+        "method": "GET",
+        "route": "/product-details"
     },
-    "product-save":{
-      "method":"POST",
-      "route":"/auth/product/save"
+    "product-delete": {
+        "method": "GET",
+        "route": "/auth/product-delete"
     },
-    "orders-listing":{
-        "method":"GET",
-        "route":"/auth/orders-listing"
+    "product-edit": {
+        "method": "GET",
+        "route": "/auth/product-edit"
     },
-    "order-detail":{
-        "method":"GET",
-        "route":"/auth/order-detail"
+    "productEdit": {
+        "method": "POST",
+        "route": "/auth/product/save"
     },
-    "sale":{
-        "method":"POST",
-        "route":"/auth/sale"
+    "product-save": {
+        "method": "POST",
+        "route": "/auth/product/save"
     },
-    "return-sale":{
-        "method":"POST",
-        "route":"/auth/return-sale"
+    "orders-listing": {
+        "method": "GET",
+        "route": "/auth/orders-listing"
+    },
+    "order-detail": {
+        "method": "GET",
+        "route": "/auth/order-detail"
+    },
+    "sale": {
+        "method": "POST",
+        "route": "/auth/sale"
+    },
+    "return-sale": {
+        "method": "POST",
+        "route": "/auth/return-sale"
+    },
+    "return-sale-listing": {
+        "method": "GET",
+        "route": "/auth/return-sale-listing"
     },
     "filter-sale":{
-    "method":"POST",
-    "route":"/auth/filter-sale"
+        "method": "POST",
+        "route": "/auth/filter-sale"
     },
-    "image-upload":{
-        "method":"POST",
-        "route":"/auth/image-upload"
+    "image-upload": {
+        "method": "POST",
+        "route": "/auth/image-upload"
     },
-    "save-order":{
-        "method" :"POST",
-        "route" :"/auth/save-order"
+    "save-order": {
+        "method": "POST",
+        "route": "/auth/save-order"
     },
-    "payment":{
-        "method":"POST",
-        "route":"/auth/payment"
+    "payment": {
+        "method": "POST",
+        "route": "/auth/payment"
     },
-    "balance":{
+    "balance": {
+        "method": "GET",
+        "route": "/auth/balance"
+    },
+    "payment-listing":{
         "method":"GET",
-        "route":"/auth/balance"
+        "route":"/auth/payment-listing"
     }
-
-    
 }

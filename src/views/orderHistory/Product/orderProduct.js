@@ -56,14 +56,11 @@ export default class OrderProducts extends Component {
         super(props);
         this.param = this.props.navigation.getParam('item'),
         this.state = {
-          //  SearchValue: '',
             visible: false,
-          //  History: order_history,
             showModal: false,
             InvoiceURL: '',
             ImageURL:'',
-          //  pId: '',
-           // pData: '',
+            Blinking:true,
             orderDetail:'',
             order:'',
             showSheet: false,
@@ -88,13 +85,15 @@ export default class OrderProducts extends Component {
           alert('fail')
         console.log('error',error)
         })
+
+        setInterval(() => {
+            this.setState(previousState => {
+              return { Blinking: !previousState.Blinking };
+            });
+          }, 
+          4000);
     }
 
-    // _navigateTo = (routeName) => {
-    //     const { pData } = this.state;
-    //     this.onCloseSheet();
-    //     this.props.navigation.navigate(routeName, { pData })
-    // }
     goBack = () => {
         this.props.navigation.pop()
     };
@@ -191,11 +190,18 @@ export default class OrderProducts extends Component {
 
     render() {
         //console.log('param',this.param)
-        const { InvoiceURL,ImageURL,loading,orderDetail,order } = this.state;
-        let date = new Date(order.order_date)
+        const { Blinking,loading,orderDetail,order } = this.state;
+        let date = new Date(order.order_date*1000)
         const { SearchValue } = this.state;
         return (
             <Container>
+                {loading ?
+                <_Header
+                ImageLeftIcon={'keyboard-backspace'}
+                LeftPress={() => this.goBack()}
+                ImageRightIcon={'file-download'}
+                HeadingText={'Order products'} /> : null }
+
                 {loading ? 
                 <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
                     <ActivityIndicator
@@ -226,18 +232,22 @@ export default class OrderProducts extends Component {
                                 | AppBarLayout.SCROLL_FLAG_SNAP
                             }>
                             <CollapsingParallax parallaxMultiplier={0.6}>
-                                <View collapsable={false} style={{ height: ScreenHeight * 0.23, justifyContent: 'center' }}>
+                                <View collapsable={false} style={{ height: ScreenHeight * 0.16, justifyContent: 'center' }}>
                                     <_Header
                                         ImageLeftIcon={'keyboard-backspace'}
                                         LeftPress={() => this.goBack()}
+                                        ImageRightIcon={'file-download'}
+                                        RightPress={() => this.invoice(order)}
                                         HeadingText={'Order products'} />
                                     <View style={{ marginHorizontal: 10, }}>
-                                        <View style={{ justifyContent: 'space-around', flexDirection: 'row',marginTop:10 }}>
-                                            <Blink text={order.batch_number} />
-                                            <Blink text={convertDateToString(date) } />
+                                        <View style={[styles.blinkgView, Blinking ?{color:'black',backgroundColor:'#BBBBBB'}:{color:MenuTextColor,backgroundColor:AdminBG}]}>
+                                            {/* <Blink text={order.batch_number} />
+                                            <Blink text={convertDateToString(date) } /> */}
+                                            <Text style={styles.textStyle}>{order.batch_number}</Text>
+                                            <Text style={styles.textStyle}>{convertDateToString(date)}</Text>
                                         </View>
 
-                                        <View style={{ flexDirection: 'row', alignSelf: 'center', marginTop: 5, }}>
+                                        {/* <View style={{ flexDirection: 'row', alignSelf: 'center', marginTop: 5, }}>
                                             <TouchableOpacity style={styles.textInvoice}
                                                 onPress={() => this.invoice(order)}>
                                                 <View style={[styles.detailView, { paddingRight: 5 }]}>
@@ -247,7 +257,7 @@ export default class OrderProducts extends Component {
                                                         style={{ fontSize: 20, color: MenuTextColor, alignSelf: 'center' }}></Icon>
                                                 </View>
                                             </TouchableOpacity>
-                                        </View>
+                                        </View> */}
 
                                     </View>
                                 </View>

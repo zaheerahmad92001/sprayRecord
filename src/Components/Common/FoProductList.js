@@ -13,26 +13,24 @@ import { Card, } from 'native-base';
 import { TextFont_Stnadered } from '../../Constants/fontsize';
 import { CountColor, borderColor, TextColor } from '../../Constants/colors'
 import { RFValue } from 'react-native-responsive-fontsize';
+import { IMAGEURL } from '../../RandFunction';
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 
 export default class FoProductList extends Component {
     render() {
-        const { qty, Id, name } = this.props;
+        const { qty, Id, name,price,img } = this.props;
         return (
             <TouchableOpacity style={{ width: ScreenWidth * 0.47, borderWidth: 1, borderColor:borderColor, marginHorizontal: 5, marginBottom: 5, paddingVertical: 10 }}
                 onPress={() => this.props.navigation.navigate('ProductDetail', {
                     item: {
                         Id: Id,
-                        qty: qty,
-                        name: name,
                         from:'fo'
                     }
                 })}
                 >
                 <View style={{ alignItems: 'center', justifyContent: 'center' }} >
                     <Image style={styles.imageStyle}
-                        //source={require('../../assets/image/3.jpg')}
-                        source={require('../../assets/image/p.png')}
+                        source={{uri:IMAGEURL+img}}
                          />
                 </View>
 

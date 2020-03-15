@@ -60,8 +60,13 @@ export default class Login extends Component {
                 
                 USERINFO={
                     token:response.data.collection.authorization,
-                    email:email,
-                    pass:pass
+                    firstName:response.data.collection.first_name,
+                    lastName:response.data.collection.last_name,
+                    email:response.data.collection.email,
+                    phone:response.data.collection.phone,
+                    // email:email,
+                    // pass:pass,
+
                 }
                    AsyncStorage.setItem('user',JSON.stringify(USERINFO)).then(
                        ()=>{scope.props.navigation.navigate('AdminHome')}

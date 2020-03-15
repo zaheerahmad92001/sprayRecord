@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import {
-    View,Text,Image,Dimensions,
-    TouchableOpacity,FlatList,Alert,
-    PermissionsAndroid,Keyboard, ActivityIndicator
+    View, Text, Image, Dimensions,
+    TouchableOpacity, FlatList, Alert,
+    PermissionsAndroid, Keyboard, ActivityIndicator, ToastAndroid
 } from 'react-native';
-import {Container,Content,Icon,Drawer} from 'native-base';
+import { Container, Content, Icon, Drawer } from 'native-base';
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 import _Header from '../../../Components/Common/AppHeader';
 import Autocomplete from 'react-native-autocomplete-input';
@@ -15,96 +15,79 @@ import _OrderList from '../../../Components/Common/orderList';
 import Modalize from 'react-native-modalize';
 import Sidebar from '../../../Components/sidebar/menu';
 import _BottomSheet from '../../../Components/Common/BottomSheet';
-import{convertDateToString, IMAGEURL}from '../../../RandFunction';
+import { convertDateToString, IMAGEURL } from '../../../RandFunction';
 import DateTimePicker from "react-native-modal-datetime-picker";
-import Dialog,{DialogTitle,DialogContent,SlideAnimation,DialogFooter,DialogButton,}from 'react-native-popup-dialog';
+import Dialog, { DialogTitle, DialogContent, SlideAnimation, DialogFooter, DialogButton, } from 'react-native-popup-dialog';
 import RNFetchBlob from 'rn-fetch-blob';
 import OrderModal from '../../../../Utils/modal/order';
-const myProduct =
-    [
-        { Id: 1, qty: 22, name: 'Tryezophas' },
-        { Id: 2, qty: 21, name: 'Lemda' },
-        { Id: 3, qty: 22, name: 'Karatay' },
-        { Id: 4, qty: 24, name: 'Danydar' },
-        { Id: 5, qty: 25, name: 'PhasPhoras' },
-        { Id: 6, qty: 22, name: 'Jugni' },
-    ]
-// const order_history =
-//     [
-//         { Id: 1, name: 'Tryezophas', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '1', batchNO: 'XxB12345678BAS',weight:'200',unit:'ml'},
-//         { Id: 2, name: 'Lemda', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '2', batchNO: 'XxB12345678BAS',weight:'200',unit:'kg' },
-//         { Id: 3, name: 'Karatay', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '3', batchNO: 'XxB12345678BAS',weight:'200',unit:'ml' },
-//         { Id: 4, name: 'Danydar', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '4', batchNO: 'XxB12345678BAS',weight:'500',unit:'kg' },
-//         { Id: 5, name: 'PhasPhoras', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '5', batchNO: 'XxB12345678BAS',weight:'300',unit:'ml' },
-//         { Id: 6, name: 'Jugni', AQty: '200', RQty: '400', TQty: '600', date: 'Dec 20 2019', invoiceimg: '6', batchNO: 'XxB12345678BAS',weight:'200',unit:'kg' },
-//     ]
-
+let pageNo = 0;
 export async function request_storage_runtime_permission() {
     try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-        {
-          'title': 'ReactNativeCode Storage Permission',
-          'message': 'ReactNativeCode App needs access to your storage to download Photos.'
+        const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+            {
+                'title': 'ReactNativeCode Storage Permission',
+                'message': 'ReactNativeCode App needs access to your storage to download Photos.'
+            }
+        )
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+
+            //Alert.alert("Storage Permission Granted.");
         }
-      )
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            
-        //Alert.alert("Storage Permission Granted.");
-      }
-      else {
+        else {
 
-        Alert.alert("Storage Permission Not Granted");
+            Alert.alert("Storage Permission Not Granted");
 
-      }
+        }
     } catch (err) {
-      console.warn(err)
+        console.warn(err)
     }
-  }
+}
 
 export default class Orders extends Component {
     modal = React.createRef();
     bottomSheet = React.createRef();
     constructor(props) {
         super(props);
+        this.onEndReachedCalledDuringMomentum = true;
         this.state = {
-            //Product: myProduct,
             SearchValue: '',
             isDatePickerVisible: false,
             visible: false,
             date: '',
-            matchedproduct: myProduct,
-           // History: order_history,
-            orders:[],
-            loading:true,
+            orders: [], moreOrders: [],
+            loading: true,
             showModal: false,
             imageUrl: '',
-            pId: '',
-            pData: '',
-            showSheet: false,
+            pagination:'',
         }
     }
     async componentDidMount() {
         const scope = this;
+        let _orders = [];
+        pageNo = 1;
         await request_storage_runtime_permission();
-        OrderModal.orderList().then(
-            (res)=>{
-              if(res.success){
-               this.setState({
-                   orders:res.data.collection,
-                   loading:false
-               })
-              }else{
-               alert('server error')
-               console.log('data',res)
-              }
-            },(error)=>{
-              alert('response fail');
-              console.log('error',error)
+        console.log('page at this stage',pageNo)
+        OrderModal.orderList(pageNo).then(
+            (res) => {
+                if (res.success) {
+                    this.setState({
+                    orders:res.data.collection,
+                    loading: false,
+                    pagination:res.data.pagination,
+                    })
+                   // console.log('aaaaaa',this.state.pagination.last_page)
+                } else {
+                    alert('server error')
+                    console.log('data', res)
+                }
+            }, (error) => {
+                alert('response fail');
+                console.log('error', error)
             }
         )
 
-      }
+    }
     openDrawer = () => {
         Keyboard.dismiss();
         setTimeout(() => {
@@ -115,32 +98,17 @@ export default class Orders extends Component {
     closeDrawer = () => {
         this.drawer && this.drawer._root && this.drawer._root.close();
     };
-    _navigateTo =(routeName)=>{
-       const {pData} = this.state;
-       this.onCloseSheet();
-    this.props.navigation.navigate(routeName,{pData})
-    }
-    showProduct =(item)=>{
-       // alert(item.Id)
-       this.props.navigation.navigate('OrderProducts',{
-           item:item
-       })
-    }
-    // findProduct(query) {
-    //     if (query === '') {
-    //         return [];
-    //     }
 
-    //     const { matchedproduct } = this.state;
-    //     const regex = new RegExp([query.trim()], 'i');
-    //     return matchedproduct.filter((product) => product.name.search(regex)>= 0);
-    // }
+    showProduct = (item) => {
+        this.props.navigation.navigate('OrderProducts', {
+            item: item
+        })
+    }
     showDateTimePicker = () => {
         this.setState({ isDateTimePickerVisible: true });
     };
     handleDatePicked = date => {
-        //let dateText = this.convertDateTimeToString(date)
-        date=convertDateToString(date)
+        date = convertDateToString(date)
         this.setState({ date });
         this.hideDateTimePicker();
 
@@ -154,8 +122,7 @@ export default class Orders extends Component {
                 item={item}
                 key={item.Id}
                 invoice={() => this.Invoice(item)}
-               // EditDelete={() => this.editDelete(item)}
-                showProducts={()=>this.showProduct(item)}
+                showProducts={() => this.showProduct(item)}
                 navigation={this.props.navigation} />
         )
     };
@@ -173,60 +140,46 @@ export default class Orders extends Component {
             modal.open();
         }
     };
-    onCloseSheet = () => {
-        this.setState({ showSheet: false })
-        if (this.bottomSheet.current) {
-            this.bottomSheet.current.close();
-        }
-    };
-    onOpenSheet = () => {
-        const bottomSheet = this.bottomSheet.current;
-        if (bottomSheet) {
-            this.setState({ showSheet: true })
-            bottomSheet.open();
-        }
-    };
 
     Invoice = (item) => {
         const scope = this;
-     //  console.log('item image', item.invoice)
-       this.setState({ imageUrl: item.invoice })
+        this.setState({ imageUrl: item.invoice })
         this.onOpen()
     };
 
-    editDelete = (item) => {
+    onEndReached = ({ distanceFromEnd }) => {
         const scope = this;
-        console.log('item', item);
-        this.setState({
-            pId: item.Id,
-            pData: item,
-        });
-        this.onOpenSheet();
-    };
-    CallDialogBox = () => {
-        this.setState({visible: true })
-        this.onCloseSheet()
+        const {pagination} = this.state;
+        pageNo = pageNo + 1;
+        if (!scope.onEndReachedCalledDuringMomentum) {
+            if(pageNo <= pagination.last_page){
+                ToastAndroid.show('More data available',ToastAndroid.SHORT)
+///////////////////////////////////////////////////////////////////////////////////////////////
+            OrderModal.orderList(pageNo).then(
+                (res) => {
+                    if (res.success) {
+                        scope.setState({
+                            moreOrders: res.data.collection
+                        })
+                        scope.setState({ orders: scope.state.orders.concat(scope.state.moreOrders) })
+                    } else {
+                        alert('something went wrong')
+                        console.log('something went wrong', res)
+                    }
+                }, (error) => {
+                    alert('network error')
+                    console.log('network error', error)
+                }
+            )
+///////////////////////////////////////////////////////////////////////////////////////////////            
+              }else{
+                ToastAndroid.show('No more data',ToastAndroid.LONG)
+              } 
+        this.onEndReachedCalledDuringMomentum = true;
+        }
     }
-    CancelDialog = () => {
-        this.setState({visible: false})
-    }
-    Delete = () => {
-        this.CancelDialog()
-        console.log('product id',this.state.pId)
-    }
-    renderBottomSheet = () => {
-        return (
-            <_BottomSheet
-            _navigateTo={()=>this._navigateTo('EditOrder')}
-            CallDialogBox={()=>this.CallDialogBox()}
-            CancelSheet={() => this.onCloseSheet()}
-            />
-        )}
     renderSheet = () => {
-        // console.log('invoice image', this.state.imageUrl)
-        // console.log('product data for Edit',this.state.pData.name)
-        // console.log('product id',this.state.pId)
-        const {imageUrl} = this.state;
+        const { imageUrl } = this.state;
         return (
             <View style={{ backgroundColor: 'white', borderTopRightRadius: 5, borderTopLeftRadius: 5 }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
@@ -254,8 +207,7 @@ export default class Orders extends Component {
                 <View style={styles.imgView}>
                     <Image
                         style={{ height: ScreenHeight * 0.8, width: ScreenWidth * 0.98, alignSelf: 'center', }}
-                        //source={{ uri: 'https://reactnativecode.com/wp-content/uploads/2018/02/motorcycle.jpg' }}
-                        source={{ uri:IMAGEURL+imageUrl }}
+                        source={{ uri: IMAGEURL + imageUrl }}
                     />
                 </View>
             </View>
@@ -263,10 +215,8 @@ export default class Orders extends Component {
     }
     downloadImage = () => {
         var date = new Date();
-         let {imageUrl} = this.state
-      //  var image_URL = 'https://reactnativecode.com/wp-content/uploads/2018/02/motorcycle.jpg ';
-      var image_URL=IMAGEURL+imageUrl;
-       
+        let { imageUrl } = this.state
+        var image_URL = IMAGEURL + imageUrl;
         var ext = this.getExtention(image_URL);
         ext = "." + ext[0];
         const { config, fs } = RNFetchBlob;
@@ -291,10 +241,8 @@ export default class Orders extends Component {
     }
 
     render() {
-        const { Product, History,date,loading,SearchValue,orders } = this.state;
-        // const matchedproduct = this.findProduct(SearchValue);
-        // const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
-        console.log('image url',)
+        const { date, loading, orders } = this.state;
+        console.log('orders', orders)
         return (
             <Drawer ref={(ref) => { this.drawer = ref; }}
                 content={<Sidebar navigation={this.props.navigation} drawerClose={this.closeDrawer} />}
@@ -308,125 +256,61 @@ export default class Orders extends Component {
                         ImageLeftIcon={'menu'}
                         LeftPress={() => this.openDrawer()}
                         HeadingText={'Order History'} />
-                    {/* <View style={styles.SearchView}>
-                        <Autocomplete
-                            style={styles.AutocompleteStyle}
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            inputContainerStyle={{ borderWidth: 0, }}
-                            listStyle={{ borderWidth: 0 }}
-                            data={matchedproduct.length >= 1 && comp(SearchValue, matchedproduct[0].name) ? [] : matchedproduct}
-                            defaultValue={SearchValue}
-                            onChangeText={(text) => this.setState({ SearchValue: text })}
-                            placeholder="Search "
-                            placeholderTextColor={TextColor}
-                            renderItem={({ item }) => (
-                                <TouchableOpacity onPress={() => this.setState({ SearchValue: item.name })}>
-                                    <Text style={styles.itemText}>{item.name}</Text>
-                                </TouchableOpacity>
-                            )}>
-                        </Autocomplete>
-                        <Icon
-                            style={styles.IconStyle}
-                            name={'ios-search'}
-                            type={'Ionicons'}
-                        />
-                    </View> */}
-                                     <View style={styles.datePickerView}>
-                                        <TouchableOpacity style={styles.selectDateStyle}
-                                            onPress={() => this.showDateTimePicker()}>
-                                            <Text style={styles.startDInput}>
-                                                {/* {this.state.date.toString().slice(3, 16)} */}
-                                                {!date || !date.length ? 'Select date' : date}
-                                            </Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.SearchIconView}
-                                            onPress={() => this.props.navigation.navigate('orderSearchView')}>
-                                            <Icon
-                                                name={'ios-search'}
-                                                type={'Ionicons'}
-                                                style={{ fontSize: RFValue(26), alignSelf: 'flex-end', marginRight: 15 }}
-                                            />
-                                        </TouchableOpacity>
-                                    </View>
-                    <Content showsVerticalScrollIndicator={false} style={{ flex: 1, marginBottom: 10 }}>
-                        {loading ?
-                        <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-                         <ActivityIndicator
-                         color={MenuTextColor}
-                         size={'large'}/>
+                    <View style={styles.datePickerView}>
+                        <TouchableOpacity style={styles.selectDateStyle}
+                            onPress={() => this.showDateTimePicker()}>
+                            <Text style={styles.startDInput}>
+                                {!date || !date.length ? 'Select date' : date}
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.SearchIconView}
+                            onPress={() => this.props.navigation.navigate('orderSearchView', {
+                                item: {
+                                    date: date,
+                                    orders: orders
+                                }
+                            })}>
+                            <Icon
+                                name={'ios-search'}
+                                type={'Ionicons'}
+                                style={{ fontSize: RFValue(26), alignSelf: 'flex-end', marginRight: 15 }}
+                            />
+                        </TouchableOpacity>
+                    </View>
+
+                    {loading ?
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <ActivityIndicator
+                                color={MenuTextColor}
+                                size={'large'} />
                         </View> :
                         <FlatList
+                            style={{ marginBottom: 10 }}
                             showsVerticalScrollIndicator={false}
                             data={orders}
                             keyExtractor={(item) => item.Id}
                             renderItem={this.renderOrderList}
                             numColumns={1}
-                            horizontal={false} /> 
-                        }
-                        <Dialog
-                            visible={this.state.visible}
-                            onTouchOutside={() => {
-                                this.setState({ visible: false });
-                            }}
-                            dialogAnimation={new SlideAnimation({
-                                slideFrom:'right' ,
-                            })}
-                            footer={
-                                <DialogFooter>
-                                    <DialogButton
-                                    textStyle={styles.DialogOK_CancelButton}
-                                        text="CANCEL"
-                                        onPress={() => this.CancelDialog()}
-                                    />
-                                    <DialogButton
-                                      textStyle={styles.DialogOK_CancelButton}
-                                        text="OK"
-                                        onPress={() => this.Delete()}
-                                    />
-                                </DialogFooter>
-                            }
-                            dialogTitle={
-                                <DialogTitle 
-                                textStyle={{
-                                    color:'white',
-                                    fontSize:RFValue(16),
-                                    fontStyle:'normal',
-                                    fontWeight:'700',
-                                    fontFamily:'Poppins'  
-                                }}
-                                title="Delete " 
-                                style={{ backgroundColor:buttonBGcolor,color:'white' }} />
-                            }>
-                            <DialogContent
-                                style={{ width: 300 }}>
-                                <Text style={styles.DialogText}>Do you want to Delete ? Action can`t Undo</Text>
-                                {/* <Text style={styles.DialogText}>Action can`t Undo</Text> */}
-                            </DialogContent>
-                        </Dialog>
-                        <DateTimePicker
-                            isVisible={this.state.isDateTimePickerVisible}
-                            onConfirm={this.handleDatePicked}
-                            onCancel={this.hideDateTimePicker}
-                            is24Hour={false}
-                            mode={'date'}
-                            datePickerModeAndroid={'spinner'}
-                            timePickerModeAndroid={'spinner'}
+                            horizontal={false}
+                            onEndReached={this.onEndReached.bind(this)}
+                            onEndReachedThreshold={0.5}
+                            onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}
                         />
-       
-                    </Content>
+                    }
+                    <DateTimePicker
+                        isVisible={this.state.isDateTimePickerVisible}
+                        onConfirm={this.handleDatePicked}
+                        onCancel={this.hideDateTimePicker}
+                        is24Hour={false}
+                        mode={'date'}
+                        datePickerModeAndroid={'spinner'}
+                        timePickerModeAndroid={'spinner'}
+                    />
                     <Modalize
                         adjustToContentHeight
                         ref={this.modal}
                         onClosed={this.onClosed} >
                         {this.renderSheet()}
-                    </Modalize>
-
-                    <Modalize
-                        adjustToContentHeight
-                        ref={this.bottomSheet}
-                        onClosed={this.onClosed} >
-                        {this.renderBottomSheet()}
                     </Modalize>
                 </Container>
             </Drawer>

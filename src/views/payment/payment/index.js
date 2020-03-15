@@ -82,7 +82,7 @@ export default class payment extends Component {
         var DateTime = new Date(date).getTime()
         let aa = new Date(DateTime)
         date = convertDateToString(aa)
-        this.setState({ date, paymentDate: DateTime });
+        this.setState({ date, paymentDate:DateTime/1000 });
         this.hideDateTimePicker();
     };
     hideDateTimePicker = () => {

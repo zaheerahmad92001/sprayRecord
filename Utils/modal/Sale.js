@@ -20,9 +20,17 @@ export default class SaleModal extends Component{
             entry_date:date
         })
     };
-    // static saleFilter(page,daily,weekly,monthly){
-    //     return requestHandler('filter-sale',{
-    //       page:page,
-    //     })
-    // }
+    static ReturnProductList(pageNo){
+        return requestHandler('return-sale-listing',{
+            page:pageNo,
+        })
+    }
+    static saleFilter(pageNo){
+        return requestHandler('filter-sale',{
+          //  per_month:monthly,
+            //per_day:daily,
+            //start_date:fromDate,
+            //end_date:toDate
+        },pageNo)
+    }
 }

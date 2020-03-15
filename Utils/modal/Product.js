@@ -3,8 +3,10 @@ import { requestHandler } from "../requestHandler";
 
 export default class ProuductModal extends Component {
 
-    static ProductListing() {
-        return requestHandler('products-filter')
+    static ProductListing(pageNo) {
+        return requestHandler('products-filter',{
+            page:pageNo
+        })
     };
     static ProductDetails(id) {
         return requestHandler('product-details', {

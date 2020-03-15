@@ -16,15 +16,6 @@ import { TextColor, BBCOLOR,borderColor } from '../../Constants/colors';
 import ProuductModal from '../../../Utils/modal/Product';
 import SaleModal from '../../../Utils/modal/Sale';
 
-// const myProduct =
-//     [
-//         { Id: 1, qty: 22, name: 'abc' },
-//         { Id: 2, qty: 22, name: 'abc' },
-//         { Id: 3, qty: 22, name: 'def' },
-//         { Id: 4, qty: 22, name: 'ghi' },
-//         { Id: 5, qty: 22, name: 'jkl' },
-//         { Id: 10, qty: 22, name: 'adc' },
-//     ]
 export default class ReturnProducts extends Component {
     constructor(props) {
         super(props);
@@ -45,12 +36,12 @@ export default class ReturnProducts extends Component {
                        products:res.data.collection,
                    })
                 }else{
-                    alert('server error');
-                    console.log('Return product error',res)
+                    alert('something went wrong');
+                    console.log('something went wrong',res)
                 }
             },(error)=>{
-              alert('fail');
-              console.log('Return product error',error)
+              alert('network error');
+              console.log('network error',error)
             }
         )
     }
@@ -65,7 +56,7 @@ export default class ReturnProducts extends Component {
         var DateTime = new Date(date).getTime();
         let aa= new  Date(DateTime)
         date = convertDateToString(aa)
-        this.setState({ date ,return_date:DateTime });
+        this.setState({ date ,return_date:DateTime/1000 });
         this.hideDateTimePicker();
 
     };
@@ -110,9 +101,8 @@ export default class ReturnProducts extends Component {
             },(error)=>{
                 alert('fail'),
                 console.log('reqeust fail',error)
-            } 
-        )
-    }
+            })
+        }
 //////////////////////////////////////////////////////////////////////////////////    
     render() {
         const { date, qty, errorMsg,products,selected } = this.state;
@@ -208,7 +198,6 @@ export default class ReturnProducts extends Component {
                         onPress={() => this.showDateTimePicker()}>
                         <View>
                             <Text style={styles.startDInput}>
-                                {/* {this.state.date.toString().slice(3, 16)} */}
                                 {!date || !date.length ? 'Select date' : date}
                             </Text>
                         </View>

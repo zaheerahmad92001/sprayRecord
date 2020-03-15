@@ -22,6 +22,9 @@ export function ValidateEmail (email){
 export function ValidateBatchNo (input){
     
 }
+export  function getDateInUTCWithoutHours(date){
+    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0,0, 0));
+}
 export function convertDateToString(date) {
     date = date.getFullYear() + '-' + (("0" + (date.getMonth() + 1)).slice(-2)) + '-' + ("0"+date.getDate()).slice(-2)
     return date;

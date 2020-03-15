@@ -12,5 +12,10 @@ export default class PaymentModal extends Component{
     };
     static Balance(){
         return requestHandler('balance')
-    }
+    };
+    static PaymentListing(pageNo){
+        return requestHandler('payment-listing',{
+            page:pageNo
+        })
+    };
 }

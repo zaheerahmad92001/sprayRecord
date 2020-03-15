@@ -65,7 +65,7 @@ export default StyleSheet.create({
         marginBottom: 3,
     },
     appbar: {
-        height: ScreenHeight*0.25,
+        height: ScreenHeight*0.19,
         backgroundColor: 'white',
     },
     invoiceStyle: {
@@ -75,5 +75,21 @@ export default StyleSheet.create({
         fontSize: RFValue(14),
         color: 'green'
     },
+    blinkgView:{
+        justifyContent: 'space-between', 
+        flexDirection: 'row',
+        marginTop:5,
+        backgroundColor:'red'
+    },
+    textStyle:{
+        fontSize:14,
+       fontStyle:'normal',
+       fontWeight:'bold',
+       color:MenuTextColor,
+       borderRadius:10,
+       paddingHorizontal:10,
+       paddingVertical:2,
+       textAlign:'center'
+    }
     
 })

@@ -17,9 +17,9 @@ export default class List extends Component {
         return (
             <TouchableOpacity onLongPress={this.props.deleteProduct}>
             <Card noShadow key={this.props.keyVal}>
-
                 <View style={{ justifyContent: 'space-between', flexDirection: 'row', paddingHorizontal: 5, paddingVertical: 10 }}>
-                    <Text numberOfLines={1} style={styles.textStyle}>{this.props.val.product_id}</Text>
+                    {/* <Text numberOfLines={1} style={styles.textStyle}>{this.props.val.product_id}</Text> */}
+                    <Text numberOfLines={1} style={styles.textStyle}>{this.props.val.title}</Text>
                     <Text numberOfLines={1} style={styles.textStyle}>{this.props.val.quantity}</Text>
                     <View style={{flexDirection:'row'}}>
                     <Text numberOfLines={1} style={styles.textStyle} >{this.props.val.weight}</Text>

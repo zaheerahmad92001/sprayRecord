@@ -1,6 +1,6 @@
 import {StyleSheet,Dimensions}from 'react-native';
-import { TextFont_Search,} from '../../Constants/fontsize';
-import { TextColor, borderColor, BBCOLOR } from '../../Constants/colors';
+import { TextFont_Search, HeadingFont,} from '../../Constants/fontsize';
+import { TextColor, borderColor, BBCOLOR, CountColor } from '../../Constants/colors';
 import { RFValue } from 'react-native-responsive-fontsize';
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 export default StyleSheet.create({
@@ -104,5 +104,10 @@ export default StyleSheet.create({
         fontWeight: 'normal',
         color: TextColor,
         marginLeft: 10,
+    },
+    NotFound: {
+        fontSize: HeadingFont,
+        color: CountColor,
+        fontWeight: '700',
     },
 })

@@ -16,24 +16,14 @@ import { TextColor, BBCOLOR } from '../../Constants/colors';
 import SaleModal from '../../../Utils/modal/Sale';
 import ProuductModal from '../../../Utils/modal/Product';
 
-// const myProduct =
-//     [
-//         { Id: 1, qty: 22, name: 'abc' },
-//         { Id: 2, qty: 22, name: 'abc' },
-//         { Id: 3, qty: 22, name: 'def' },
-//         { Id: 4, qty: 22, name: 'ghi' },
-//         { Id: 5, qty: 22, name: 'jkl' },
-//         { Id: 10, qty: 22, name: 'adc' },
-//     ]
 export default class DailySale extends Component {
     constructor(props) {
         super(props);
         this.state = {
-           // SearchValue: '',
              qty: '',weight:'',weightUnit:'',
              isDatePickerVisible: false,
             date: '',order_date:'',
-            errorMsg: '', //matchedproduct: myProduct,
+            errorMsg: '', 
             selected: "None", 
             mapOnce:true,
             populate:[],
@@ -42,16 +32,6 @@ export default class DailySale extends Component {
         }
     }
     
-    // findProduct(query) {
-    //     if (query === '') {
-    //         return [];
-    //     }
-
-    //     const { matchedproduct } = this.state;
-    //     const regex = new RegExp([query.trim()], 'i');
-    //     return matchedproduct.filter((product) => product.name.search(regex) >= 0);
-    // };
-
     componentDidMount(){
         ProuductModal.ProductListing().then(
             (res)=>{
@@ -87,7 +67,7 @@ export default class DailySale extends Component {
     };
     handleDatePicked = date => {
     var DateTime = new Date(date).getTime();
-   // console.log('date in timespan',DateTime);
+    console.log('date in timespan',DateTime);
     let aa= new  Date(DateTime)
     //console.log('converted back',aa);
     date=convertDateToString(aa)

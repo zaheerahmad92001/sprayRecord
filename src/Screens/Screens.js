@@ -49,8 +49,7 @@ const AuthNavigator = createStackNavigator({
      initialRouteName: 'Login',
      transitionConfig:()=>fromBottom(),
      headerMode: 'none'
-}
-);
+});
 const AppNavigator = createStackNavigator({
    // IndexFile: IndexFile,
     Landing: Landing,

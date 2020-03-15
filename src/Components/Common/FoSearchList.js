@@ -13,12 +13,13 @@ import { Card, } from 'native-base';
 import { TextFont_Search } from '../../Constants/fontsize';
 import { CountColor, BBCOLOR, TextColor } from '../../Constants/colors'
 import { RFValue } from 'react-native-responsive-fontsize';
+import { IMAGEURL } from '../../RandFunction';
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 
 
 export default class FoSearchList extends Component {
     render() {
-        const  {qty, Id, name }= this.props;
+        const  {qty, Id, name,img }= this.props;
         console.log ('props',this.props.name) 
         return (
             <TouchableOpacity style={styles.Container}
@@ -27,6 +28,7 @@ export default class FoSearchList extends Component {
                         Id: Id,
                         qty: qty,
                         name: name,
+                        img:img,
                         from:'fo'
                     }
                 })}>
@@ -34,7 +36,7 @@ export default class FoSearchList extends Component {
                     <View style={styles.imageView} >
                         <Image
                             style={styles.imageStyle}
-                             source={require('../../assets/image/p.png')}/>
+                             source={{uri:IMAGEURL+img}}/>
                     </View>
                    <Text style={styles.count}>{name}</Text>
                     <View style={styles.priceAvailableView}>

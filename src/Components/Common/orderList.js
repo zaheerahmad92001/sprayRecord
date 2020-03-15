@@ -15,7 +15,7 @@ import { convertDateToString } from '../../RandFunction';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 const _OrderList = (props) => {
-    let date = new Date(props.item.order_date)
+    let date = new Date(props.item.order_date*1000)
     return (
         <TouchableOpacity style={styles.container} 
         onLongPress={props.showProducts} >
