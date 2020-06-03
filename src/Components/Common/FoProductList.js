@@ -18,131 +18,86 @@ const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 
 export default class FoProductList extends Component {
     render() {
-        const { qty, Id, name,price,img } = this.props;
+        const { qty, Id, name, price, img, weight, unit } = this.props;
         return (
-            <TouchableOpacity style={{ width: ScreenWidth * 0.47, borderWidth: 1, borderColor:borderColor, marginHorizontal: 5, marginBottom: 5, paddingVertical: 10 }}
+            <TouchableOpacity
+                style={styles.Container}
                 onPress={() => this.props.navigation.navigate('ProductDetail', {
                     item: {
                         Id: Id,
-                        from:'fo'
+                        from: 'admin'
                     }
                 })}
-                >
-                <View style={{ alignItems: 'center', justifyContent: 'center' }} >
-                    <Image style={styles.imageStyle}
-                        source={{uri:IMAGEURL+img}}
-                         />
-                </View>
-
-                <View style={{ marginTop: 10, paddingHorizontal: 10, }}>
-                    {/* <Text>kdjk ak aljlakj akfda fjkalfdalfj alkorlksdlg;poirpw dfdf[pfaep;fvkdl;gg kljilejglk zaheer</Text> */}
-                    <Text style={styles.name}>{name}</Text>
-                    <View style={{ flexDirection: 'row', justifyContent:'space-between',marginTop:3}}>
+            >
+                <Image style={styles.imageStyle}
+                        source={{ uri: IMAGEURL + img }} />
+                <View style={{marginHorizontal:5}}>
+                    
+                    <View style={{ flexDirection: 'row', }}>
+                        <View style={{ flex: 1 }}>
+                         <Text style={styles.name}>{name}</Text>
+                        </View>
+                    <Text style={styles.name}>{weight}</Text>
+                    <Text style={styles.name}>{unit}</Text> 
+                    </View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
                         <Text style={styles.name}>Qty</Text>
-                    <Text style={styles.name}>{qty}</Text>
+                        <Text style={styles.name}>{qty}</Text>
                     </View>
                 </View>
-
             </TouchableOpacity>
+
+            // <TouchableOpacity style={styles.Container}
+            //     onPress={() => this.props.navigation.navigate('ProductDetail', {
+            //         item: {
+            //             Id: Id,
+            //             from: 'admin'
+            //         }
+            //     })}
+            // >
+
+
+            //     <Image style={styles.imageStyle}
+            //            source={{ uri: IMAGEURL + img }}/>
+            //     <View style={{ marginTop: 0, paddingHorizontal: 5,}}>
+            //         {/* <Text>kdjk ak aljlakj akfda fjkalfdalfj alkorlksdlg;poirpw dfdf[pfaep;fvkdl;gg kljilejglk zaheer</Text> */}
+            //         <View style={{ flexDirection: 'row',}}>
+            //             <Text style={styles.name}>{name}</Text>
+            //             <View style={{ flexDirection: 'row' }}>
+            //                 <Text style={styles.name}>{weight}</Text>
+            //                 <Text style={styles.name}>{unit}</Text>
+            //             </View>
+            //         </View>
+            //         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 3 }}>
+            //             <Text style={styles.name}>Qty</Text>
+            //             <Text style={styles.name}>{qty}</Text>
+            //         </View>
+            //     </View>
+            // </TouchableOpacity>
         )
     }
-
-    // render() {
-    //     const {qty, id, name }= this.props;
-    //     return (
-    //         <TouchableOpacity style={styles.Container}>
-    //             <Card style={styles.cardStyle}>
-    //                 <View style={styles.imageView} >
-    //                     <Image
-    //                         style={styles.imageStyle}
-    //                         source={require('../../assets/image/1.jpg')}
-    //                     />
-    //                 </View>
-                   
-    //                 <View style={styles.priceAvailableView}>
-    //                     <Text style={styles.heading}>
-    //                         Name
-    //                       </Text>
-    //                     <Text style={styles.count}>
-    //                         {name}
-    //                       </Text>
-    //                 </View>
-                    
-    //                 <View style={styles.priceAvailableView}>
-    //                     <Text style={styles.heading}>
-    //                         Quantity
-    //                       </Text>
-    //                     <Text style={styles.count}>
-    //                         {qty}
-    //                       </Text>
-
-    //                 </View>
-    //             </Card>
-    //         </TouchableOpacity>
-    //     )
-    //}
-
-
 }
-// const styles =StyleSheet.create({
-//      Container:{
-//           justifyContent: 'center',
-//           paddingHorizontal: 5,
-//           flex:1,
-//     },
-//     imageStyle:{
-//         width: 90, 
-//         height: 90,
-         
-//     },
-//     imageView:{
-//         justifyContent: 'center', 
-//         alignItems: 'center'
-//     },
-//     priceAvailableView:{
-//         flexDirection: 'row',
-//          justifyContent: 'space-around'
-//     },
-//     heading:{
-//         fontSize: TextFont_Stnadered,
-//          fontWeight: 'bold',
-//           paddingHorizontal: 10,
-//            color: CountColor
-//     },
-//     count:{
-//         fontSize: TextFont_Stnadered, 
-//         fontWeight: 'bold',
-//          color: CountColor
-//     },
-//     cardStyle:{
-         
-//         borderRadius: 10,
-//         paddingVertical:10,
-//         marginLeft:2
-        
-//            }
-
-// })
 const styles = StyleSheet.create({
     Container: {
-        justifyContent: 'center',
-        paddingHorizontal: 3,
-        flex: 1,
+        borderWidth: 1,
+        borderColor: borderColor, 
+        flex: 0.5,
+        marginHorizontal: 3,
+        marginBottom:5,
+        paddingBottom:10,
+        paddingTop:0, 
     },
-    name:{
-     color:TextColor,
-     fontFamily:'Poppins',
-     fontSize:RFValue(14),
-     fontStyle:'normal',
-     fontWeight:'500',
+    name: {
+        color: TextColor,
+        fontFamily: 'Poppins',
+        fontSize: RFValue(14),
+        fontStyle: 'normal',
+        fontWeight: '500',
     },
     imageStyle: {
-        //backgroundColor:'pink',
-        //width: ScreenHeight*0.23,
-       // height: ScreenHeight*0.22
-       width:RFValue(140),
-       height:RFValue(140)
-
+        width:'100%',
+        height: RFValue(150),
+        alignSelf: 'center',
     },
     imageView: {
         justifyContent: 'center',

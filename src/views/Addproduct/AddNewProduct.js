@@ -150,8 +150,8 @@ UploadImage =(response)=>{
         console.log('server error',res)
       }
     },(error)=>{
-      alert('fail')
-      console.log('request fail',error)
+      alert('network error')
+      console.log('network error',error)
     }
   )}
 
@@ -185,7 +185,7 @@ ProuductModal.ProductSave(description,ProductName,images,qty,weight,weightUnit)
 /////////////////////////////////////////////////////////////////////////////////
 
      }else{
-        this.setState({ errorMsg: 'Enter weight in KG ,ML or gram without space and special character '})
+        this.setState({ errorMsg: 'Enter weight in KG ,ML,Liter or gram without space and special character '})
       }
     } else {
       this.setState({ errorMsg: 'Enter product name' })
@@ -287,6 +287,7 @@ ProuductModal.ProductSave(description,ProductName,images,qty,weight,weightUnit)
                     <Picker.Item label="kg" value="KG" />
                     <Picker.Item label="ml" value="ML" />
                     <Picker.Item label="gram" value="Gram" />
+                    <Picker.Item label="liter" value="Liter"/>
                   </Picker>
                 </View>
               <Text style={[styles.Heading],{marginTop:RFValue(10)}}>Description</Text>

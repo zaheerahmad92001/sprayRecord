@@ -58,11 +58,11 @@ export default class ReturnedProductList extends Component {
             }
         )
     }
-    // _navigateTo = (routeName) => {
-    //     const { pData } = this.state;
-    //     this.onCloseSheet();
-    //     this.props.navigation.navigate(routeName, { pData })
-    // }
+    _navigateTo = (routeName) => {
+        const { pData } = this.state;
+       // this.onCloseSheet();
+        this.props.navigation.navigate(routeName, { pData })
+    }
     // onCloseSheet = () => {
     //     this.setState({ showBottomSheet: false })
     //     if (this.bottomSheet.current) {

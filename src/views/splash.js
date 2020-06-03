@@ -24,7 +24,7 @@ export default class Splash extends Component {
         AsyncStorage.getItem('user').then((value) => {
             USER = JSON.parse(value)
             setTimeout(() => {
-                scope.props.navigation.navigate(USER != null ? 'AdminHome' : 'AppNavigator')
+                scope.props.navigation.navigate(USER != null ? 'AdminHome' : 'LandingNavigator')
                 //this.props.navigation.navigate('LandingNavigator')
             }, 2000)
         })

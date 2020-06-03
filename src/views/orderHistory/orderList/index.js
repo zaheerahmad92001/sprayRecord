@@ -20,7 +20,9 @@ import DateTimePicker from "react-native-modal-datetime-picker";
 import Dialog, { DialogTitle, DialogContent, SlideAnimation, DialogFooter, DialogButton, } from 'react-native-popup-dialog';
 import RNFetchBlob from 'rn-fetch-blob';
 import OrderModal from '../../../../Utils/modal/order';
+import AsyncStorage from '@react-native-community/async-storage';
 let pageNo = 0;
+let USER='';
 export async function request_storage_runtime_permission() {
     try {
         const granted = await PermissionsAndroid.request(
@@ -63,6 +65,11 @@ export default class Orders extends Component {
         }
     }
     async componentDidMount() {
+        AsyncStorage.getItem('user').then((value)=>{
+            USER = JSON.parse(value)
+            console.log('user token',USER.token)
+         })
+
         const scope = this;
         let _orders = [];
         pageNo = 1;
@@ -231,8 +238,14 @@ export default class Orders extends Component {
                 description: 'Image'
             }
         }
-        config(options).fetch('GET', image_URL).then((res) => {
+        config(options).fetch('GET', image_URL,{
+            // 'Accept':'application/json,text/plain',
+            // 'Content-Type': 'application/json',
+            'authorization':USER.token
+        }).then((res) => {
             Alert.alert("Image Downloaded Successfully.");
+        }).catch(error=>{
+            console.log('invoice download error',error)
         });
     }
     getExtention = (filename) => {
@@ -242,7 +255,6 @@ export default class Orders extends Component {
 
     render() {
         const { date, loading, orders } = this.state;
-        console.log('orders', orders)
         return (
             <Drawer ref={(ref) => { this.drawer = ref; }}
                 content={<Sidebar navigation={this.props.navigation} drawerClose={this.closeDrawer} />}

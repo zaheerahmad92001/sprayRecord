@@ -29,6 +29,10 @@ const _Prouducts = (props) => {
                    <View style={{flex:1,marginLeft:15,marginRight:3}}>
                     <Text numberOfLines={2} style={styles.Text}>{props.item.title}</Text>
                     </View>
+                    <View style={{flexDirection:'row'}}>
+                     <Text style={styles.Text}>{props.item.weight}</Text>
+                     <Text style={styles.Text}>{props.item.unit}</Text>
+                    </View>
             </CardItem>
         </Card>
     )

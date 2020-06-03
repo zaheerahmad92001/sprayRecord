@@ -22,7 +22,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import Dialog, { DialogTitle, DialogContent, SlideAnimation, DialogFooter, DialogButton, } from 'react-native-popup-dialog';
 import OrderModal from '../../../Utils/modal/order';
 import ProuductModal from '../../../Utils/modal/Product';
-
+let pageNo=0;
 export default class NewOrder extends Component {
   constructor(props) {
     super(props);
@@ -35,28 +35,55 @@ export default class NewOrder extends Component {
       isDatePickerVisible: false,
       enabled: false, nextStep: 0,
       errorMsg: '', errorMsg2: '', itemKey: '',
-      products: [], visible: false,
+      products: [], visible: false,productUnit:'',
       buttonDisabled: true, product_id: "None", mapOnce: true,
       populate: [],productsList:[],productTitle:'',tempProducts:[],
+      moreProducts: [],pagination:'',
     }
   }
   
   componentDidMount(){
-    ProuductModal.ProductListing().then(
+    pageNo = 1;
+    ProuductModal.ProductListing(pageNo).then(
       (res)=>{
           if(res.success){
               this.setState({
                 productsList:res.data.collection,
+                pagination:res.data.pagination,
               })
+              console.log('products list',res)
           }else{
               alert('server error')
               console.log('NewOrder server error',res)
           }
       },(error)=>{
-          alert('fail')
-          console.log('NewOrder error',error)
+          alert('network error')
+          console.log('network error',error)
       }
   )
+  }
+  loadMoreProduct=(pageNo)=>{
+    ProuductModal.ProductListing(pageNo).then(
+        (res)=>{
+            if(res.success){
+               this.setState({
+                moreProducts:res.data.collection,
+                //pagination:res.data.pagination
+               })
+               this.setState({productsList:this.state.productsList.concat(this.state.moreProducts),
+              populate:[],
+              mapOnce:true  
+              
+            })
+            }else{
+                alert('something went wrong');
+                console.log('something went wrong',res)
+            }
+        },(error)=>{
+          alert('network error');
+          console.log('network error',error)
+        }
+    ) 
   }
   openDrawer = () => {
     Keyboard.dismiss();
@@ -125,14 +152,15 @@ export default class NewOrder extends Component {
          this.setState({
           invoice:res.data.collection.image
          })
-          alert('success')
+         ToastAndroid.show('Image Uploaded',ToastAndroid.SHORT);
+          //alert('success')
         }else{
           alert('server error')
           console.log('server error',res)
         }
       },(error)=>{
-        alert('fail')
-        console.log('request fail',error)
+        alert('network error')
+        console.log('network error',error)
       }
     )}
     PickerValue=(value)=>{
@@ -140,8 +168,8 @@ export default class NewOrder extends Component {
       const {productsList} = this.state;
       productsList.map((product)=>{
         if(value===product.id){
-          // console.log('product id',product.title)
-          this.setState({product_id: value,productTitle:product.title, errorMsg2:''})
+         //  console.log('product unit',product.unit)
+          this.setState({product_id: value,productTitle:product.title,productUnit:product.unit, errorMsg2:''})
         }
       })
      
@@ -155,17 +183,26 @@ export default class NewOrder extends Component {
     date = convertDateToString(aa)
     this.setState({ date,order_date:DateTime/1000  });
     this.hideDateTimePicker();
-    console.log('date want to show',date,'date send to server', DateTime)
+   // console.log('date want to show',date,'date send to server', DateTime)
   };
   hideDateTimePicker = () => {
     this.setState({ isDateTimePickerVisible: false });
   };
 
   render1 = () => {
-    const { order_date, batch_no, price } = this.state;
+    const { order_date, batch_no, price,avatarSource } = this.state;
     if (ValidateNumber(price)) {
       if (batch_no && batch_no.length) {
-        this.setState({ nextStep: 1 })
+        if(avatarSource){
+          if(order_date){
+            this.setState({ nextStep: 1,errorMsg:'' })
+          }else{
+            this.setState({ errorMsg: 'Please select Date ', })
+          }
+        }else{
+          this.setState({ errorMsg: 'Invoice image not added ', })
+        }
+        
       } else {
         this.setState({ errorMsg: 'Enter batch number without space ', })
       }
@@ -176,10 +213,11 @@ export default class NewOrder extends Component {
   }
 
   AddMoreProduct = () => {
-    const { product_id, qty, weight, weightUnit, products ,tempProducts,productTitle } = this.state;
+    const { product_id, qty, weight, weightUnit, products ,tempProducts,productTitle,productUnit } = this.state;
       if(product_id!='' && product_id!='None'){
       if (ValidateNumber(qty)) {
         if (weightUnit && weightUnit.length && ValidateDecimalNumber(weight)) {
+          if(weightUnit.toLocaleLowerCase()===productUnit.toLocaleLowerCase()){
           products.push({
             product_id: product_id,
             quantity: qty,
@@ -192,8 +230,17 @@ export default class NewOrder extends Component {
             weight: weight,
             weight_unit: weightUnit
           })
-          this.setState({ products: this.state.products, tempProducts:this.state.tempProducts , buttonDisabled: false })
-        } else {
+          this.setState({
+             products: this.state.products,
+             tempProducts:this.state.tempProducts ,
+             buttonDisabled: false,
+             weight:'',weightUnit:'',qty:'',product_id:'None'              
+          })
+        }else{
+          this.setState({ errorMsg2: 'Invalid Unit selected' })
+        }
+      }
+         else {
           this.setState({ errorMsg2: 'Enter weight in KG ,ML or gram without space and special character  ' })
         }
       } else {
@@ -229,7 +276,8 @@ export default class NewOrder extends Component {
                weight:'',
                qty:'',
                weightUnit:'',
-               avatarSource:null
+               avatarSource:null,
+               nextStep:0,
 
              })
              ToastAndroid.show('order saved',ToastAndroid.SHORT)
@@ -248,9 +296,14 @@ export default class NewOrder extends Component {
   }
 
   render() {
-    const { buttonDisabled,productsList,populate } = this.state;
+    const { buttonDisabled,productsList,populate,pagination,moreProducts } = this.state;
+    pageNo= pageNo+1;
+    if(pageNo<= pagination.last_page){
+        console.log('page number',pageNo)
+        this.loadMoreProduct(pageNo)
+    }
     console.log('tempProduct',this.state.tempProducts)
-    console.log('products',this.state.products)
+    console.log('moreproduvt',this.state.moreProducts)
     // let product = this.state.products.map((val, key) => {
     //   return <List
     //     key={key}
@@ -271,7 +324,7 @@ export default class NewOrder extends Component {
     {this.state.mapOnce ?
       productsList.map((value) => {
         this.state.populate.push({
-          label: value.title,
+          label: value.title+ '    '+'('+value.weight+value.unit +')',
           value: value.id
         })
         this.setState({ mapOnce: false })
@@ -409,6 +462,7 @@ export default class NewOrder extends Component {
                     <Picker.Item label="kg" value="kg" />
                     <Picker.Item label="ml" value="ml" />
                     <Picker.Item label="gram" value="gram" />
+                    <Picker.Item label="liter" value="Liter" />
                   </Picker>
                 </View>
                 <Text style={[styles.errorText, { marginTop: 5 }]}>{errorMsg2}</Text>

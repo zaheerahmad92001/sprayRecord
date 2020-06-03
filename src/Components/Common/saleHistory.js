@@ -29,8 +29,8 @@ const _SaleHistory = (props) => {
                 <View style={[styles.detailView]}>
                     <Text style={[styles.name]}>{props.item.product.title}</Text>
                     <View style={{flexDirection:'row'}}>
-                     <Text style={styles.value}>{props.item.weight}</Text>
-                     <Text style={styles.value}>{props.item.unit}</Text>
+                     <Text style={styles.value}>{props.item.product.weight}</Text>
+                     <Text style={styles.value}>{props.item.product.unit}</Text>
                      </View>
                 </View>
                 <View style={styles.borderBottom}></View>
