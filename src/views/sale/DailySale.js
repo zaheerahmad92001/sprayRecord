@@ -15,7 +15,7 @@ import styles from '../sale/styles';
 import { TextColor, BBCOLOR } from '../../Constants/colors';
 import SaleModal from '../../../Utils/modal/Sale';
 import ProuductModal from '../../../Utils/modal/Product';
-
+let pageNo=0;
 export default class DailySale extends Component {
     constructor(props) {
         super(props);
@@ -26,18 +26,19 @@ export default class DailySale extends Component {
             errorMsg: '', 
             selected: "None", 
             mapOnce:true,
-            populate:[],
-            products:[],
+            populate:[], products:[],
+            moreProducts: [],pagination:'',
 
         }
     }
-    
     componentDidMount(){
-        ProuductModal.ProductListing().then(
+        pageNo = 1;
+        ProuductModal.ProductListing(pageNo).then(
             (res)=>{
                 if(res.success){
                     this.setState({
                         products:res.data.collection,
+                        pagination:res.data.pagination,
                     })
                 }else{
                     alert('server error')
@@ -49,6 +50,28 @@ export default class DailySale extends Component {
             }
         )
     }
+    loadMoreProduct=(pageNo)=>{
+        ProuductModal.ProductListing(pageNo).then(
+            (res)=>{
+                if(res.success){
+                   this.setState({
+                    moreProducts:res.data.collection,
+                   })
+                   this.setState({products:this.state.products.concat(this.state.moreProducts),
+                  populate:[],
+                  mapOnce:true  
+                })
+                }else{
+                    alert('something went wrong');
+                    console.log('something went wrong',res)
+                }
+            },(error)=>{
+              alert('network error');
+              console.log('network error',error)
+            }
+        ) 
+      }
+
     openDrawer = async () => {
         await Keyboard.dismiss()
         setTimeout(() => {
@@ -90,7 +113,7 @@ export default class DailySale extends Component {
                     this.setState({ errorMsg: '' })
                     this.Create(selected,qty, weight,weightUnit,order_date)
                 } else {
-                    this.setState({ errorMsg: 'Enter weight in KG, ML or gm  without space and special character' })
+                    this.setState({ errorMsg: 'Enter weight in KG, ML,Liter or gm  without space and special character' })
                 }
             } else {
                 this.setState({ errorMsg: 'Enter quantity without space and special character' })
@@ -122,14 +145,18 @@ export default class DailySale extends Component {
     }
 /////////////////////////////////////////////////////////////////////////////////// 
     render() {
-        const { date, qty, errorMsg,products,selected  } = this.state;
+        const { date, qty, errorMsg,products,selected ,pagination, } = this.state;
         //const matchedproduct = this.findProduct(SearchValue);
        // const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
-    
+       pageNo= pageNo+1;
+       if(pageNo<= pagination.last_page){
+           console.log('page number',pageNo)
+           this.loadMoreProduct(pageNo)
+       }
         { this.state.mapOnce ?
         products.map((value)=>{
         this.state.populate.push({
-        label:value.title,
+        label: value.title+ '    '+'('+value.weight+value.unit +')',
         value:value.id
     })
     this.setState({mapOnce:false})
@@ -234,7 +261,8 @@ export default class DailySale extends Component {
                                 <Picker.Item label="select Unit..." value="" />
                                 <Picker.Item label="kg" value="kg" />
                                 <Picker.Item label="ml" value="ml" />
-                                <Picker.Item label="gram" value="gram" />
+                                <Picker.Item label="gram" value="gram"/>
+                                <Picker.Item label="liter" value="Liter"/>
                             </Picker>
                         </View>
 

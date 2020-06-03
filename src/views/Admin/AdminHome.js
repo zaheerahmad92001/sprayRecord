@@ -70,7 +70,7 @@ export default class AdminHome extends Component {
                         console.log('something went wrong', res)
                     }
                 }, (error) => {
-                    alert('network error')
+                    alert('Network error')
                     console.log('network error', error)
                 }
                 )
@@ -90,6 +90,8 @@ export default class AdminHome extends Component {
                 name={item.title}
                 price={item.price}
                 img={item.default_image}
+                weight={item.weight}
+                unit={item.unit}
                 navigation={this.props.navigation}
             />
         )
@@ -102,6 +104,8 @@ export default class AdminHome extends Component {
                 name={item.title}
                 key={item.Id}
                 img={item.default_image}
+                weight={item.weight}
+                unit={item.unit}
                 navigation={this.props.navigation}
             />
         )
@@ -190,7 +194,7 @@ export default class AdminHome extends Component {
                             />
                         </View>
                     }
-                    <View style={{ flex: 1, marginTop: 10 }}>
+                    <View style={{ flex: 1, marginTop: 0 }}>
                         {loading ?
                             <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
                                 <ActivityIndicator

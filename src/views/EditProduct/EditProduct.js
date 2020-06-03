@@ -109,14 +109,14 @@ export default class EditProduct extends Component {
           // })
           scope.setState({temp:res.data.collection.image})
           ToastAndroid.show('Image Uploaded',ToastAndroid.SHORT);
-          alert('success')
+          // alert('success')
         }else{
           alert('server error')
           console.log('server error',res)
         }
       },(error)=>{
-        alert('fail')
-        console.log('request fail',error)
+        alert('network error')
+        console.log('request ',error)
       }
     )}
   
@@ -142,15 +142,15 @@ export default class EditProduct extends Component {
          ProductName:'',
          weight:'',weightUnit:'',description:'',
        })
-       ToastAndroid.show('Product Updated',ToastAndroid.SHORT),
-       alert('image updated')
+       ToastAndroid.show('Product Updated',ToastAndroid.SHORT)
+      //  alert('image updated')
      }else{
     alert('server error')
     console.log('server error',res)
      }
    },(error)=>{
-     alert('fail')
-     console.log('request fail',error)
+     alert('network error')
+     console.log('network error',error)
    }
  )
  /////////////////////////////////////////////////////////////////////////////////

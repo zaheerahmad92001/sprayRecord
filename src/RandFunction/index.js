@@ -30,7 +30,7 @@ export function convertDateToString(date) {
     return date;
 }
 
-export const IMAGEURL='http://www.daniyalrentacars.com/'
+export const IMAGEURL='http://www.al-yousaf.com/'
 
 
 

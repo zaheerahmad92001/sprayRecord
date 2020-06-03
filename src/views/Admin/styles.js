@@ -56,5 +56,6 @@ export default StyleSheet.create({
         alignSelf: 'center',
         borderColor: borderColor,
         paddingHorizontal: 10,
+        marginBottom:10,
     }
 })

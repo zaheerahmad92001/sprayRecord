@@ -82,8 +82,7 @@ export default class ProductList extends Component {
                         scope.setState({
                             moreProducts: res.data.collection
                         })
-                    
-                        scope.setState({ ProductList: scope.state.ProductList.concat(scope.state.moreProducts) })
+                    scope.setState({ ProductList: scope.state.ProductList.concat(scope.state.moreProducts) })
                     } else {
                         alert('something went wrong')
                         console.log('something went wrong', res)

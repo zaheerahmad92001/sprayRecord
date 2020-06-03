@@ -15,7 +15,7 @@ import styles from '../ReturnProduct/styles';
 import { TextColor, BBCOLOR,borderColor } from '../../Constants/colors';
 import ProuductModal from '../../../Utils/modal/Product';
 import SaleModal from '../../../Utils/modal/Sale';
-
+let pageNo=0;
 export default class ReturnProducts extends Component {
     constructor(props) {
         super(props);
@@ -24,16 +24,18 @@ export default class ReturnProducts extends Component {
             date: '', return_date:'', errorMsg: '',
             selected: "None", mapOnce: true,
            populate: [],
-           products:[],
+           products:[], moreProducts: [], productUnit:'',pagination:'',
 
         }
     }
     componentDidMount(){
-        ProuductModal.ProductListing().then(
+        pageNo = 1;
+        ProuductModal.ProductListing(pageNo).then(
             (res)=>{
                 if(res.success){
                    this.setState({
                        products:res.data.collection,
+                       pagination:res.data.pagination,
                    })
                 }else{
                     alert('something went wrong');
@@ -50,7 +52,7 @@ export default class ReturnProducts extends Component {
     }
 
     showDateTimePicker = () => {
-        this.setState({ isDateTimePickerVisible: true });
+        this.setState({ isDateTimePickerVisible: true,errorMsg:'' });
     };
     handleDatePicked = date => {
         var DateTime = new Date(date).getTime();
@@ -63,16 +65,59 @@ export default class ReturnProducts extends Component {
     hideDateTimePicker = () => {
         this.setState({ isDateTimePickerVisible: false });
     };
+    PickerValue=(value)=>{
+        const scope = this;
+        const {products} = this.state;
+        products.map((product)=>{
+          if(value===product.id){
+             console.log('product unit',product.unit,'product id',product.id)
+            this.setState({selected: value, errorMsg: '',productUnit:product.unit})
+          }
+        })
+       
+      }
+      loadMoreProduct=(pageNo)=>{
+        ProuductModal.ProductListing(pageNo).then(
+            (res)=>{
+                if(res.success){
+                   this.setState({
+                    moreProducts:res.data.collection,
+                    //pagination:res.data.pagination
+                   })
+                   this.setState({products:this.state.products.concat(this.state.moreProducts),
+                  populate:[],
+                  mapOnce:true  
+                  
+                })
+                }else{
+                    alert('something went wrong');
+                    console.log('something went wrong',res)
+                }
+            },(error)=>{
+              alert('network error');
+              console.log('network error',error)
+            }
+        ) 
+      }
 
 
     saveInfo = () => {
-        const { return_date, qty, weight, weightUnit, selected } = this.state;
+        const { return_date, qty, weight, weightUnit, selected,productUnit } = this.state;
         if (selected != '' && selected != 'None') {
             if (ValidateNumber(qty)) {
                 if (weightUnit && weightUnit.length && ValidateDecimalNumber(weight)) {
+                    if(weightUnit.toLowerCase()===productUnit.toLowerCase()){
+                        if(return_date){
                     this.setState({ errorMsg: '' })
                     this.Create(selected, qty, weight, weightUnit,return_date)
-                } else {
+                }else{
+                    this.setState({ errorMsg: 'Please select Date' })
+                }
+            }else{
+                    this.setState({ errorMsg: 'Invalid Unit selected' })  
+                } 
+            }
+            else {
                     this.setState({ errorMsg: 'Enter weight in KG, ML or gm  without space and special character' })
                 }
             } else {
@@ -105,13 +150,19 @@ export default class ReturnProducts extends Component {
         }
 //////////////////////////////////////////////////////////////////////////////////    
     render() {
-        const { date, qty, errorMsg,products,selected } = this.state;
-        console.log('selected data',this.state.selected)
+        const { date, qty, errorMsg,products,selected,pagination,moreProducts } = this.state;
+        //console.log('produtct length',products.length)
+       // console.log('More products',moreProducts)
+      pageNo= pageNo+1;
+      if(pageNo<= pagination.last_page){
+          console.log('page number',pageNo)
+          this.loadMoreProduct(pageNo)
+      }
         {
             this.state.mapOnce ?
             products.map((value) => {
                 this.state.populate.push({
-                    label: value.title,
+                    label:  value.title+ '    '+'('+value.weight+value.unit +')',
                     value: value.id
                 })
                 this.setState({ mapOnce: false })
@@ -150,7 +201,8 @@ export default class ReturnProducts extends Component {
                                     },
                                    
                                 }}
-                                onValueChange={(value) => this.setState({ selected: value, errorMsg: '' })}
+                               // onValueChange={(value) => this.setState({ selected: value, errorMsg: '' })}
+                               onValueChange={(value)=>this.PickerValue(value)}
                                 items={this.state.populate}
                                 value={selected}
                                 Icon={() => {
@@ -190,6 +242,7 @@ export default class ReturnProducts extends Component {
                             <Picker.Item label="kg" value="kg" />
                             <Picker.Item label="ml" value="ml" />
                             <Picker.Item label="gram" value="gram" />
+                            <Picker.Item label="liter" value="Liter" />
                         </Picker>
                     </View>
 

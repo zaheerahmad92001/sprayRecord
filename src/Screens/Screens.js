@@ -41,6 +41,13 @@ const LoadingNavigator = createStackNavigator({
         transitionConfig: () => fromBottom(),
         headerMode: 'none',
     });
+ const LandingNavigator = createSwitchNavigator({
+    Landing: Landing,
+ },{
+    initialRouteName: 'Landing',
+    transitionConfig: () => fromBottom(),
+    headerMode: 'none',
+ })   
 const AuthNavigator = createStackNavigator({
     Login: Login,
     Signup:Signup,
@@ -50,10 +57,17 @@ const AuthNavigator = createStackNavigator({
      transitionConfig:()=>fromBottom(),
      headerMode: 'none'
 });
-const AppNavigator = createStackNavigator({
-   // IndexFile: IndexFile,
-    Landing: Landing,
+const FoHomeNavigator = createSwitchNavigator({
     FoHome: FoHome,
+},{
+    initialRouteName: 'FoHome',
+    transitionConfig:()=>fromBottom(),
+    headerMode: 'none'
+})
+const AppNavigator = createStackNavigator({
+   
+    // Landing: Landing,
+    // FoHome: FoHome,
     AdminHome:AdminHome,
     ProductDetail:ProductDetail,
     // AddNewProduct:AddNewProduct,
@@ -82,7 +96,7 @@ const AppNavigator = createStackNavigator({
 },
 
     {
-        initialRouteName: 'Landing',
+        initialRouteName: 'AdminHome',
        // initialRouteName:'AdminHome',
         transitionConfig: () => fromBottom(),
         headerMode: 'none',
@@ -98,6 +112,8 @@ const AppNavigator = createStackNavigator({
 // )
 const RootNavigator = createSwitchNavigator({
     LoadingNavigator,
+    LandingNavigator,
+    FoHomeNavigator,
     AuthNavigator,
     AppNavigator,
     //AddNewProductNavigator

@@ -1,7 +1,9 @@
 //import requests from '../Utils/requestRoutes.json';
 import requests from '../Utils/requestRoutes.json';
 import AsyncStorage from '@react-native-community/async-storage';
-const BaseURL = 'http://www.daniyalrentacars.com/en/api';
+//const BaseURL = 'http://www.daniyalrentacars.com/en/api';
+//http://www.al-yousaf.com/en/api/login
+const BaseURL ='http://www.al-yousaf.com/en/api'
 let USER ='';
 let authToken ='';
 

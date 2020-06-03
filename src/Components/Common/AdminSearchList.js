@@ -18,7 +18,7 @@ const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get('window');
 
 export default class AdminSearchList extends Component {
     render() {
-        const { qty, Id, name, img } = this.props;
+        const { qty, Id, name, img,weight,unit } = this.props;
         return (
             <TouchableOpacity style={styles.Container}
                 onPress={() => this.props.navigation.navigate('ProductDetail', {
@@ -32,7 +32,13 @@ export default class AdminSearchList extends Component {
                 <View style={styles.cardStyle}>
                     <Thumbnail large square source={{ uri: IMAGEURL + img }} />
                     <View style={styles.textStyle}>
+                        <View style={{flexDirection:'row'}}>
+                        <View style={{flex:1}}>
                         <Text style={styles.count}>{name}</Text>
+                        </View>
+                        <Text style={styles.count}>{weight}</Text>
+                        <Text style={styles.count}>{unit}</Text>
+                        </View>
                         <View style={styles.priceAvailableView}>
                             <Text style={styles.count}>Qty</Text>
                             <Text style={styles.count}>{qty}</Text>
